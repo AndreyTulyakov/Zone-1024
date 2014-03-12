@@ -54,6 +54,7 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
                 return true;
             }
         };
+        spriteMenu.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         attachChild(spriteMenu);
         registerTouchArea(spriteMenu);
 
@@ -61,7 +62,8 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
 
         // Text
         final IFont usedFont = MainActivity.resources.getFont("Furore");
-        textEntityScores = new Text(0, 0, usedFont, textScores, MainActivity.Me.getVertexBufferObjectManager());
+        textEntityScores = new Text(0, 0, usedFont, textScores, 24, MainActivity.Me.getVertexBufferObjectManager());
+        textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         attachChild(textEntityScores);
     }
 
@@ -113,6 +115,8 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
         default:
             break;
         }
+        
+        textEntityScores.setText(move.name());
     }
 
 }

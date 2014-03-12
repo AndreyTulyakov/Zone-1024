@@ -9,7 +9,7 @@ import org.andengine.input.touch.TouchEvent;
 
 public class TouchSlideDetector {
     
-    private final float MINIMAL_OFFSET = 100;
+    private final float MINIMAL_OFFSET = 90;
     private final float VECTOR_FACTOR = 1.5f;
     
     private TouchMotionsHunter hunter;
