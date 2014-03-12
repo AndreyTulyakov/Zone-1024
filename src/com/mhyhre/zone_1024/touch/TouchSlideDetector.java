@@ -4,7 +4,7 @@ import org.andengine.input.touch.TouchEvent;
 
 import android.graphics.Point;
 
-public class TouchMotionDetector {
+public class TouchSlideDetector {
     
     private final float MINIMAL_OFFSET = 80;
     private final float VECTOR_FACTOR = 1.5f;
@@ -14,7 +14,7 @@ public class TouchMotionDetector {
     boolean isTouched;
     TouchPoint touchStart;
     
-    public TouchMotionDetector(TouchMotionsHunter hunter) {
+    public TouchSlideDetector(TouchMotionsHunter hunter) {
         this.hunter = hunter;
 
     }
@@ -24,8 +24,7 @@ public class TouchMotionDetector {
         // Using only 1 touch
         if (touchEvent.getPointerID() != 0)
             return;
-        
-        
+           
         if(isTouched) {
             
             if(touchEvent.isActionCancel()|| touchEvent.isActionUp() || touchEvent.isActionOutside()) {

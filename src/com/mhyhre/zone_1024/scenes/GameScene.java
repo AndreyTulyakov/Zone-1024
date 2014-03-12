@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
-import com.mhyhre.zone_1024.touch.TouchMotionDetector;
+import com.mhyhre.zone_1024.touch.TouchSlideDetector;
 import com.mhyhre.zone_1024.touch.TouchMotionsHunter;
 import com.mhyhre.zone_1024.touch.TouchDirections;
 
@@ -25,7 +25,7 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
     private Text textEntityScores;
     private Sprite spriteMenu;
     
-    private TouchMotionDetector motionDetector;;
+    private TouchSlideDetector motionDetector;;
     
     
     public GameScene() {
@@ -34,7 +34,7 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
         setBackground(background);
         setBackgroundEnabled(true);   
         
-        motionDetector = new TouchMotionDetector(this);
+        motionDetector = new TouchSlideDetector(this);
         
         
         // Creating sprites
