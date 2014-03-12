@@ -5,7 +5,6 @@
 
 package com.mhyhre.zone_1024;
 
-import android.app.Activity;
 import org.andengine.BuildConfig;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
@@ -18,7 +17,6 @@ import org.andengine.ui.activity.SimpleBaseGameActivity;
 
 import com.mhyhre.zone_1024.scenes.RootScene;
 
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
@@ -47,32 +45,6 @@ public class MainActivity extends SimpleBaseGameActivity {
     private boolean vibroEnabled = true;
     private boolean soundEnabled = true;
     
-    
-    protected void savePreferences() {
-
-        int mode = Activity.MODE_PRIVATE;
-        SharedPreferences mySharedPreferences = getSharedPreferences(PREFERENCE_ID, mode);
-
-        SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putInt("appVersion", 2);
-        editor.putBoolean("isVibroEnabled", isVibroEnabled());
-        editor.putBoolean("isSoundEnabled", isSoundEnabled());
-        editor.commit();
-    }
-
-    public static RootScene getRootScene() {
-        return sceneRoot;
-    }
-
-    
-    public void loadPreferences() {
-
-        int mode = Activity.MODE_PRIVATE;
-        SharedPreferences mySharedPreferences = getSharedPreferences(PREFERENCE_ID, mode);
-
-        setVibroEnabled(mySharedPreferences.getBoolean("isVibroEnabled", true));
-        setSoundEnabled(mySharedPreferences.getBoolean("isSoundEnabled", true));
-    }
 
     @Override
     public EngineOptions onCreateEngineOptions() {
@@ -86,8 +58,6 @@ public class MainActivity extends SimpleBaseGameActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        loadPreferences();
-
         halfWidth = width / 2.0f;
         halfHeight = height / 2.0f;
 
@@ -100,6 +70,11 @@ public class MainActivity extends SimpleBaseGameActivity {
         mEngineOptions.getAudioOptions().setNeedsSound(true);
         mEngineOptions.getTouchOptions().setNeedsMultiTouch(true);
         return mEngineOptions;
+    }
+    
+    
+    public static RootScene getRootScene() {
+        return sceneRoot;
     }
 
     @Override
@@ -142,9 +117,9 @@ public class MainActivity extends SimpleBaseGameActivity {
 
     public void onDestroy() {
 
-        savePreferences();
         if (BuildConfig.DEBUG)
             Log.i(DEBUG_ID, this.getClass().getSimpleName() + ".onDestroy");
+        
         super.onDestroy();
         android.os.Process.killProcess(android.os.Process.myPid());
     }
