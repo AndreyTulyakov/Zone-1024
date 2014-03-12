@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2013 Andrey Tulyakov
+ * Copyright (C) 2013-2014 Andrey Tulyakov
  * @mail: mhyhre@gmail.com
  */
 
 package com.mhyhre.zone_1024;
-
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,9 +23,8 @@ import org.andengine.opengl.texture.region.TextureRegionFactory;
 import android.graphics.Color;
 import android.util.Log;
 
+
 public class ResourceManager {
-    
-    
 
     private Map<String, ITextureRegion> regions;
     private Map<String, ITiledTextureRegion> tiledRegions;
@@ -121,62 +119,6 @@ public class ResourceManager {
         regions.put("Right", TextureRegionFactory.extractFromTexture(atlas, 80, 72, 80, 80, false));
         regions.put("Menu", TextureRegionFactory.extractFromTexture(atlas, 160, 70, 74, 74, false));
         regions.put("Fire", TextureRegionFactory.extractFromTexture(atlas, 86, 160, 64, 64, false));
-
-        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
-        BitmapTextureAtlasTextureRegionFactory.createFromAsset(atlas, MainActivity.Me, "tex_01.png", 0, 0);
-        atlas.load();
-        atlases.put("texture01", atlas);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 80, 64, 64);
-        regions.put("boat_body", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 70, 80, 64, 24);
-        regions.put("pirate_boat", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 128, 180, 128, 78);
-        regions.put("pirate_ship", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 0, 64, 40);
-        regions.put("shark_body", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 160, 32, 32);
-        regions.put("heart", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 32, 160, 32, 32);
-        regions.put("heart_died", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 64, 160, 32, 32);
-        regions.put("gold", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 200, 16, 16);
-        regions.put("bullet", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 16, 200, 32, 32);
-        regions.put("bullet_boom", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 150, 0, 50, 50);
-        regions.put("sun", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 200, 0, 50, 50);
-        regions.put("moon", region);
-
-        // Clouds texture
-        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 128, 192, TextureOptions.BILINEAR);
-        BitmapTextureAtlasTextureRegionFactory.createFromAsset(atlas, MainActivity.Me, "Clouds.png", 0, 0);
-        atlas.load();
-        atlases.put("Clouds", atlas);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 0, 90, 45);
-        regions.put("cloud1", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 50, 90, 45);
-        regions.put("cloud2", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 100, 70, 45);
-        regions.put("cloud3", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 150, 90, 45);
-        regions.put("cloud4", region);
 
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadAtlases: OK");
     }

@@ -15,20 +15,27 @@ import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
+import com.mhyhre.zone_1024.touch.TouchMotionDetector;
+import com.mhyhre.zone_1024.touch.TouchMotionsHunter;
+import com.mhyhre.zone_1024.touch.TouchDirections;
 
-public class GameScene extends SimpleScene {
+public class GameScene extends SimpleScene implements TouchMotionsHunter {
 
     private Background background;
-    
-    public Text textEntityScores;
+    private Text textEntityScores;
     private Sprite spriteMenu;
+    
+    private TouchMotionDetector motionDetector;;
     
     
     public GameScene() {
         
         background = new Background(0.2f, 0.6f, 0.7f);
         setBackground(background);
-        setBackgroundEnabled(true);      
+        setBackgroundEnabled(true);   
+        
+        motionDetector = new TouchMotionDetector(this);
+        
         
         // Creating sprites
         spriteMenu = new Sprite(0, 0, MainActivity.resources.getTextureRegion("Button1"), MainActivity.Me.getVertexBufferObjectManager()) {
@@ -57,7 +64,12 @@ public class GameScene extends SimpleScene {
     
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-
+        
+        if(pSceneTouchEvent.isActionDown()) {
+            Log.i(MainActivity.DEBUG_ID, "onSceneTouchEvent: Touched!");
+        }
+        
+        motionDetector.onTouchEvent(pSceneTouchEvent);
         return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
@@ -65,6 +77,32 @@ public class GameScene extends SimpleScene {
     protected void onManagedUpdate(float pSecondsElapsed) {
 
         super.onManagedUpdate(pSecondsElapsed);
+    }
+
+
+    @Override
+    public void onDetectedMotionEvent(TouchDirections move) {
+        
+        switch(move) {
+        case DOWN:
+            Log.i(MainActivity.DEBUG_ID, "onDetectedMotionEvent: DOWN!");
+            break;
+            
+        case LEFT:
+            Log.i(MainActivity.DEBUG_ID, "onDetectedMotionEvent: LEFT!");
+            break;
+            
+        case RIGHT:
+            Log.i(MainActivity.DEBUG_ID, "onDetectedMotionEvent: RIGHT!");
+            break;
+            
+        case UP:
+            Log.i(MainActivity.DEBUG_ID, "onDetectedMotionEvent: UP!");
+            break;
+            
+        default:
+            break;
+        }
     }
 
 }
