@@ -1,12 +1,15 @@
+/*
+ * Copyright (C) 2013-2014 Andrey Tulyakov
+ * @mail: mhyhre@gmail.com
+ */
+
 package com.mhyhre.zone_1024.touch;
 
 import org.andengine.input.touch.TouchEvent;
 
-import android.graphics.Point;
-
 public class TouchSlideDetector {
     
-    private final float MINIMAL_OFFSET = 80;
+    private final float MINIMAL_OFFSET = 100;
     private final float VECTOR_FACTOR = 1.5f;
     
     private TouchMotionsHunter hunter;
