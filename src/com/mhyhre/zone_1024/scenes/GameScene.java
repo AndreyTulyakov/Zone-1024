@@ -19,7 +19,7 @@ import com.mhyhre.zone_1024.scenes.game.field.GameField;
 import com.mhyhre.zone_1024.touch.TouchLocker;
 import com.mhyhre.zone_1024.touch.TouchSlideDetector;
 import com.mhyhre.zone_1024.touch.TouchMotionsHunter;
-import com.mhyhre.zone_1024.touch.TouchDirections;
+import com.mhyhre.zone_1024.utils.Directions;
 
 public class GameScene extends SimpleScene implements TouchMotionsHunter {
 
@@ -98,9 +98,9 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
     }
 
     @Override
-    public void onDetectedMotionEvent(TouchDirections move) {
+    public void onDetectedMotionEvent(Directions move) {
 
-        if (move != TouchDirections.NONE) {
+        if (move != Directions.NONE) {
             touchLocker.lock();
         }
 

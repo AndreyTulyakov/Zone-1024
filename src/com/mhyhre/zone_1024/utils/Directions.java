@@ -3,9 +3,9 @@
  * @mail: mhyhre@gmail.com
  */
 
-package com.mhyhre.zone_1024.touch;
+package com.mhyhre.zone_1024.utils;
 
-public enum TouchDirections {
+public enum Directions {
     NONE,
     UP,
     DOWN,
