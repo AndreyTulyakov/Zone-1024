@@ -109,7 +109,7 @@ public class ResourceManager {
         region = TextureRegionFactory.extractFromTexture(atlas, 0, 360, 104, 144, false);
         regions.put("LevelCell", region);
         
-        region = TextureRegionFactory.extractFromTexture(atlas, 380, 386, 124, 124, false);
+        region = TextureRegionFactory.extractFromTexture(atlas, 385, 390, 80, 80, false);
         regions.put("EquipmentCell", region);
 
         // game ui

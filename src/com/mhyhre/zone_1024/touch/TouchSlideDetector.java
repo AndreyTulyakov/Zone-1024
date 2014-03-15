@@ -11,8 +11,8 @@ import com.mhyhre.zone_1024.utils.Directions;
 
 public class TouchSlideDetector {
     
-    private final float MINIMAL_OFFSET = 90;
-    private final float VECTOR_FACTOR = 1.5f;
+    private final float MINIMAL_OFFSET = 80;
+    private final float VECTOR_FACTOR = 1.3f;
     
     private TouchMotionsHunter hunter;
     

@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
+
+import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.utils.Directions;
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
@@ -42,14 +45,14 @@ public class FieldData {
         return size.getHeight();
     }
     
-    public boolean putNewElement() {
+    public void putNewElement() {
         if(hasFreeCell()) {
+            
             List<Position> freeCells = getFreeCellsList();
             Position targetCellPosition = freeCells.get(random.nextInt(freeCells.size()));
             set(targetCellPosition.getX(), targetCellPosition.getY(), random.nextBoolean() ? 2 : 4);
-            return true;
+            Log.i(MainActivity.DEBUG_ID, "Put new Element:" + targetCellPosition.getX() + "," + targetCellPosition.getY());
         }
-        return false;
     }
     
     public List<Position> getFreeCellsList() {
@@ -94,5 +97,7 @@ public class FieldData {
             break;
         
         }
+        
+        
     }
 }

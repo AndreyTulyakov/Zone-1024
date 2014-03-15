@@ -13,7 +13,7 @@ import org.andengine.input.touch.TouchEvent;
 public class RootScene extends Scene {
 
     public static boolean Preloaded = false;
-    
+
     GameScene gameScene;
 
     public RootScene() {
@@ -23,20 +23,25 @@ public class RootScene extends Scene {
         MainActivity.resources.loadAtlases();
         MainActivity.resources.loadFonts();
         MainActivity.resources.loadSounds();
-        
+
         gameScene = new GameScene();
         attachChild(gameScene);
         gameScene.show();
     }
 
     public void onSceneBackPress() {
- 
+
     }
 
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
         gameScene.onSceneTouchEvent(pSceneTouchEvent);
         return super.onSceneTouchEvent(pSceneTouchEvent);
+    }
+
+    public void gameOver() {
+        MainActivity.vibrate(100);
+        MainActivity.Me.finish();
     }
 
 }

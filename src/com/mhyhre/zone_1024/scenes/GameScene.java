@@ -23,7 +23,7 @@ import com.mhyhre.zone_1024.utils.Directions;
 
 public class GameScene extends SimpleScene implements TouchMotionsHunter {
 
-    private final float TOUCH_LOCK_TIME = 0.8f; // in seconds
+    private final float TOUCH_LOCK_TIME = 0.6f; // in seconds
 
     private Background background;
     private Text textEntityScores;
@@ -102,8 +102,10 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
 
         if (move != Directions.NONE) {
             touchLocker.lock();
+            gameField.onMoveField(move);
         }
 
+        
         switch (move) {
         case DOWN:
             Log.i(MainActivity.DEBUG_ID, "onDetectedMotionEvent: DOWN!");
