@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
+import com.mhyhre.zone_1024.scenes.game.field.GameField;
 import com.mhyhre.zone_1024.touch.TouchLocker;
 import com.mhyhre.zone_1024.touch.TouchSlideDetector;
 import com.mhyhre.zone_1024.touch.TouchMotionsHunter;
@@ -28,6 +29,8 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
     private Text textEntityScores;
     private Sprite spriteMenu;
     
+    private GameField gameField;
+    
 
     private TouchSlideDetector motionDetector;
     private TouchLocker touchLocker;
@@ -38,10 +41,16 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
         setBackground(background);
         setBackgroundEnabled(true);
 
+
         touchLocker = new TouchLocker(TOUCH_LOCK_TIME);
         touchLocker.lock();
         motionDetector = new TouchSlideDetector(this);
 
+        
+        gameField = new GameField();
+        attachChild(gameField);
+        
+        
         // Creating sprites
         spriteMenu = new Sprite(0, 0, MainActivity.resources.getTextureRegion("Button1"), MainActivity.Me.getVertexBufferObjectManager()) {
             @Override
@@ -54,7 +63,7 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
                 return true;
             }
         };
-        spriteMenu.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
+        spriteMenu.setPosition(MainActivity.getHalfWidth(), 24);
         attachChild(spriteMenu);
         registerTouchArea(spriteMenu);
 
@@ -63,19 +72,19 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
         // Text
         final IFont usedFont = MainActivity.resources.getFont("Furore");
         textEntityScores = new Text(0, 0, usedFont, textScores, 24, MainActivity.Me.getVertexBufferObjectManager());
-        textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
+        textEntityScores.setPosition(MainActivity.getHalfWidth(), 24);
         attachChild(textEntityScores);
+        
+        
+        
     }
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
 
-        if(pSceneTouchEvent.isActionDown())
-            Log.i(MainActivity.DEBUG_ID, "uncensored: DOWN!");
-        
         if (touchLocker.isLocked() == false) {
             motionDetector.onTouchEvent(pSceneTouchEvent);
-
+            gameField.onSceneTouchEvent(pSceneTouchEvent);
             return super.onSceneTouchEvent(pSceneTouchEvent);
         }
         return true;

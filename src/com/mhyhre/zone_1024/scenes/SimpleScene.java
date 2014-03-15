@@ -6,6 +6,8 @@
 package com.mhyhre.zone_1024.scenes;
 
 import org.andengine.entity.scene.CameraScene;
+import org.andengine.input.touch.TouchEvent;
+
 import com.mhyhre.zone_1024.MainActivity;
 
 public class SimpleScene extends CameraScene {
