@@ -4,20 +4,20 @@ import org.andengine.util.color.Color;
 
 import android.util.SparseArray;
 
-public class CellColors {
+public class TileColors {
     
-    private static CellColors instance;
+    private static TileColors instance;
     
-    public static CellColors getInstance() {
+    public static TileColors getInstance() {
         if(instance == null) {
-            instance = new  CellColors();
+            instance = new  TileColors();
         }
         return instance;
     }
     
     private SparseArray<Color> colorBase;
 
-    private CellColors() {
+    private TileColors() {
         colorBase = new SparseArray<Color>();
         
         colorBase.put(0, new Color(0.8f, 0.753f, 0.702f));
@@ -31,7 +31,7 @@ public class CellColors {
         
         Color result = colorBase.get(value);
         if(result == null) {
-            return Color.BLACK;
+            return Color.YELLOW;
         }
         return result;
     }

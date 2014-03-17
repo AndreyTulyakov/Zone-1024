@@ -6,53 +6,82 @@
 package com.mhyhre.zone_1024.scenes.game.field;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-
-import org.andengine.engine.camera.Camera;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.batch.SpriteBatch;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.opengl.util.GLState;
 import org.andengine.util.color.Color;
 
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.scenes.SimpleScene;
-import com.mhyhre.zone_1024.utils.CellColors;
-import com.mhyhre.zone_1024.utils.Directions;
+import com.mhyhre.zone_1024.utils.TileColors;
+import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Size;
 
 public class GameField extends SimpleScene {
 
     private final String cellsRegionName = "EquipmentCell";
     private final int BETWEEN_CELLS_SIZE = 4;
+    
+    private final Size size;
+    
 
-    private FieldData data;
+    private Grid grid;
     private Rectangle background;
-    private SpriteBatch cellsGraphics;
+    private SpriteBatch tilesSpriteBatch;
+
 
     private ArrayList<Text> cellsTextEntityList;
+    private TileColors tileColors;
+    
 
-    private CellColors cellColors;
+    public GameField(Size size) {
 
-    public GameField() {
-
+        this.size = size;
+        
         setBackgroundEnabled(false);
         show();
         
-        cellColors = CellColors.getInstance();
+        tileColors = TileColors.getInstance();
 
-        data = new FieldData(new Size(5, 5));
-        data.putNewElement();
+        grid = new Grid(size);
 
+        createBackgroundRect();
+        createTilesGraphics();
+    }
+
+    private void createTilesGraphics() {
+
+        tilesSpriteBatch = new SpriteBatch(MainActivity.resources.getTextureAtlas("User_Interface"),
+                size.getWidth()*size.getHeight(), MainActivity.getVboManager());
+        tilesSpriteBatch.setPosition(MainActivity.getHalfWidth() - ((background.getWidth() / 2) - BETWEEN_CELLS_SIZE),
+                MainActivity.getHalfHeight() - ((background.getHeight() / 2) - BETWEEN_CELLS_SIZE));
+        attachChild(tilesSpriteBatch);
+
+        // Create cells label
+        int textCount = size.getWidth() * size.getHeight();
+        cellsTextEntityList = new ArrayList<Text>(textCount);
+
+        IFont textFont = MainActivity.resources.getFont("White Furore");
+        for (int i = 0; i < textCount; i++) {
+            Text text = new Text(0, 0, textFont, "0", 8, MainActivity.getVboManager());
+            attachChild(text);
+            text.setVisible(false);
+            cellsTextEntityList.add(text);
+        }
+        updateCellsGraphic();
+    }
+    
+    private void createBackgroundRect() {
+        
         ITextureRegion cellRegion = MainActivity.resources.getTextureRegion(cellsRegionName);
-        int backgroundSizeX = ((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE) * data.getWidth() + BETWEEN_CELLS_SIZE;
-        int backgroundSizeY = ((int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE) * data.getHeight() + BETWEEN_CELLS_SIZE;
-
+        int backgroundSizeX = ((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE) * size.getWidth() + BETWEEN_CELLS_SIZE;
+        int backgroundSizeY = ((int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE) * size.getHeight() + BETWEEN_CELLS_SIZE;
+        
         background = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), backgroundSizeX, backgroundSizeY, MainActivity.getVboManager()) {
 
             @Override
@@ -67,30 +96,6 @@ public class GameField extends SimpleScene {
         background.setColor(0.73f, 0.68f, 0.62f);
         attachChild(background);
         registerTouchArea(background);
-
-        createCellsGraphic();
-    }
-
-    private void createCellsGraphic() {
-
-        cellsGraphics = new SpriteBatch(MainActivity.resources.getTextureAtlas("User_Interface"), 50, MainActivity.getVboManager());
-
-        cellsGraphics.setPosition(MainActivity.getHalfWidth() - ((background.getWidth() / 2) - BETWEEN_CELLS_SIZE),
-                MainActivity.getHalfHeight() - ((background.getHeight() / 2) - BETWEEN_CELLS_SIZE));
-        attachChild(cellsGraphics);
-
-        // Create cells label
-        int textCount = data.getWidth() * data.getHeight();
-        cellsTextEntityList = new ArrayList<Text>(textCount);
-
-        IFont textFont = MainActivity.resources.getFont("White Furore");
-        for (int i = 0; i < textCount; i++) {
-            Text text = new Text(0, 0, textFont, "0", 8, MainActivity.getVboManager());
-            attachChild(text);
-            text.setVisible(false);
-            cellsTextEntityList.add(text);
-        }
-        updateCellsGraphic();
     }
 
     private void updateCellsGraphic() {
@@ -98,46 +103,47 @@ public class GameField extends SimpleScene {
         ITextureRegion cellRegion = MainActivity.resources.getTextureRegion(cellsRegionName);
         Size cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
 
-        for (int x = 0; x < data.getWidth(); x++) {
-            for (int y = 0; y < data.getWidth(); y++) {
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getWidth(); y++) {
 
-                Color cellColor = cellColors.getColorByCellValue(data.get(x, y));
+                Color cellColor = tileColors.getColorByCellValue(tiles.getTileValue(x, y));
 
                 float cellX = x * cellsOffset.getWidth();
                 float cellY = y * cellsOffset.getHeight();
-                cellsGraphics.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, cellColor.getRed(), cellColor.getGreen(),
+                tilesSpriteBatch.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, cellColor.getRed(), cellColor.getGreen(),
                         cellColor.getBlue(), 1);
 
-                Text cellText = cellsTextEntityList.get(y * data.getWidth() + x);
-                if (data.get(x, y) == 0) {
+                Text cellText = cellsTextEntityList.get(y * size.getWidth() + x);
+                if (tiles.getTileValue(x, y) == 0) {
                     cellText.setVisible(false);
                 } else {
-                    cellText.setText("" + data.get(x, y));
+                    cellText.setText("" + tiles.getTileValue(x, y));
                     cellText.setColor(0,0,0);
-                    cellText.setPosition(cellsGraphics.getX() + cellX + cellRegion.getWidth()/2, cellsGraphics.getY() + cellY + cellRegion.getWidth()/2);
-                    cellText.setVisible(true);
-                    
+                    cellText.setPosition(tilesSpriteBatch.getX() + cellX + cellRegion.getWidth()/2, tilesSpriteBatch.getY() + cellY + cellRegion.getWidth()/2);
+                    cellText.setVisible(true);                  
                 }
-
             }
-        }
-                     
-        cellsGraphics.submit();
-
+        }              
+        tilesSpriteBatch.submit();
     }
 
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
-        updateCellsGraphic();
+            
+            tiles.update();
+            updateCellsGraphic();
+
         super.onManagedUpdate(pSecondsElapsed);
     }
 
-    public void onMoveField(Directions moveDicrection) {
-        data.slideTo(moveDicrection);
-        data.putNewElement();
+    public void onMoveField(Direction moveDicrection) {
 
-        if (data.hasFreeCell() == false) {
+        tiles.slideField(moveDicrection);
+        tiles.putNewElement();
+
+        if (tiles.hasFreeCell() == false) {
             MainActivity.getRootScene().gameOver();
         }
     }
+    
 }

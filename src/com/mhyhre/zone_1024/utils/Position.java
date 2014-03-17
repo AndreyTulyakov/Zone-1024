@@ -5,10 +5,10 @@
 
 package com.mhyhre.zone_1024.utils;
 
-public class Position {
+public final class Position implements Cloneable{
     
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
     
     public Position(int x, int y) {
         this.x = x;
@@ -22,9 +22,22 @@ public class Position {
     public int getY() {
         return y;
     }
-    
-    public Position sum(Position value) {
-        return new Position(x + value.x, y + value.y);
+
+    public void setX(int x) {
+        this.x = x;
     }
 
+    public void setY(int y) {
+        this.y = y;
+    }
+    
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public Position clone() {
+        return new Position(x, y);
+    }  
 }

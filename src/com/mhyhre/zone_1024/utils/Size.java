@@ -22,4 +22,13 @@ public class Size {
     public int getHeight() {
         return height;
     }
+    
+    public boolean inRange(int x, int y) {
+        if(x >= 0 && y >=0) {
+            if( x < width && y < height) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

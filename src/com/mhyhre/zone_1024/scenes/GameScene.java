@@ -19,21 +19,16 @@ import com.mhyhre.zone_1024.scenes.game.field.GameField;
 import com.mhyhre.zone_1024.touch.TouchLocker;
 import com.mhyhre.zone_1024.touch.TouchSlideDetector;
 import com.mhyhre.zone_1024.touch.TouchMotionsHunter;
-import com.mhyhre.zone_1024.utils.Directions;
+import com.mhyhre.zone_1024.utils.Direction;
+import com.mhyhre.zone_1024.utils.Size;
 
 public class GameScene extends SimpleScene implements TouchMotionsHunter {
-
-    private final float TOUCH_LOCK_TIME = 0.4f; // in seconds
 
     private Background background;
     private Text textEntityScores;
     private Sprite spriteMenu;
-    
     private GameField gameField;
-    
-
     private TouchSlideDetector motionDetector;
-    private TouchLocker touchLocker;
 
     public GameScene() {
 
@@ -41,16 +36,11 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
         setBackground(background);
         setBackgroundEnabled(true);
 
-
-        touchLocker = new TouchLocker(TOUCH_LOCK_TIME);
-        touchLocker.lock();
         motionDetector = new TouchSlideDetector(this);
 
-        
-        gameField = new GameField();
+        gameField = new GameField(new Size(4, 4));
         attachChild(gameField);
-        
-        
+
         // Creating sprites
         spriteMenu = new Sprite(0, 0, MainActivity.resources.getTextureRegion("Button1"), MainActivity.Me.getVertexBufferObjectManager()) {
             @Override
@@ -74,38 +64,20 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
         textEntityScores = new Text(0, 0, usedFont, textScores, 24, MainActivity.Me.getVertexBufferObjectManager());
         textEntityScores.setPosition(MainActivity.getHalfWidth(), 24);
         attachChild(textEntityScores);
-        
-        
-        
     }
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-
-        if (touchLocker.isLocked() == false) {
-            motionDetector.onTouchEvent(pSceneTouchEvent);
-            gameField.onSceneTouchEvent(pSceneTouchEvent);
-            return super.onSceneTouchEvent(pSceneTouchEvent);
-        }
-        return true;
+        motionDetector.onTouchEvent(pSceneTouchEvent);
+        gameField.onSceneTouchEvent(pSceneTouchEvent);
+        return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
     @Override
-    protected void onManagedUpdate(float pSecondsElapsed) {
- 
-        touchLocker.update(pSecondsElapsed);
-        super.onManagedUpdate(pSecondsElapsed);
-    }
-
-    @Override
-    public void onDetectedMotionEvent(Directions move) {
-
-        if (move != Directions.NONE) {
-            touchLocker.lock();
+    public void onDetectedMotionEvent(Direction move) {
+        if (move != Direction.NONE) {
             gameField.onMoveField(move);
         }
-
         textEntityScores.setText(move.name());
     }
-
 }

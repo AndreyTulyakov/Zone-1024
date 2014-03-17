@@ -7,7 +7,7 @@ package com.mhyhre.zone_1024.touch;
 
 import org.andengine.input.touch.TouchEvent;
 
-import com.mhyhre.zone_1024.utils.Directions;
+import com.mhyhre.zone_1024.utils.Direction;
 
 public class TouchSlideDetector {
     
@@ -35,18 +35,18 @@ public class TouchSlideDetector {
             if(touchEvent.isActionCancel()|| touchEvent.isActionUp() || touchEvent.isActionOutside()) {
                 isTouched = false;
                 
-                Directions direction = calculateMovement(
+                Direction direction = calculateMovement(
                         touchStart, new TouchPoint(touchEvent.getX(), touchEvent.getY()), MINIMAL_OFFSET, VECTOR_FACTOR);
                 
-                if(direction != Directions.NONE) {
+                if(direction != Direction.NONE) {
                     hunter.onDetectedMotionEvent(direction);
                 }
             }
             
             if(touchEvent.isActionMove()) {
-                Directions direction = calculateMovement(
+                Direction direction = calculateMovement(
                         touchStart, new TouchPoint(touchEvent.getX(), touchEvent.getY()), MINIMAL_OFFSET, VECTOR_FACTOR);
-                if(direction != Directions.NONE) {
+                if(direction != Direction.NONE) {
                     isTouched = false;
                     hunter.onDetectedMotionEvent(direction);
                 }
@@ -61,36 +61,36 @@ public class TouchSlideDetector {
     }
 
     
-    private Directions calculateMovement(TouchPoint firstPoint, TouchPoint lastPoint, float minimalOffset, float vectorFactor) {
+    private Direction calculateMovement(TouchPoint firstPoint, TouchPoint lastPoint, float minimalOffset, float vectorFactor) {
         
         TouchPoint resultVector = new TouchPoint(
                 lastPoint.getX() - firstPoint.getX(), lastPoint.getY() - firstPoint.getY());
         
         if(resultVector.getX() >= minimalOffset) {
             if(Math.abs(resultVector.getX()) > Math.abs(resultVector.getY()*vectorFactor)) {
-                return Directions.RIGHT;
+                return Direction.RIGHT;
             }
         }
         
         if(resultVector.getX() <= -minimalOffset) {
             if(Math.abs(resultVector.getX()) > Math.abs(resultVector.getY()*vectorFactor)) {
-                return Directions.LEFT;
+                return Direction.LEFT;
             }
         }
         
         if(resultVector.getY() >= minimalOffset) {
             if(Math.abs(resultVector.getY()) > Math.abs(resultVector.getX()*vectorFactor)) {
-                return Directions.UP;
+                return Direction.UP;
             }
         }
         
         if(resultVector.getY() <= -minimalOffset) {
             if(Math.abs(resultVector.getY()) > Math.abs(resultVector.getX()*vectorFactor)) {
-                return Directions.DOWN;
+                return Direction.DOWN;
             }
         }
             
-        return Directions.NONE;
+        return Direction.NONE;
     }
     
 }
