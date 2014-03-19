@@ -8,20 +8,20 @@ package com.mhyhre.zone_1024.touch;
 import org.andengine.input.touch.TouchEvent;
 
 import com.mhyhre.zone_1024.utils.Direction;
+import com.mhyhre.zone_1024.utils.MoveEventListener;
 
-public class TouchSlideDetector {
+public class TouchSlidingEventDetector {
     
     private final float MINIMAL_OFFSET = 80;
     private final float VECTOR_FACTOR = 1.3f;
     
-    private TouchMotionsHunter hunter;
+    private MoveEventListener listener;
     
-    boolean isTouched;
-    TouchPoint touchStart;
+    private boolean isTouched;
+    private TouchPoint touchStart;
     
-    public TouchSlideDetector(TouchMotionsHunter hunter) {
-        this.hunter = hunter;
-
+    public TouchSlidingEventDetector(MoveEventListener listener) {
+        this.listener = listener;
     }
     
     public void onTouchEvent(final TouchEvent touchEvent) {
@@ -39,7 +39,7 @@ public class TouchSlideDetector {
                         touchStart, new TouchPoint(touchEvent.getX(), touchEvent.getY()), MINIMAL_OFFSET, VECTOR_FACTOR);
                 
                 if(direction != Direction.NONE) {
-                    hunter.onDetectedMotionEvent(direction);
+                    listener.onMoveEvent(direction);
                 }
             }
             
@@ -48,7 +48,7 @@ public class TouchSlideDetector {
                         touchStart, new TouchPoint(touchEvent.getX(), touchEvent.getY()), MINIMAL_OFFSET, VECTOR_FACTOR);
                 if(direction != Direction.NONE) {
                     isTouched = false;
-                    hunter.onDetectedMotionEvent(direction);
+                    listener.onMoveEvent(direction);
                 }
             }
             

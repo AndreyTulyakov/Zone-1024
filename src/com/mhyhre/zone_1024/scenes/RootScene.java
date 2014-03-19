@@ -6,15 +6,19 @@
 package com.mhyhre.zone_1024.scenes;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.logic.GameManager;
+import com.mhyhre.zone_1024.touch.TouchSlidingEventDetector;
+import com.mhyhre.zone_1024.utils.Size;
 
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;
 
 public class RootScene extends Scene {
 
-    public static boolean Preloaded = false;
+    private GameVisualizationScene gameScene;
+    private GameManager gameManager;
+    private TouchSlidingEventDetector moveEventDetector;
 
-    GameScene gameScene;
 
     public RootScene() {
         setBackgroundEnabled(false);
@@ -23,25 +27,36 @@ public class RootScene extends Scene {
         MainActivity.resources.loadAtlases();
         MainActivity.resources.loadFonts();
         MainActivity.resources.loadSounds();
+        
+        gameManager = new GameManager(new Size(4,4));
+        moveEventDetector = new TouchSlidingEventDetector(gameManager);
 
-        gameScene = new GameScene();
+        gameScene = new GameVisualizationScene(gameManager);
         attachChild(gameScene);
         gameScene.show();
     }
 
     public void onSceneBackPress() {
-
+        
     }
 
     @Override
-    public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
+    public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {     
+        moveEventDetector.onTouchEvent(pSceneTouchEvent);
         gameScene.onSceneTouchEvent(pSceneTouchEvent);
         return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
+    @Override
+    protected void onManagedUpdate(float pSecondsElapsed) {
+        gameManager.update();
+        super.onManagedUpdate(pSecondsElapsed);
+    }
+    
+/*
     public void gameOver() {
         MainActivity.vibrate(100);
         MainActivity.Me.finish();
     }
-
+*/
 }

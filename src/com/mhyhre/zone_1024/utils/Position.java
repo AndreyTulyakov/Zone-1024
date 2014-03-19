@@ -5,7 +5,7 @@
 
 package com.mhyhre.zone_1024.utils;
 
-public final class Position implements Cloneable{
+public final class Position implements Cloneable {
     
     private int x;
     private int y;
@@ -39,5 +39,19 @@ public final class Position implements Cloneable{
     @Override
     public Position clone() {
         return new Position(x, y);
-    }  
+    }
+    
+    @Override 
+    public boolean equals(Object obj) {
+        
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Position))
+            return false;
+
+        Position position = (Position) obj;
+        return (x == position.x) && (y == position.y);
+    }
 }

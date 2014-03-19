@@ -10,35 +10,29 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
-
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
-import com.mhyhre.zone_1024.scenes.game.field.GameField;
-import com.mhyhre.zone_1024.touch.TouchLocker;
-import com.mhyhre.zone_1024.touch.TouchSlideDetector;
-import com.mhyhre.zone_1024.touch.TouchMotionsHunter;
-import com.mhyhre.zone_1024.utils.Direction;
-import com.mhyhre.zone_1024.utils.Size;
+import com.mhyhre.zone_1024.game.logic.GameManager;
 
-public class GameScene extends SimpleScene implements TouchMotionsHunter {
+public class GameVisualizationScene extends SimpleScene{
 
     private Background background;
     private Text textEntityScores;
     private Sprite spriteMenu;
+    private GameManager gameManager;
     private GameField gameField;
-    private TouchSlideDetector motionDetector;
+    
+    public GameVisualizationScene(GameManager gameManager) {
 
-    public GameScene() {
+        this.gameManager = gameManager;
 
         background = new Background(0.2f, 0.6f, 0.7f);
         setBackground(background);
         setBackgroundEnabled(true);
 
-        motionDetector = new TouchSlideDetector(this);
-
-        gameField = new GameField(new Size(4, 4));
+        gameField = new GameField(gameManager.getGrid().getSize());
         attachChild(gameField);
 
         // Creating sprites
@@ -68,16 +62,15 @@ public class GameScene extends SimpleScene implements TouchMotionsHunter {
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-        motionDetector.onTouchEvent(pSceneTouchEvent);
-        gameField.onSceneTouchEvent(pSceneTouchEvent);
+        // gameField.onSceneTouchEvent(pSceneTouchEvent);
         return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
     @Override
-    public void onDetectedMotionEvent(Direction move) {
-        if (move != Direction.NONE) {
-            gameField.onMoveField(move);
-        }
-        textEntityScores.setText(move.name());
+    protected void onManagedUpdate(float pSecondsElapsed) {
+
+        gameField.update(gameManager.getGrid());
+        super.onManagedUpdate(pSecondsElapsed);
     }
+
 }
