@@ -54,4 +54,9 @@ public final class Position implements Cloneable {
         Position position = (Position) obj;
         return (x == position.x) && (y == position.y);
     }
+    
+    @Override
+    public String toString() {
+        return "[x=" + x + ", y=" + y + "]";
+    }
 }

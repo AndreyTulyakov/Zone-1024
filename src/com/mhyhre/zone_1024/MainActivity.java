@@ -107,8 +107,11 @@ public class MainActivity extends SimpleBaseGameActivity {
 
     @Override
     public void onBackPressed() {
-        sceneRoot.onSceneBackPress();
-        super.onBackPressed();
+        if (RootScene.getState() == RootScene.GameStates.LOADER) {
+            super.onBackPressed();
+        } else {
+            sceneRoot.onSceneBackPress();
+        }
     }
 
     public AssetManager getAssetManager() {

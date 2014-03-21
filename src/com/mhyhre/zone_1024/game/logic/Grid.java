@@ -4,6 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import android.util.Log;
+import android.util.Pair;
+
+import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
 
@@ -11,12 +16,14 @@ public class Grid extends SimpleGrid {
 
     private Random random;
     private boolean locked;
-    
+
+
     public Grid(Size size) {
         super(size);
         random = new Random();
     }
-    
+
+
     public Position randomAvaibleCell() {
         List<Position> freeCells = availableCells();
         if (freeCells.size() > 0) {
@@ -41,83 +48,160 @@ public class Grid extends SimpleGrid {
         return availableCells().size() > 0;
     }
 
+    public boolean isCellAvailable(Position cell) {
+        if (inGridRange(cell)) {
+            return tiles[cell.getX()][cell.getY()] != null;
+        }
+        return false;
+    }
 
-    public void prepareTiles() {
-        for (int x = 0; x < size.getWidth(); x++) {
-            for (int y = 0; y < size.getHeight(); y++) {
-                Tile tile = tiles[x][y];
-                if (tile != null) {
-             
-                }
-            }
+    private void insertTile(int column, int row, SimpleTile tile) {
+        if (inGridRange(column, row)) {
+            tiles[column][row] = tile;
         }
     }
 
-    private void insertTile(int x, int y, Tile tile) {
-        if(inGridRange(x, y)) {
-            tiles[x][y] = tile;
+    private void removeTile(Position cellPosition) {
+        if (inGridRange(cellPosition)) {
+            tiles[cellPosition.getX()][cellPosition.getY()] = null;
         }
     }
 
-    private void removeTile(int x, int y, Tile tile) {
-        if(inGridRange(x, y)) {
-            tiles[x][y] = null;
+    private void removeTile(int column, int row, SimpleTile tile) {
+        if (inGridRange(column, row)) {
+            tiles[column][row] = null;
         }
     }
 
-    
     // Adds a tile in a random free position
-    public void addRandomTile() {
+    public SimpleTile addRandomTile() {
         if (cellsAvailable()) {
             int value = Math.random() < 0.9 ? 2 : 4;
             Position position = randomAvaibleCell();
-            Tile tile = new Tile(position.getX(),position.getY(), value);
+            SimpleTile tile = new SimpleTile(position.getX(), position.getY(), value);
             insertTile(position.getX(), position.getY(), tile);
+            tile.bang();
+            return tile;
         }
+        
+        return null;
     }
-    
+
     public void lock() {
         locked = true;
     }
-    
+
     public void unlock() {
         locked = false;
     }
-    
+
     public boolean isLocked() {
         return locked;
     }
 
     public void update() {
-        
-        if(allTilesIsReady()) {
-            unlock();
-            return;
-        } else {
-            for (int x = 0; x < size.getWidth(); x++) {
-                for (int y = 0; y < size.getHeight(); y++) {
-                    Tile tile = tiles[x][y];
-                    if (tile != null) {
-                        tile.updatePosition();
-                    }
-                }
-            }
-        }
-    }
     
-    public boolean allTilesIsReady() {
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
-                Tile tile = tiles[x][y];
+                if (tiles[x][y] != null) {
+                    tiles[x][y].update();
+                }
+            }
+        }
+    }
+
+    private Position findTargetForTile(final Position cell, Direction vector) {
+        Position previous = null;
+        Position last = cell.clone();
+
+        // Progress towards the vector direction until an obstacle is found
+        do {
+            previous = last.clone();
+            last.set(previous.getX() + vector.getVectorX(), previous.getY() + vector.getVectorY());
+            
+            if(inGridRange(last) == false) {
+                return previous;
+            }
+            
+            if(isBusyCell(last)) {
+                if(getTile(cell).getValue() == getTile(last).getValue() && getTile(last).isWasChanged() == false) {
+                    return last;
+                } else {
+                    return previous;
+                }
+            }
+            
+        } while (true);
+    }
+    
+
+    public void resetTilesMovingInfo() {
+        
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
+                if (tiles[x][y] != null) {
+                    tiles[x][y].setWasChanged(false);
+                }
+            }
+        }
+    }
+
+    public boolean availableCell(Position cell) {
+        return tiles[cell.getX()][cell.getY()] == null;
+    }
+
+    public void move(Direction direction) {
+        
+        Log.i(MainActivity.DEBUG_ID, "Grid::Move::To " + direction.name()); 
+
+        // Creating traversal path
+        Pair<List<Integer>, List<Integer>> traversal = GridUtils.getTraversalList(direction, size.getWidth());
+        List<Integer> traversalX = traversal.first;
+        List<Integer> traversalY = traversal.second;
+
+        resetTilesMovingInfo();
+        Position currentPosition = new Position(0, 0);
+        
+        boolean somethingWasMoved = false;
+
+        // Creating loop by traversals
+        for (Integer x : traversalX) {
+            for (Integer y : traversalY) {
+                
+                SimpleTile tile = getTile(x, y);
+
                 if (tile != null) {
-                    if(tile.isDestinationReached() == false) {
-                        return false;
+                    currentPosition.set(x, y);
+                    Position targetPosition = findTargetForTile(currentPosition, direction);
+
+                    if (currentPosition.equals(targetPosition) == true) {
+                        Log.i(MainActivity.DEBUG_ID, "Grid::Move::Position"
+                                    + currentPosition.toString() + " Cant move to " + direction.name());
+                        continue;
+                    } else {
+                        
+                        SimpleTile targetTile = getTile(targetPosition);
+                        
+                        if(targetTile == null) {
+                            tile.setPosition(targetPosition.getX(), targetPosition.getY());
+                            insertTile(targetPosition.getX(), targetPosition.getY(), tile);
+                            removeTile(currentPosition);
+                        } else {
+                            targetTile.setValue(targetTile.getValue()*2);
+                            targetTile.setWasChanged(true);
+                            targetTile.bang();
+                            removeTile(currentPosition);
+                        }
+                        somethingWasMoved = true;
                     }
                 }
             }
         }
-        return true;
+        
+        if(somethingWasMoved) {
+            addRandomTile();
+        }
+        unlock();
     }
-
 
 }

@@ -115,11 +115,10 @@ public class ResourceManager {
         // game ui
         regions.put("Button", TextureRegionFactory.extractFromTexture(atlas, 0, 0, 310, 70, false));
 
-        regions.put("Left", TextureRegionFactory.extractFromTexture(atlas, 0, 72, 80, 80, false));
-        regions.put("Right", TextureRegionFactory.extractFromTexture(atlas, 80, 72, 80, 80, false));
-        regions.put("Menu", TextureRegionFactory.extractFromTexture(atlas, 160, 70, 74, 74, false));
-        regions.put("Fire", TextureRegionFactory.extractFromTexture(atlas, 86, 160, 64, 64, false));
-
+        regions.put("Yes", TextureRegionFactory.extractFromTexture(atlas, 0, 80, 80, 80, false));
+        regions.put("No", TextureRegionFactory.extractFromTexture(atlas, 84, 80, 80, 80, false));
+        regions.put("Menu", TextureRegionFactory.extractFromTexture(atlas, 160, 70, 74, 74, false));        
+        
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadAtlases: OK");
     }
 

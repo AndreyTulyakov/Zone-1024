@@ -10,25 +10,23 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
-import android.util.Log;
-
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.R;
+import com.mhyhre.zone_1024.game.logic.GameControllable;
 import com.mhyhre.zone_1024.game.logic.GameManager;
 
-public class GameVisualizationScene extends SimpleScene{
+public class GameScene extends SimpleScene{
 
     private Background background;
     private Text textEntityScores;
     private Sprite spriteMenu;
-    private GameManager gameManager;
+    private GameControllable gameManager;
     private GameField gameField;
     
-    public GameVisualizationScene(GameManager gameManager) {
+    public GameScene(GameControllable gameManager) {
 
         this.gameManager = gameManager;
 
-        background = new Background(0.2f, 0.6f, 0.7f);
+        background = new Background(0.0f, 0.0f, 0.0f);
         setBackground(background);
         setBackgroundEnabled(true);
 
@@ -40,9 +38,8 @@ public class GameVisualizationScene extends SimpleScene{
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
-
-                    Log.i(MainActivity.DEBUG_ID, "Pressed menu icon");
                     MainActivity.vibrate(30);
+                    GameManager.getInstance().restart();
                 }
                 return true;
             }
@@ -51,7 +48,7 @@ public class GameVisualizationScene extends SimpleScene{
         attachChild(spriteMenu);
         registerTouchArea(spriteMenu);
 
-        String textScores = MainActivity.Me.getString(R.string.scores);
+        String textScores = "Restart";
 
         // Text
         final IFont usedFont = MainActivity.resources.getFont("Furore");
@@ -62,7 +59,6 @@ public class GameVisualizationScene extends SimpleScene{
 
     @Override
     public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-        // gameField.onSceneTouchEvent(pSceneTouchEvent);
         return super.onSceneTouchEvent(pSceneTouchEvent);
     }
 
