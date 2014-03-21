@@ -7,6 +7,8 @@ package com.mhyhre.zone_1024.scenes;
 
 import java.util.Map;
 
+import android.util.Log;
+
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.game.logic.GameManager;
 import com.mhyhre.zone_1024.touch.TouchSlidingEventDetector;
@@ -34,6 +36,7 @@ public class RootScene extends Scene {
     private LoaderScene loaderScene;
     private GameScene gameScene;
     private RestartScene restartScene;
+    private StopScene stopScene;
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -52,6 +55,9 @@ public class RootScene extends Scene {
 
         loaderScene = new LoaderScene();
         attachChild(loaderScene);
+        
+        stopScene = new StopScene();
+        attachChild(stopScene);
 
         gameManager = GameManager.getInstance();
         moveEventDetector = new TouchSlidingEventDetector(gameManager);
@@ -67,9 +73,13 @@ public class RootScene extends Scene {
     }
     
     public void setState(GameStates state) {
-        this.state = state;
+        RootScene.state = state;
+        
+        Log.i(MainActivity.DEBUG_ID, "Selected state: " + state);
         
         restartScene.hide();
+        loaderScene.hide();
+        stopScene.hide();
         gameScene.hide();
         
         switch(state) {
@@ -86,6 +96,10 @@ public class RootScene extends Scene {
             gameManager.restart();
             gameScene.show();
             setState(GameStates.GAME_PROCESS);
+            break;
+            
+        case STOP_Q:
+            stopScene.show();
             break;
             
         case RESTART_Q:
@@ -118,7 +132,10 @@ public class RootScene extends Scene {
         case FAIL_SCENE:
             setState(GameStates.LOADER);
             break;
+            
         case GAME_PROCESS:
+            setState(GameStates.STOP_Q);
+            
             break;
             
         case LOADER:
@@ -132,6 +149,7 @@ public class RootScene extends Scene {
             break;
             
         case STOP_Q:
+            setState(GameStates.GAME_PROCESS);
             break;
             
         case WIN_SCENE:
@@ -162,6 +180,8 @@ public class RootScene extends Scene {
             break;
         case RESTART_Q:
             restartScene.onSceneTouchEvent(pSceneTouchEvent);
+        case STOP_Q:
+            stopScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
         case WIN_SCENE:
             break;

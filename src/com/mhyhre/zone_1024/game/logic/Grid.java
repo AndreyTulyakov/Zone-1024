@@ -67,12 +67,6 @@ public class Grid extends SimpleGrid {
         }
     }
 
-    private void removeTile(int column, int row, SimpleTile tile) {
-        if (inGridRange(column, row)) {
-            tiles[column][row] = null;
-        }
-    }
-
     // Adds a tile in a random free position
     public SimpleTile addRandomTile() {
         if (cellsAvailable()) {

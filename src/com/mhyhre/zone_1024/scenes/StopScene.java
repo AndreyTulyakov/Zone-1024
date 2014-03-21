@@ -6,8 +6,6 @@ import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 
-import android.util.Log;
-
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 
@@ -20,7 +18,7 @@ public class StopScene extends SimpleScene {
         
         // FIXME: re move it to R. string resources
         // Restart label
-        String strStop = "Do you want stop game?";
+        final String strStop = "Do you want stop game?";
         IFont font = MainActivity.resources.getFont("White Furore");
         Text textStop = new Text(0, 0, font, strStop, MainActivity.getVboManager());
         textStop.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());

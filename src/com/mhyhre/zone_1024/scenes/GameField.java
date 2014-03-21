@@ -11,10 +11,8 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.color.Color;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.game.logic.GameManager;
 import com.mhyhre.zone_1024.game.logic.SimpleGrid;
 import com.mhyhre.zone_1024.game.logic.SimpleTile;
-import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
 import com.mhyhre.zone_1024.utils.TileColors;
 
