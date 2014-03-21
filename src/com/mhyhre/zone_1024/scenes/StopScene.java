@@ -18,7 +18,7 @@ public class StopScene extends SimpleScene {
         
         // FIXME: re move it to R. string resources
         // Restart label
-        final String strStop = "Do you want stop game?";
+        final String strStop = "Stop game?";
         IFont font = MainActivity.resources.getFont("White Furore");
         Text textStop = new Text(0, 0, font, strStop, MainActivity.getVboManager());
         textStop.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());

@@ -51,10 +51,10 @@ public class GameScene extends SimpleScene{
         String textScores = "Restart";
 
         // Text
-        final IFont usedFont = MainActivity.resources.getFont("Furore");
+        final IFont usedFont = MainActivity.resources.getFont("White Furore");
         
-        textEntityScores = new Text(0, 0, usedFont, textScores, 24, MainActivity.Me.getVertexBufferObjectManager());
-        textEntityScores.setPosition(MainActivity.getHalfWidth(), 24);
+        textEntityScores = new Text(0, 0, usedFont, textScores, 32, MainActivity.Me.getVertexBufferObjectManager());
+        textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight() - 30);
         attachChild(textEntityScores);
     }
 
@@ -66,6 +66,7 @@ public class GameScene extends SimpleScene{
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
 
+        textEntityScores.setText("Scores: "+GameManager.getInstance().getScore());
         gameField.update(gameManager.getGrid());
         super.onManagedUpdate(pSecondsElapsed);
     }

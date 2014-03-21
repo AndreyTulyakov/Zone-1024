@@ -19,7 +19,7 @@ public class RestartScene extends SimpleScene {
         
         // FIXME: re move it to R. string resources
         // Restart label
-        String strRestart = "Do you want restart game?";
+        String strRestart = "Restart game?";
         IFont font = MainActivity.resources.getFont("White Furore");
         Text textRestart = new Text(0, 0, font, strRestart, MainActivity.getVboManager());
         textRestart.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
@@ -49,7 +49,7 @@ public class RestartScene extends SimpleScene {
 
                     Log.i(MainActivity.DEBUG_ID, "Restart? No - clicked");
                     MainActivity.vibrate(30);
-                    RootScene.Me.setState(GameStates.END);
+                    RootScene.Me.setState(GameStates.LOADER);
                 }
                 return true;
             }

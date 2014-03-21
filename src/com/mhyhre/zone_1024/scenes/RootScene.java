@@ -169,19 +169,24 @@ public class RootScene extends Scene {
 
         case LOADER:
             loaderScene.onSceneTouchEvent(pSceneTouchEvent);
+            break;
             
-        case GAME_PROCESS:
-            
+        case GAME_PROCESS:           
             moveEventDetector.onTouchEvent(pSceneTouchEvent);
             gameScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
+            
         case NEW_GAME:
             break;
+            
         case RESTART_Q:
             restartScene.onSceneTouchEvent(pSceneTouchEvent);
+            break;
+            
         case STOP_Q:
             stopScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
+            
         case WIN_SCENE:
             break;
         default:
@@ -197,10 +202,11 @@ public class RootScene extends Scene {
         switch (state) {
         
         case LOADER:
-            
+            break;
         
         case END:
             break;
+            
         case GAME_PROCESS:
             gameManager.update();
             
@@ -214,12 +220,16 @@ public class RootScene extends Scene {
                
             }
             break;
+            
         case NEW_GAME:
             break;
+            
         case RESTART_Q:
             break;
+            
         case WIN_SCENE:
             break;
+            
         default:
             break;
         }   
