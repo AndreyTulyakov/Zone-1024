@@ -144,10 +144,15 @@ public class Grid extends SimpleGrid {
         return tiles[cell.getX()][cell.getY()] == null;
     }
 
-    public void move(Direction direction) {
+    /**
+     * @return return scores in this move 
+     */
+    public int move(Direction direction) {
         
         Log.i(MainActivity.DEBUG_ID, "Grid::Move::To " + direction.name()); 
 
+        int scores = 0;
+        
         // Creating traversal path
         Pair<List<Integer>, List<Integer>> traversal = GridUtils.getTraversalList(direction, size.getWidth());
         List<Integer> traversalX = traversal.first;
@@ -185,6 +190,7 @@ public class Grid extends SimpleGrid {
                             targetTile.setWasChanged(true);
                             targetTile.bang();
                             removeTile(currentPosition);
+                            scores += targetTile.getValue();
                         }
                         somethingWasMoved = true;
                     }
@@ -196,6 +202,7 @@ public class Grid extends SimpleGrid {
             addRandomTile();
         }
         unlock();
+        return scores;
     }
 
 }

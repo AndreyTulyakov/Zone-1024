@@ -135,7 +135,6 @@ public class RootScene extends Scene {
             
         case GAME_PROCESS:
             setState(GameStates.STOP_Q);
-            
             break;
             
         case LOADER:

@@ -52,6 +52,7 @@ public class GameScene extends SimpleScene{
 
         // Text
         final IFont usedFont = MainActivity.resources.getFont("Furore");
+        
         textEntityScores = new Text(0, 0, usedFont, textScores, 24, MainActivity.Me.getVertexBufferObjectManager());
         textEntityScores.setPosition(MainActivity.getHalfWidth(), 24);
         attachChild(textEntityScores);

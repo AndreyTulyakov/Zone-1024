@@ -31,7 +31,7 @@ public class LoaderScene extends SimpleScene {
         textTitle.setPosition(MainActivity.getHalfWidth() * 1.5f, MainActivity.getHalfHeight());
         attachChild(textTitle);
         
-        Rectangle bigStartButton = new Rectangle(120, 20, 200, 40, MainActivity.getVboManager()) {
+        Rectangle bigStartButton = new Rectangle(120, 30, 200, 60, MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {

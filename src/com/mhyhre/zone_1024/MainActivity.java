@@ -34,8 +34,8 @@ public class MainActivity extends SimpleBaseGameActivity {
     public static ResourceManager resources;
     public static RootScene sceneRoot;
     
-    private static final int width = 960;
-    private static final int height = 540;
+    private static final int width = 540;
+    private static final int height = 960;
     private static float halfWidth;
     private static float halfHeight;
     
@@ -64,7 +64,7 @@ public class MainActivity extends SimpleBaseGameActivity {
         camera = new Camera(0, 0, width, height);
 
         EngineOptions mEngineOptions = new EngineOptions(
-                true, ScreenOrientation.LANDSCAPE_FIXED,
+                true, ScreenOrientation.PORTRAIT_FIXED,
                 new RatioResolutionPolicy(metrics.widthPixels,
                 metrics.heightPixels), camera);
         mEngineOptions.getAudioOptions().setNeedsSound(true);

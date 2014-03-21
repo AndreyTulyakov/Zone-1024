@@ -38,7 +38,7 @@ public class RestartScene extends SimpleScene {
                 return true;
             }
         };
-        spriteButtonYes.setPosition(MainActivity.getWidth()/4, 100);
+        spriteButtonYes.setPosition(MainActivity.getWidth()/4, MainActivity.getHeight()/4);
 
         
         // Buttons yes no
@@ -54,7 +54,7 @@ public class RestartScene extends SimpleScene {
                 return true;
             }
         };
-        spriteButtonNo.setPosition((MainActivity.getWidth()/4)*3, 100);
+        spriteButtonNo.setPosition((MainActivity.getWidth()/4)*3, MainActivity.getHeight()/4);
         
         attachChild(spriteButtonYes);
         attachChild(spriteButtonNo);

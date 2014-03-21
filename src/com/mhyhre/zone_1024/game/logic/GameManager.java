@@ -12,6 +12,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private static GameManager instance;
     private static final int START_TILES = 2;
 
+    private int score;
     private boolean pause;
     private boolean over;
     private boolean won;
@@ -40,6 +41,8 @@ public final class GameManager implements MoveEventListener, GameControllable {
         this.won = false;
         this.keepPlaying = false;
 
+        this.score = 0;
+        
         this.addStartTiles();
     }
     
@@ -87,7 +90,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
         
         if(grid.isLocked() == false) {
             grid.lock();
-            grid.move(direction);
+            score += grid.move(direction);
         }
     }
 
@@ -116,5 +119,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
         return keepPlaying;
     }
     
-    
+    public int getScore() {
+        return score;
+    }
 }
