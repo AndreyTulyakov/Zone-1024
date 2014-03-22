@@ -29,7 +29,7 @@ import android.view.KeyEvent;
 public class MainActivity extends SimpleBaseGameActivity {
 
     public static final String DEBUG_ID = "MHYHRE";
-    public static final String PREFERENCE_ID = "MY_PREF";
+    public static final String PREFERENCE_ID = "MHYHRE_ZONE1024_PREF";
     
     public static MainActivity Me;
     public static Camera camera;
@@ -43,19 +43,18 @@ public class MainActivity extends SimpleBaseGameActivity {
     
     private AssetManager assetManager;
     private Vibrator vibrator;
-    
-    private boolean vibroEnabled = true;
-    private boolean soundEnabled = true;
-    
+    private PreferenceManager preferenceManager;
 
     @Override
     public EngineOptions onCreateEngineOptions() {
-
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(40);
-
         Me = this;
         assetManager = getAssets();
+        
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        
+        preferenceManager = PreferenceManager.getInstance(this, PREFERENCE_ID);
+
+
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -122,6 +121,8 @@ public class MainActivity extends SimpleBaseGameActivity {
 
     public void onDestroy() {
 
+        preferenceManager.savePreferences();
+        
         if (BuildConfig.DEBUG)
             Log.i(DEBUG_ID, this.getClass().getSimpleName() + ".onDestroy");
         
@@ -145,24 +146,8 @@ public class MainActivity extends SimpleBaseGameActivity {
         return halfHeight;
     }
 
-    public static boolean isVibroEnabled() {
-        return Me.vibroEnabled;
-    }
-
-    public static void setVibroEnabled(boolean enabled) {
-        Me.vibroEnabled = enabled;
-    }
-
-    public static boolean isSoundEnabled() {
-        return Me.soundEnabled;
-    }
-
-    public static void setSoundEnabled(boolean enabled) {
-            Me.soundEnabled = enabled;
-    }
-
     public static void vibrate(long milliseconds) {
-        if (Me.vibroEnabled) {
+        if (PreferenceManager.isVibroEnabled()) {
             Me.vibrator.vibrate(milliseconds);
         }
     }

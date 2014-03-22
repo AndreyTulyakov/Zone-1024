@@ -73,7 +73,7 @@ public class ResourceManager {
     public void playSound(String key) {
         if (!sounds.containsKey(key))
             Log.e(MainActivity.DEBUG_ID, "ResourceManager::playSound: invalid key - " + key);
-        if (MainActivity.isSoundEnabled()) {
+        if (PreferenceManager.isSoundEnabled()) {
             sounds.get(key).play();
         }
     }
