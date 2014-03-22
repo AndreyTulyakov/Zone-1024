@@ -20,10 +20,7 @@ public class QuestionScene extends SimpleScene {
         
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
-        
-        // FIXME: re move it to R. string resources
-        // Restart label
-        
+
         IFont font = MainActivity.resources.getFont("White Furore");
         
         textQuestion = new Text(0, 0, font, "",64, MainActivity.getVboManager());
@@ -85,7 +82,6 @@ public class QuestionScene extends SimpleScene {
         
         registerTouchArea(spriteButtonYes);
         registerTouchArea(spriteButtonNo);
-
     }
     
     @Override

@@ -10,6 +10,7 @@ import java.util.Map;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.game.logic.GameManager;
 import com.mhyhre.zone_1024.touch.TouchSlidingEventDetector;
 import org.andengine.entity.scene.Scene;
@@ -22,12 +23,12 @@ public class RootScene extends Scene {
         LOADER,
         NEW_GAME,
         STOP_Q,
-        STATISTICS,
+        SCORES_VIEW,
         GAME_PROCESS,
         RESTART_Q,
         WIN_SCENE,
         FAIL_SCENE,
-        END;
+        TERMINATE;
     }
 
     public static RootScene Me;
@@ -36,6 +37,7 @@ public class RootScene extends Scene {
     private LoaderScene loaderScene;
     private GameScene gameScene;
     private QuestionScene questionScene;
+    private ScoreScene scoreScene;
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -54,6 +56,9 @@ public class RootScene extends Scene {
 
         loaderScene = new LoaderScene();
         attachChild(loaderScene);
+        
+        scoreScene = new ScoreScene();
+        attachChild(scoreScene);
         
         questionScene = new QuestionScene();
         attachChild(questionScene);
@@ -86,6 +91,10 @@ public class RootScene extends Scene {
             gameScene.show();
             break;
             
+        case SCORES_VIEW:
+            scoreScene.show();
+            break;
+            
         case NEW_GAME:
             gameManager.restart();
             gameScene.show();
@@ -101,10 +110,11 @@ public class RootScene extends Scene {
             break;
             
         case WIN_SCENE:
-            MainActivity.Me.finish();
+            
             break;
             
-        case END:
+        case TERMINATE:
+            preTerminateOperations();
             MainActivity.Me.finish();
             break;
             
@@ -114,6 +124,10 @@ public class RootScene extends Scene {
         }
     }
     
+    private void preTerminateOperations() {
+        ScoresTable.getInstance().saveScores();
+    }
+
     public static GameStates getState() {
         return state;
     }
@@ -121,8 +135,7 @@ public class RootScene extends Scene {
     public void onSceneBackPress() {
         
         switch(state) {
-        case END:
-            break;
+            
         case FAIL_SCENE:
             setState(GameStates.LOADER);
             break;
@@ -131,14 +144,15 @@ public class RootScene extends Scene {
             setState(GameStates.STOP_Q);
             break;
             
+        case SCORES_VIEW:
+            setState(GameStates.LOADER);
+            break;
+            
         case LOADER:
+            setState(GameStates.TERMINATE);
             break;
             
         case RESTART_Q:
-            break;
-            
-        case STATISTICS:
-            setState(GameStates.LOADER);
             break;
             
         case STOP_Q:
@@ -173,6 +187,10 @@ public class RootScene extends Scene {
         case NEW_GAME:
             break;
             
+        case SCORES_VIEW:
+            scoreScene.onSceneTouchEvent(pSceneTouchEvent);
+            break;
+            
         case RESTART_Q:
             questionScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
@@ -198,7 +216,7 @@ public class RootScene extends Scene {
         case LOADER:
             break;
         
-        case END:
+        case TERMINATE:
             break;
             
         case GAME_PROCESS:

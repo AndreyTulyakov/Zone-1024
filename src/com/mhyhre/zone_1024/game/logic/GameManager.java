@@ -3,6 +3,7 @@ package com.mhyhre.zone_1024.game.logic;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.MoveEventListener;
 import com.mhyhre.zone_1024.utils.Size;
@@ -18,6 +19,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private boolean won;
     private boolean keepPlaying;
     private final int winNumber = 32;//1024;
+
 
     private final Size size;
     private Grid grid;
