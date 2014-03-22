@@ -1,5 +1,8 @@
 package com.mhyhre.zone_1024.game.logic;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
@@ -14,10 +17,11 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     private int score;
     private boolean pause;
-    private boolean over;
+    private static boolean over;
     private boolean won;
-    private boolean keepPlaying;
-    private final int winNumber = 32;//1024;
+    private final int winNumber = 1024;
+    
+    Timer myTimer = new Timer();
 
 
     private final Size size;
@@ -40,8 +44,6 @@ public final class GameManager implements MoveEventListener, GameControllable {
         this.grid = new Grid(size);
         this.over = false;
         this.won = false;
-        this.keepPlaying = false;
-
         this.score = 0;
         
         this.addStartTiles();
@@ -51,28 +53,19 @@ public final class GameManager implements MoveEventListener, GameControllable {
         if(pause){
             return;
         }
-        
+
         grid.update();
         
         if(grid.hasNumber(winNumber)){
             won = true;
         }
         
-        if(grid.hasFreeCell() == false) {
-            // if grid can't move anything
-            if(true){
-                    over = true;
-            }
-        }
+
     }
 
     public void restart() {
         Log.i(MainActivity.DEBUG_ID, "GameManager: Restart!");
         this.setup();
-    }
-
-    public void keepPlaying() {
-        this.keepPlaying = true;
     }
 
     // Set up the initial tiles to start the game with
@@ -93,8 +86,16 @@ public final class GameManager implements MoveEventListener, GameControllable {
             grid.lock();
             score += grid.move(direction);
             if(grid.canMove() == false) {
-                over = true;
-                won = false;
+                grid.lock();
+                
+                myTimer.schedule(new TimerTask() { // Определяем задачу
+                    @Override
+                    public void run() {
+                        over = true;
+                        myTimer.cancel();
+                    }
+                }, 3000L, 3000L); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
+                
             }
         }
     }
@@ -117,11 +118,6 @@ public final class GameManager implements MoveEventListener, GameControllable {
     @Override
     public boolean isOver() {
         return over;
-    }
-
-    @Override
-    public boolean isKeepPlaying() {
-        return keepPlaying;
     }
     
     public int getScore() {

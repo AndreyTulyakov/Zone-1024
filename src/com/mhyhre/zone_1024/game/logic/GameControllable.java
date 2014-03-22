@@ -8,7 +8,6 @@ public interface GameControllable {
     
     public boolean isWon();
     public boolean isOver();
-    public boolean isKeepPlaying();
-    
+
     public SimpleGrid getGrid();
 }
