@@ -27,7 +27,7 @@ public class RootScene extends Scene {
         GAME_PROCESS,
         RESTART_Q,
         WIN_SCENE,
-        FAIL_SCENE,
+        GAME_OVER_SCENE,
         TERMINATE;
     }
 
@@ -38,6 +38,7 @@ public class RootScene extends Scene {
     private GameScene gameScene;
     private QuestionScene questionScene;
     private ScoreScene scoreScene;
+    private GameOverScene gameOverScene;
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -54,6 +55,9 @@ public class RootScene extends Scene {
         MainActivity.resources.loadFonts();
         MainActivity.resources.loadSounds();
 
+        gameManager = GameManager.getInstance();
+        moveEventDetector = new TouchSlidingEventDetector(gameManager); 
+        
         loaderScene = new LoaderScene();
         attachChild(loaderScene);
         
@@ -62,12 +66,12 @@ public class RootScene extends Scene {
         
         questionScene = new QuestionScene();
         attachChild(questionScene);
-
-        gameManager = GameManager.getInstance();
-        moveEventDetector = new TouchSlidingEventDetector(gameManager);
-        
+   
         gameScene = new GameScene(gameManager);
         attachChild(gameScene);
+        
+        gameOverScene = new GameOverScene();
+        attachChild(gameOverScene);
         
         setState(GameStates.LOADER);
     }
@@ -78,8 +82,11 @@ public class RootScene extends Scene {
         Log.i(MainActivity.DEBUG_ID, "Selected state: " + state);
         
         loaderScene.hide();
+        scoreScene.hide();
         questionScene.hide();
         gameScene.hide();
+        gameOverScene.hide();
+        
         
         switch(state) {
         
@@ -113,6 +120,11 @@ public class RootScene extends Scene {
             
             break;
             
+        case GAME_OVER_SCENE:
+            gameScene.show();
+            gameOverScene.show();
+            break;
+            
         case TERMINATE:
             preTerminateOperations();
             MainActivity.Me.finish();
@@ -136,8 +148,8 @@ public class RootScene extends Scene {
         
         switch(state) {
             
-        case FAIL_SCENE:
-            setState(GameStates.LOADER);
+        case GAME_OVER_SCENE:
+            setState(GameStates.RESTART_Q);
             break;
             
         case GAME_PROCESS:
@@ -179,6 +191,10 @@ public class RootScene extends Scene {
             loaderScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
+        case GAME_OVER_SCENE:
+            gameOverScene.onSceneTouchEvent(pSceneTouchEvent);
+            break;
+            
         case GAME_PROCESS:           
             moveEventDetector.onTouchEvent(pSceneTouchEvent);
             gameScene.onSceneTouchEvent(pSceneTouchEvent);
@@ -213,22 +229,12 @@ public class RootScene extends Scene {
         
         switch (state) {
         
-        case LOADER:
-            break;
-        
-        case TERMINATE:
-            break;
-            
         case GAME_PROCESS:
             gameManager.update();
+            break;
             
-            if(gameManager.isOver()) {
-                setState(GameStates.RESTART_Q);
-            }
-            
-            if(gameManager.isWon()) {
-                setState(GameStates.RESTART_Q);       
-            }
+        case GAME_OVER_SCENE:
+            gameManager.update();
             break;
             
         default:

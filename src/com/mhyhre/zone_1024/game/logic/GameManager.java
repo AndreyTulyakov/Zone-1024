@@ -6,6 +6,8 @@ import java.util.TimerTask;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.scenes.RootScene;
+import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.MoveEventListener;
 import com.mhyhre.zone_1024.utils.Size;
@@ -16,13 +18,9 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private static final int START_TILES = 2;
 
     private int score;
-    private boolean pause;
     private static boolean over;
     private boolean won;
     private final int winNumber = 1024;
-    
-    Timer myTimer = new Timer();
-
 
     private final Size size;
     private Grid grid;
@@ -50,17 +48,15 @@ public final class GameManager implements MoveEventListener, GameControllable {
     }
     
     public void update() {
-        if(pause){
-            return;
-        }
 
         grid.update();
+        if(grid.isLocked() == false) {
         
-        if(grid.hasNumber(winNumber)){
-            won = true;
+            if(grid.hasNumber(winNumber)){
+                won = true;
+            }
+        
         }
-        
-
     }
 
     public void restart() {
@@ -85,30 +81,19 @@ public final class GameManager implements MoveEventListener, GameControllable {
         if(grid.isLocked() == false) {
             grid.lock();
             score += grid.move(direction);
+            
+
             if(grid.canMove() == false) {
                 grid.lock();
-                
-                myTimer.schedule(new TimerTask() { // Определяем задачу
-                    @Override
-                    public void run() {
-                        over = true;
-                        myTimer.cancel();
-                    }
-                }, 3000L, 3000L); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
-                
+                over = true;
+                won = false;
+     
+                RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
             }
+
         }
     }
 
-    @Override
-    public void pause() {
-        pause = true;
-    }
-
-    @Override
-    public void resume() {
-        pause = false;
-    }
 
     @Override
     public boolean isWon() {
