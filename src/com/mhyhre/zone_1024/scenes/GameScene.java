@@ -6,7 +6,6 @@
 package com.mhyhre.zone_1024.scenes;
 
 import org.andengine.entity.scene.background.Background;
-import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
@@ -18,7 +17,6 @@ public class GameScene extends SimpleScene {
 
     private Background background;
     private Text textEntityScores;
-    private Sprite spriteMenu;
     private GameControllable gameManager;
     private GameField gameField;
 

@@ -35,8 +35,7 @@ public class RootScene extends Scene {
     
     private LoaderScene loaderScene;
     private GameScene gameScene;
-    private RestartScene restartScene;
-    private StopScene stopScene;
+    private QuestionScene questionScene;
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -56,18 +55,14 @@ public class RootScene extends Scene {
         loaderScene = new LoaderScene();
         attachChild(loaderScene);
         
-        stopScene = new StopScene();
-        attachChild(stopScene);
+        questionScene = new QuestionScene();
+        attachChild(questionScene);
 
         gameManager = GameManager.getInstance();
         moveEventDetector = new TouchSlidingEventDetector(gameManager);
         
         gameScene = new GameScene(gameManager);
         attachChild(gameScene);
-        
-        restartScene = new RestartScene();
-        attachChild(restartScene);
-
         
         setState(GameStates.LOADER);
     }
@@ -77,9 +72,8 @@ public class RootScene extends Scene {
         
         Log.i(MainActivity.DEBUG_ID, "Selected state: " + state);
         
-        restartScene.hide();
         loaderScene.hide();
-        stopScene.hide();
+        questionScene.hide();
         gameScene.hide();
         
         switch(state) {
@@ -99,11 +93,11 @@ public class RootScene extends Scene {
             break;
             
         case STOP_Q:
-            stopScene.show();
+            questionScene.show();
             break;
             
         case RESTART_Q:
-            restartScene.show();
+            questionScene.show();
             break;
             
         case WIN_SCENE:
@@ -180,11 +174,11 @@ public class RootScene extends Scene {
             break;
             
         case RESTART_Q:
-            restartScene.onSceneTouchEvent(pSceneTouchEvent);
+            questionScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
         case STOP_Q:
-            stopScene.onSceneTouchEvent(pSceneTouchEvent);
+            questionScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
         case WIN_SCENE:
@@ -215,19 +209,8 @@ public class RootScene extends Scene {
             }
             
             if(gameManager.isWon()) {
-                
-                    setState(GameStates.RESTART_Q);
-               
+                setState(GameStates.RESTART_Q);       
             }
-            break;
-            
-        case NEW_GAME:
-            break;
-            
-        case RESTART_Q:
-            break;
-            
-        case WIN_SCENE:
             break;
             
         default:
