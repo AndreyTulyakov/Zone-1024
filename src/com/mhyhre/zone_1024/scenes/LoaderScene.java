@@ -7,7 +7,10 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 import org.andengine.util.adt.color.Color;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
@@ -17,30 +20,37 @@ import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 
-public class LoaderScene extends SimpleScene implements TextWatcher {
+public class LoaderScene extends SimpleScene {
 
-    private EditText mEditText;
-    private String strPersonName = "unnamed";
-    private Text textPersonName;
-    
+
     public LoaderScene() {
         
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
         
-        this.mEditText = (EditText)MainActivity.Me.findViewById(R.id.textbreakexample_text);
-        this.mEditText.addTextChangedListener(this);
         
-        String strTextTitle = "ZONE-1024";
-        String strTextStart = "start";
+
         
         IFont font = MainActivity.resources.getFont("White Furore");
         IFont fontBlack = MainActivity.resources.getFont("Furore");
         
+
+        addTitle(font);
+        addStartButton(fontBlack);
+    }
+    
+    
+    
+    private void addTitle(IFont font) {
+        String strTextTitle = MainActivity.Me.getString(R.string.app_name);
         Text textTitle = new Text(0, 0, font, strTextTitle, MainActivity.getVboManager());
         textTitle.setPosition(MainActivity.getHalfWidth() * 1.5f, MainActivity.getHalfHeight());
         attachChild(textTitle);
-        
+    }
+
+
+
+    private void addStartButton(IFont font) {
         Rectangle bigStartButton = new Rectangle(120, 30, 200, 60, MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
@@ -56,40 +66,10 @@ public class LoaderScene extends SimpleScene implements TextWatcher {
         attachChild(bigStartButton);
         registerTouchArea(bigStartButton);
         
-        Text textStart = new Text(0, 0, fontBlack, strTextStart, MainActivity.getVboManager());
+        String strTextStart = MainActivity.Me.getString(R.string.start);
+        Text textStart = new Text(0, 0, font, strTextStart, MainActivity.getVboManager());
         textStart.setPosition(bigStartButton);
         attachChild(textStart);
-
-        textPersonName = new Text(0, 0, font, strPersonName, 16, MainActivity.getVboManager());
-        textPersonName.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight() - 40);
-        attachChild(textPersonName);
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        String name = s.toString();
-        
-        if(name.length() == 0) {
-            return;
-        }
-        
-        if(name.length() > ScoresTable.MAXIMAL_NAME_LENGTH) {
-            name = name.substring(0, ScoresTable.MAXIMAL_NAME_LENGTH);
-        }
-        
-        strPersonName = name;
-        textPersonName.setText(strPersonName);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        // TODO Auto-generated method stub
-        
-    }
 }
