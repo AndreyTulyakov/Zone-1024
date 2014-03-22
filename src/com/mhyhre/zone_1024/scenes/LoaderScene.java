@@ -9,8 +9,6 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 import org.andengine.util.adt.color.Color;
 
-
-import android.util.Log;
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.R;
@@ -21,16 +19,15 @@ public class LoaderScene extends SimpleScene {
 
     private static final Color blue = new Color(0.51f, 0.549f, 1.0f);
     private static final Color red = new Color(1.0f, 0.549f, 0.51f);
-    Rectangle bigStartButton;
-    Rectangle bigExitButton; 
+
     
     public LoaderScene() {
         
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
         
-        IFont font = MainActivity.resources.getFont("White Furore");
-        IFont fontBlack = MainActivity.resources.getFont("Furore");
+        IFont font = MainActivity.resources.getFont("WhiteMono32");
+        IFont fontBlack = MainActivity.resources.getFont("WhiteMono24");
         
 
         addTitle(font);
@@ -51,7 +48,7 @@ public class LoaderScene extends SimpleScene {
 
     
     private void addStartButton(IFont font) {
-        bigStartButton = new Rectangle(MainActivity.getWidth()/4, 30, 200, 60, MainActivity.getVboManager()) {
+        Rectangle bigStartButton = new Rectangle(MainActivity.getWidth()/4, 30, 200, 60, MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
@@ -64,7 +61,6 @@ public class LoaderScene extends SimpleScene {
         bigStartButton.setColor(blue);
         attachChild(bigStartButton);
         registerTouchArea(bigStartButton);
-        bigStartButton.setAlpha(0);
 
         String strTextStart = MainActivity.Me.getString(R.string.start);
         Text textStart = new Text(0, 0, font, strTextStart, MainActivity.getVboManager());
@@ -73,7 +69,7 @@ public class LoaderScene extends SimpleScene {
     }
     
     private void addExitButton(IFont font) {
-        bigExitButton = new Rectangle((MainActivity.getWidth()/4)*3, 30, 200, 60, MainActivity.getVboManager()) {
+        Rectangle bigExitButton = new Rectangle((MainActivity.getWidth()/4)*3, 30, 200, 60, MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
@@ -86,7 +82,6 @@ public class LoaderScene extends SimpleScene {
         bigExitButton.setColor(red);
         attachChild(bigExitButton);
         registerTouchArea(bigExitButton);
-        bigExitButton.setAlpha(0);
 
         String strTextStart = MainActivity.Me.getString(R.string.exit);
         Text textStart = new Text(0, 0, font, strTextStart, MainActivity.getVboManager());
@@ -143,6 +138,7 @@ public class LoaderScene extends SimpleScene {
                 }
                 return true;
             }
+            
         };
         mSpriteVibro.setPosition((MainActivity.getWidth()/8)*7, MainActivity.getHeight() - 40);
         attachChild(mSpriteVibro);
@@ -159,11 +155,7 @@ public class LoaderScene extends SimpleScene {
     public void show() {
         AlphaModifier alphaMode = new AlphaModifier(2, 0.0f, 1.0f);
         alphaMode.setAutoUnregisterWhenFinished(true);
-        
-        bigStartButton.registerEntityModifier(alphaMode);
-        bigExitButton.registerEntityModifier(alphaMode);
-        
-
+        this.registerEntityModifier(alphaMode);
         super.show();
     }
 }

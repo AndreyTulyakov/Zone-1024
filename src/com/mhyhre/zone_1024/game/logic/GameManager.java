@@ -3,7 +3,6 @@ package com.mhyhre.zone_1024.game.logic;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.MoveEventListener;
 import com.mhyhre.zone_1024.utils.Size;
@@ -93,6 +92,10 @@ public final class GameManager implements MoveEventListener, GameControllable {
         if(grid.isLocked() == false) {
             grid.lock();
             score += grid.move(direction);
+            if(grid.canMove() == false) {
+                over = true;
+                won = false;
+            }
         }
     }
 

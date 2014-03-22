@@ -19,9 +19,8 @@ import com.mhyhre.zone_1024.utils.TileColors;
 
 public class GameField extends SimpleScene {
     
-    private final String cellsRegionName = "EquipmentCell";
     private final ITextureRegion cellRegion;
-    private final int BETWEEN_CELLS_SIZE = 4;
+    private final int BETWEEN_CELLS_SIZE = 2;
     private final Size cellsOffset;
 
     private Rectangle fieldRect;
@@ -39,14 +38,13 @@ public class GameField extends SimpleScene {
         this.size = size;
         tileColors = TileColors.getInstance();
         
-        cellRegion = MainActivity.resources.getTextureRegion(cellsRegionName);
+        cellRegion = MainActivity.resources.getTextureRegion("Cell");
         cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
         
         // Generate background rectangle
-        int backgroundSizeX = ((int) cellRegion.getWidth()+BETWEEN_CELLS_SIZE) * size.getWidth() - BETWEEN_CELLS_SIZE/2;
-        int backgroundSizeY = ((int) cellRegion.getHeight()+BETWEEN_CELLS_SIZE) * size.getHeight() - BETWEEN_CELLS_SIZE/2;
-        fieldRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), backgroundSizeX, backgroundSizeY, MainActivity.getVboManager());
-        fieldRect.setColor(0.3f, 0.3f, 0.3f);
+        fieldRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), 
+                MainActivity.getWidth(), MainActivity.getWidth(), MainActivity.getVboManager());
+        fieldRect.setColor(0.6f, 0.6f, 0.6f);
         attachChild(fieldRect);
 
         createTilesGraphics();
@@ -65,11 +63,13 @@ public class GameField extends SimpleScene {
         int textCount = size.getWidth() * size.getHeight();
         cellsTextEntityList = new ArrayList<Text>(textCount);
 
-        IFont textFont = MainActivity.resources.getFont("White Furore");
+        IFont textFont = MainActivity.resources.getFont("WhiteMono24");
+
         for (int i = 0; i < textCount; i++) {
             Text text = new Text(0, 0, textFont, "0", 8, MainActivity.getVboManager());
             attachChild(text);
             text.setVisible(false);
+            text.setColor(0,0,0);
             cellsTextEntityList.add(text);
         }
 
@@ -99,8 +99,8 @@ public class GameField extends SimpleScene {
         
         Color cellColor = tileColors.getColorByCellValue(value);
 
-        float cellX = x * cellsOffset.getWidth() + BETWEEN_CELLS_SIZE;
-        float cellY = y * cellsOffset.getHeight() + BETWEEN_CELLS_SIZE;
+        float cellX = (x * (cellsOffset.getWidth()+BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
+        float cellY = (y * (cellsOffset.getHeight()+BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
         
         // Draw cells texture
         tilesSpriteBatch.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(), cellColor.getBlue(), 1);

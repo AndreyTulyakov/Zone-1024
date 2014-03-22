@@ -21,7 +21,7 @@ public class ScoreScene extends SimpleScene {
         
         scoresTable = ScoresTable.getInstance();
         
-        IFont font = MainActivity.resources.getFont("White Furore");
+        IFont font = MainActivity.resources.getFont("WhiteMono16");
         
         // Configure text labels
         texts = new ArrayList<Text>(ScoresTable.MAXIMAL_COUNT_OF_RECORDS);
@@ -37,9 +37,9 @@ public class ScoreScene extends SimpleScene {
         hideAllTexts();
 
         Map<String, Integer> scores = scoresTable.getScores();
-        IFont font = MainActivity.resources.getFont("White Furore");
+
         
-        float recordHeight = font.getLineHeight()* 3;
+        float recordHeight = 40;
         float tableHeight = recordHeight * scores.size();
         float startHeight = MainActivity.getHalfHeight() - tableHeight/2;
         

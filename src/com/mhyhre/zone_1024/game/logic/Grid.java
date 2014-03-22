@@ -17,12 +17,10 @@ public class Grid extends SimpleGrid {
     private Random random;
     private boolean locked;
 
-
     public Grid(Size size) {
         super(size);
         random = new Random();
     }
-
 
     public Position randomAvaibleCell() {
         List<Position> freeCells = availableCells();
@@ -77,7 +75,7 @@ public class Grid extends SimpleGrid {
             tile.bang();
             return tile;
         }
-        
+
         return null;
     }
 
@@ -94,7 +92,7 @@ public class Grid extends SimpleGrid {
     }
 
     public void update() {
-    
+
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
                 if (tiles[x][y] != null) {
@@ -112,25 +110,24 @@ public class Grid extends SimpleGrid {
         do {
             previous = last.clone();
             last.set(previous.getX() + vector.getVectorX(), previous.getY() + vector.getVectorY());
-            
-            if(inGridRange(last) == false) {
+
+            if (inGridRange(last) == false) {
                 return previous;
             }
-            
-            if(isBusyCell(last)) {
-                if(getTile(cell).getValue() == getTile(last).getValue() && getTile(last).isWasChanged() == false) {
+
+            if (isBusyCell(last)) {
+                if (getTile(cell).getValue() == getTile(last).getValue() && getTile(last).isWasChanged() == false) {
                     return last;
                 } else {
                     return previous;
                 }
             }
-            
+
         } while (true);
     }
-    
 
     public void resetTilesMovingInfo() {
-        
+
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
                 if (tiles[x][y] != null) {
@@ -145,14 +142,14 @@ public class Grid extends SimpleGrid {
     }
 
     /**
-     * @return return scores in this move 
+     * @return return scores in this move
      */
     public int move(Direction direction) {
-        
-        Log.i(MainActivity.DEBUG_ID, "Grid::Move::To " + direction.name()); 
+
+        Log.i(MainActivity.DEBUG_ID, "Grid::Move::To " + direction.name());
 
         int scores = 0;
-        
+
         // Creating traversal path
         Pair<List<Integer>, List<Integer>> traversal = GridUtils.getTraversalList(direction, size.getWidth());
         List<Integer> traversalX = traversal.first;
@@ -160,13 +157,13 @@ public class Grid extends SimpleGrid {
 
         resetTilesMovingInfo();
         Position currentPosition = new Position(0, 0);
-        
+
         boolean somethingWasMoved = false;
 
         // Creating loop by traversals
         for (Integer x : traversalX) {
             for (Integer y : traversalY) {
-                
+
                 SimpleTile tile = getTile(x, y);
 
                 if (tile != null) {
@@ -174,19 +171,18 @@ public class Grid extends SimpleGrid {
                     Position targetPosition = findTargetForTile(currentPosition, direction);
 
                     if (currentPosition.equals(targetPosition) == true) {
-                        Log.i(MainActivity.DEBUG_ID, "Grid::Move::Position"
-                                    + currentPosition.toString() + " Cant move to " + direction.name());
+                        Log.i(MainActivity.DEBUG_ID, "Grid::Move::Position" + currentPosition.toString() + " Cant move to " + direction.name());
                         continue;
                     } else {
-                        
+
                         SimpleTile targetTile = getTile(targetPosition);
-                        
-                        if(targetTile == null) {
+
+                        if (targetTile == null) {
                             tile.setPosition(targetPosition.getX(), targetPosition.getY());
                             insertTile(targetPosition.getX(), targetPosition.getY(), tile);
                             removeTile(currentPosition);
                         } else {
-                            targetTile.setValue(targetTile.getValue()*2);
+                            targetTile.setValue(targetTile.getValue() * 2);
                             targetTile.setWasChanged(true);
                             targetTile.bang();
                             removeTile(currentPosition);
@@ -197,12 +193,65 @@ public class Grid extends SimpleGrid {
                 }
             }
         }
-        
-        if(somethingWasMoved) {
+
+        if (somethingWasMoved) {
             addRandomTile();
         }
+        
+        if (canMove() == false) {
+            
+        }
+        
         unlock();
         return scores;
+    }
+
+    public boolean canMove() {
+
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
+                if (tiles[x][y] != null) {
+                    if (hasNeighborWithEqualValue(x, y)) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Need correct positions
+    public boolean hasNeighborWithEqualValue(int x, int y) {
+        SimpleTile tile = getTile(x, y);
+        SimpleTile left = getTile(x - 1, y);
+        SimpleTile right = getTile(x + 1, y);
+        SimpleTile down = getTile(x, y - 1);
+        SimpleTile top = getTile(x, y + 1);
+
+        if (left != null) {
+            if (tile.getValue() == left.getValue()) {
+                return true;
+            }
+        }
+        if (right != null) {
+            if (tile.getValue() == right.getValue()) {
+                return true;
+            }
+        }
+        if (down != null) {
+            if (tile.getValue() == down.getValue()) {
+                return true;
+            }
+        }
+        if (top != null) {
+            if (tile.getValue() == top.getValue()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

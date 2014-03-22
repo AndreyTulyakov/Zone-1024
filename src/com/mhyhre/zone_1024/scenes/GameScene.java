@@ -32,7 +32,7 @@ public class GameScene extends SimpleScene {
         attachChild(gameField);
 
         // Text
-        final IFont usedFont = MainActivity.resources.getFont("White Furore");
+        final IFont usedFont = MainActivity.resources.getFont("WhiteMono24");
 
         textEntityScores = new Text(0, 0, usedFont, "", 32, MainActivity.Me.getVertexBufferObjectManager());
         textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight() - 30);
