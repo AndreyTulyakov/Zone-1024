@@ -11,22 +11,14 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
-import org.andengine.util.adt.color.Color;
-
-import android.hardware.SensorEvent;
-import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
-import com.mhyhre.zone_1024.utils.AccelerometrListener;
 
 
-public class LoaderScene extends SimpleScene implements AccelerometrListener {
+public class LoaderScene extends SimpleScene{
 
-    private static final float WAKE_UP_TIME = 2;
-    private static final float ACCELEROMETR_SENSITIVITY = 1.0f;
     /*
     private static final Color blue = new Color(0.51f, 0.549f, 1.0f);
     private static final Color red = new Color(1.0f, 0.549f, 0.51f);
@@ -37,8 +29,7 @@ public class LoaderScene extends SimpleScene implements AccelerometrListener {
     private Text textTitle;
     private Text textPressToStart;
     private float pressAlphaSum;
-    private float wakeUpCounter;
-    private float elemetsAlpha;
+
     
     public LoaderScene() {
         
@@ -47,7 +38,7 @@ public class LoaderScene extends SimpleScene implements AccelerometrListener {
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
         
-        IFont font32 = MainActivity.resources.getFont("WhiteMono32");
+        IFont font32 = MainActivity.resources.getFont("WhiteMono48");
         IFont font16 = MainActivity.resources.getFont("WhiteMono16");
         
 
@@ -64,7 +55,7 @@ public class LoaderScene extends SimpleScene implements AccelerometrListener {
     private void addTitle(IFont font) {
         String strTextTitle = MainActivity.Me.getString(R.string.app_name);
         textTitle = new Text(0, 0, font, strTextTitle, MainActivity.getVboManager());
-        textTitle.setPosition(MainActivity.getHalfWidth() * 1.5f, MainActivity.getHalfHeight());
+        textTitle.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         attachChild(textTitle);
     }
 
@@ -198,36 +189,23 @@ public class LoaderScene extends SimpleScene implements AccelerometrListener {
     
     @Override
     public void show() {
-        wakeUp();
-        AlphaModifier alphaMode = new AlphaModifier(1.5f, 0.0f, 1.0f);
+        
+        AlphaModifier alphaMode = new AlphaModifier(2f, 0.0f, 1.0f);
         alphaMode.setAutoUnregisterWhenFinished(true);
         textTitle.setAlpha(0);
         textTitle.registerEntityModifier(alphaMode);
+        
+        AlphaModifier alphaMode2 = new AlphaModifier(3f, 0.0f, 0.8f);
+        alphaMode2.setAutoUnregisterWhenFinished(true);
+        
+        for(Entity entity: slowShowList) {
+            entity.setAlpha(0);
+            entity.registerEntityModifier(alphaMode2);
+        }
+        
         super.show();
     }
 
-    private static float lastAccelerometrSum = 0;
-    @Override
-    public void onAccelerometerEvent(SensorEvent event) {
-        float[] values = event.values;
-        
-        float sum = (Math.abs(values[0]) +  Math.abs(values[1]) + Math.abs(values[2]));
-        Log.i(MainActivity.DEBUG_ID, "Accelerometr sum:" + sum);
-        if(Math.abs(sum-lastAccelerometrSum) > ACCELEROMETR_SENSITIVITY) {
-            wakeUp();
-        }
-        lastAccelerometrSum = sum;
-    }
-    
-    public void wakeUp() {
-        wakeUpCounter = WAKE_UP_TIME;
-        elemetsAlpha = 1.0f;
-        for(Entity entity: slowShowList) {
-            entity.setAlpha(elemetsAlpha);
-        }
-
-    }
-    
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
 
@@ -236,22 +214,7 @@ public class LoaderScene extends SimpleScene implements AccelerometrListener {
             pressAlphaSum = 0;
         }
         textPressToStart.setAlpha((float)Math.sin(pressAlphaSum));
-        
-        if(wakeUpCounter <= 0) {
-            wakeUpCounter = 0;
-            
-            if(elemetsAlpha > 0.0f) {
-                for(Entity entity: slowShowList) {
-                    entity.setAlpha(elemetsAlpha);
-                }
-                elemetsAlpha -= 0.005f;
-            } else {
-                elemetsAlpha = 0;
-            }
-        } else {
-            wakeUpCounter -= pSecondsElapsed;
-        }
-            
+  
         super.onManagedUpdate(pSecondsElapsed);
     }
 }

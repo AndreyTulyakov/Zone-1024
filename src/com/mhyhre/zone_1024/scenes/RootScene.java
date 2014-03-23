@@ -7,10 +7,6 @@ package com.mhyhre.zone_1024.scenes;
 
 import java.util.Map;
 
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
@@ -20,7 +16,7 @@ import com.mhyhre.zone_1024.touch.TouchSlidingEventDetector;
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;
 
-public class RootScene extends Scene implements SensorEventListener {
+public class RootScene extends Scene {
     
     public enum GameStates {
         // Q - Question
@@ -262,33 +258,6 @@ public class RootScene extends Scene implements SensorEventListener {
             break;
         }   
         super.onManagedUpdate(pSecondsElapsed);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-        {
-            switch (state) {
-            
-            case GAME_PROCESS:
-
-                break;
-                
-            case LOADER:
-                loaderScene.onAccelerometerEvent(event);
-                break;
-                
-            default:
-                break;
-            }   
-        }
     }
 
 }

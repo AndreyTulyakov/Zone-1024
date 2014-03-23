@@ -5,8 +5,6 @@
 
 package com.mhyhre.zone_1024;
 
-import java.util.List;
-
 import org.andengine.BuildConfig;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
@@ -19,14 +17,8 @@ import org.andengine.ui.activity.SimpleBaseGameActivity;
 
 import com.mhyhre.zone_1024.scenes.RootScene;
 
-import android.content.Context;
 import android.content.res.AssetManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Vibrator;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,19 +42,14 @@ public class MainActivity extends SimpleBaseGameActivity {
     private AssetManager assetManager;
     private Vibrator vibrator;
     private PreferenceManager preferenceManager;
-    private SensorManager sensorManager;
-    private Sensor mAccelerometerSensor;
     
     @Override
     public EngineOptions onCreateEngineOptions() {
         Me = this;
         assetManager = getAssets();
         
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);      
         preferenceManager = PreferenceManager.getInstance(this, PREFERENCE_ID);
-        
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
 
         DisplayMetrics metrics = new DisplayMetrics();
@@ -100,25 +87,11 @@ public class MainActivity extends SimpleBaseGameActivity {
         this.mEngine.registerUpdateHandler(new FPSLogger());
 
         resources = new ResourceManager();
-
         sceneRoot = new RootScene();
-        findAccelerometr();
-        registerToAccelerometrEvents(sceneRoot);
-        
+
         return sceneRoot;
     }
     
-    @Override
-    public synchronized void onPauseGame() {
-        unregisterToAccelerometrEvents(sceneRoot);
-        super.onPauseGame();
-    }
-    
-    @Override
-    public synchronized void onResumeGame() {
-        registerToAccelerometrEvents(sceneRoot);
-        super.onResumeGame();
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -130,36 +103,6 @@ public class MainActivity extends SimpleBaseGameActivity {
         return super.onKeyDown(keyCode, event);
     }
     
-    private void findAccelerometr() {
-        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-        if(sensors.size() > 0)
-        {
-            for (Sensor sensor : sensors) {
-                switch(sensor.getType())
-                {
-                case Sensor.TYPE_ACCELEROMETER:
-                    if(mAccelerometerSensor == null) {
-                        mAccelerometerSensor = sensor;
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-    }
-        
-    private void registerToAccelerometrEvents(SensorEventListener listener) {
-        if(mAccelerometerSensor != null) {
-            sensorManager.registerListener(listener, mAccelerometerSensor, SensorManager.SENSOR_DELAY_UI);
-        }
-    }
-    
-    private void unregisterToAccelerometrEvents(SensorEventListener listener) {
-        if(mAccelerometerSensor != null) {
-            sensorManager.unregisterListener(listener);
-        }
-    }
 
     @Override
     public void onBackPressed() {
