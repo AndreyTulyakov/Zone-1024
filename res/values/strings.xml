@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Zone-1024</string>
-    <string name="scores">SCORES:</string>
+    <string name="scores">SCORES: </string>
     <string name="q_stop_game">Stop game?</string>
     <string name="q_restart_game">Restart game?</string>
     <string name="q_keep_playing">Keep playing?!</string>  
