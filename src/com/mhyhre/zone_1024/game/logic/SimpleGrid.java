@@ -43,12 +43,12 @@ public class SimpleGrid {
         return allTiles;
     }
     
-    public boolean hasNumber(int number) {
+    public boolean hasNumberOrMore(int number) {
         for(int x = 0; x < size.getWidth(); x++) {
             for(int y = 0; y < size.getHeight(); y++) {
                 SimpleTile tile = tiles[x][y];
                 if(tile != null) {
-                    if(tile.getValue() == number) {
+                    if(tile.getValue() >= number) {
                         return true;
                     }
                 }
@@ -67,6 +67,19 @@ public class SimpleGrid {
             }
         }
         return false;
+    }
+    
+    public int calculateTotalValues() {
+        int scores = 0;
+        for(int x = 0; x < size.getWidth(); x++) {
+            for(int y = 0; y < size.getHeight(); y++) {
+                SimpleTile tile = tiles[x][y];
+                if(tile != null) {
+                    scores += tile.value;
+                }
+            }
+        }
+        return scores;
     }
     
     public boolean isBusyCell(Position cell) {

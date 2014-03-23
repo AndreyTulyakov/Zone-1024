@@ -134,7 +134,7 @@ public class ResourceManager {
         Font mFont;
         
         final ITexture TextureFontPixelWhite48 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite48, MainActivity.Me.getAssets(), "jupiterc.ttf", 72, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite48, MainActivity.Me.getAssets(), "jupiterc.ttf", 80, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono48", mFont);

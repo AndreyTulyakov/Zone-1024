@@ -103,7 +103,10 @@ public class GameField extends SimpleScene {
         float cellY = (y * (cellsOffset.getHeight()+BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
         
         // Draw cells texture
-        tilesSpriteBatch.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(), cellColor.getBlue(), 1);
+        float cAll = (cellColor.getRed()+ cellColor.getGreen()+ cellColor.getBlue())/3;
+        tilesSpriteBatch.draw(cellRegion, cellX, cellY, 
+                cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom,
+                cAll, cAll, cAll, 1);
      
         // Draw cells text
         Text cellText = cellsTextEntityList.get(counter);

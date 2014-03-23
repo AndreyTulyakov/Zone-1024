@@ -15,6 +15,7 @@ import org.andengine.opengl.font.IFont;
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
+import com.mhyhre.zone_1024.utils.LoaderBackground;
 
 
 public class LoaderScene extends SimpleScene{
@@ -30,6 +31,7 @@ public class LoaderScene extends SimpleScene{
     private Text textPressToStart;
     private float pressAlphaSum;
 
+    private LoaderBackground loaderBackground;
     
     public LoaderScene() {
         
@@ -41,7 +43,8 @@ public class LoaderScene extends SimpleScene{
         IFont font32 = MainActivity.resources.getFont("WhiteMono48");
         IFont font16 = MainActivity.resources.getFont("WhiteMono16");
         
-
+        loaderBackground = new LoaderBackground(MainActivity.getHalfWidth(), 0);
+        attachChild(loaderBackground);
 
         addStartButton(font16);
         addExitButton();
@@ -202,6 +205,8 @@ public class LoaderScene extends SimpleScene{
             entity.setAlpha(0);
             entity.registerEntityModifier(alphaMode2);
         }
+        // For blink synchronization
+        pressAlphaSum = 0;
         
         super.show();
     }

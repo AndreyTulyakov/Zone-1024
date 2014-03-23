@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Zone-1024</string>
+    <string name="scores">SCORES:</string>
+    <string name="q_stop_game">Stop game?</string>
+    <string name="q_restart_game">Restart game?</string>
+    <string name="q_keep_playing">Keep playing?!</string>  
+    <string name="start">Start</string>
+    <string name="exit">Terminate</string>
+    <string name="game_over">Game over.</string>
+    <string name="press_to_start">press to start</string>
+    <string name="won">Congratulations!\nYou won!</string>
+</resources>

@@ -32,17 +32,13 @@ public class GameScene extends SimpleScene {
         attachChild(gameField);
 
         // Text
-        final IFont usedFont = MainActivity.resources.getFont("WhiteMono24");
+        final IFont font = MainActivity.resources.getFont("WhiteMono32");
 
-        textEntityScores = new Text(0, 0, usedFont, "", 32, MainActivity.Me.getVertexBufferObjectManager());
-        textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight() - 30);
+        textEntityScores = new Text(0, 0, font, "", 32, MainActivity.Me.getVertexBufferObjectManager());
+        textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight() - 40);
         attachChild(textEntityScores);
     }
 
-    @Override
-    public boolean onSceneTouchEvent(final TouchEvent pSceneTouchEvent) {
-        return super.onSceneTouchEvent(pSceneTouchEvent);
-    }
 
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {

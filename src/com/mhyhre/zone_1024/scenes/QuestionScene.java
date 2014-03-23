@@ -9,12 +9,14 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.logic.GameManager;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 
 public class QuestionScene extends SimpleScene {
 
     private final String strStop = MainActivity.Me.getString(R.string.q_stop_game);
     private final String strRestart = MainActivity.Me.getString(R.string.q_restart_game);
+    private final String strKeepPlaying = MainActivity.Me.getString(R.string.q_keep_playing);
     private Text textQuestion;
     
     public QuestionScene() {
@@ -40,6 +42,8 @@ public class QuestionScene extends SimpleScene {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
 
                     MainActivity.vibrate(30);
+ 
+                    // Clicked YES!
                     
                     switch(RootScene.getState()) {
                     case RESTART_Q:
@@ -48,6 +52,11 @@ public class QuestionScene extends SimpleScene {
                         
                     case STOP_Q:
                         RootScene.Me.setState(GameStates.LOADER);
+                        break;
+                        
+                    case KEEP_PLAYING_Q:
+                        RootScene.Me.setState(GameStates.GAME_PROCESS);
+                        GameManager.getInstance().setKeepPlaying();
                         break;
                         
                     default:
@@ -71,6 +80,8 @@ public class QuestionScene extends SimpleScene {
 
                     MainActivity.vibrate(30);
                     
+                    // Clicked NO!
+                    
                     switch(RootScene.getState()) {
                     case RESTART_Q:
                         RootScene.Me.setState(GameStates.LOADER);
@@ -78,6 +89,10 @@ public class QuestionScene extends SimpleScene {
                         
                     case STOP_Q:
                         RootScene.Me.setState(GameStates.GAME_PROCESS);
+                        break;
+                        
+                    case KEEP_PLAYING_Q:
+                        RootScene.Me.setState(GameStates.ABOUT);
                         break;
                         
                     default:
@@ -103,6 +118,10 @@ public class QuestionScene extends SimpleScene {
             
         case STOP_Q:
             textQuestion.setText(strStop);
+            break;
+            
+        case KEEP_PLAYING_Q:
+            textQuestion.setText(strKeepPlaying);
             break;
             
         default:

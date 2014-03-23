@@ -1,8 +1,5 @@
 package com.mhyhre.zone_1024.game.logic;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
@@ -18,10 +15,8 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private static final int START_TILES = 2;
 
     private int score;
-    private static boolean over;
-    private boolean won;
     private final int winNumber = 1024;
-
+    private boolean keepPlaying = false;
     private final Size size;
     private Grid grid;
     
@@ -40,12 +35,10 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private void setup() {
         Log.i(MainActivity.DEBUG_ID, "GameManager: Setup");
         this.grid = new Grid(size);
-        this.won = false;
         this.score = 0;
+        this.keepPlaying = false;
         
-        over = false;
-        
-        grid.testInit();
+        //grid.testInit();
 
         
         this.addStartTiles();
@@ -56,10 +49,17 @@ public final class GameManager implements MoveEventListener, GameControllable {
         grid.update();
         if(grid.isLocked() == false) {
         
-            if(grid.hasNumber(winNumber)){
-                won = true;
+            if(grid.hasNumberOrMore(winNumber)){
+                if(keepPlaying == false) {
+                    grid.lock();
+                    RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
+                }
+                
             }
-        
+        } else {
+            if(keepPlaying == true) {
+                grid.unlock();
+            }
         }
     }
 
@@ -84,32 +84,23 @@ public final class GameManager implements MoveEventListener, GameControllable {
         
         if(grid.isLocked() == false) {
             grid.lock();
-            score += grid.move(direction);
-            
+            grid.move(direction);
+            score = grid.calculateTotalValues();
 
             if(grid.canMove() == false) {
                 grid.lock();
-                over = true;
-                won = false;
-     
+                keepPlaying = false;
                 RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
             }
 
         }
     }
-
-
-    @Override
-    public boolean isWon() {
-        return won;
-    }
-
-    @Override
-    public boolean isOver() {
-        return over;
-    }
     
     public int getScore() {
         return score;
+    }
+    
+    public void setKeepPlaying() {
+        keepPlaying = true;
     }
 }

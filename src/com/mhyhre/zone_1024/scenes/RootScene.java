@@ -27,8 +27,9 @@ public class RootScene extends Scene {
         SCORES_VIEW,
         GAME_PROCESS,
         RESTART_Q,
-        WIN_SCENE,
+        GAME_WIN_SCENE,
         GAME_OVER_SCENE,
+        KEEP_PLAYING_Q,
         TERMINATE;
     }
 
@@ -41,6 +42,7 @@ public class RootScene extends Scene {
     private ScoreScene scoreScene;
     private GameOverScene gameOverScene;
     private AboutScene aboutScene;
+    private GameWinScene gameWinScene;
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -68,7 +70,7 @@ public class RootScene extends Scene {
         
         scoreScene = new ScoreScene();
         attachChild(scoreScene);
-        
+
         questionScene = new QuestionScene();
         attachChild(questionScene);
    
@@ -77,6 +79,9 @@ public class RootScene extends Scene {
         
         gameOverScene = new GameOverScene();
         attachChild(gameOverScene);
+        
+        gameWinScene = new GameWinScene();
+        attachChild(gameWinScene);
         
         setState(GameStates.LOADER);
     }
@@ -91,7 +96,9 @@ public class RootScene extends Scene {
         questionScene.hide();
         gameScene.hide();
         gameOverScene.hide();
+        gameWinScene.hide();
         aboutScene.hide();
+        
         
         switch(state) {
         
@@ -117,6 +124,10 @@ public class RootScene extends Scene {
             setState(GameStates.GAME_PROCESS);
             break;
             
+        case KEEP_PLAYING_Q:
+            questionScene.show();
+            break;
+            
         case STOP_Q:
             questionScene.show();
             break;
@@ -125,8 +136,9 @@ public class RootScene extends Scene {
             questionScene.show();
             break;
             
-        case WIN_SCENE:
-            
+        case GAME_WIN_SCENE:
+            gameScene.show();
+            gameWinScene.show();
             break;
             
         case GAME_OVER_SCENE:
@@ -184,8 +196,12 @@ public class RootScene extends Scene {
             setState(GameStates.GAME_PROCESS);
             break;
             
-        case WIN_SCENE:
-            setState(GameStates.LOADER);
+        case KEEP_PLAYING_Q:
+            setState(GameStates.GAME_PROCESS);
+            break;
+            
+        case GAME_WIN_SCENE:
+            setState(GameStates.KEEP_PLAYING_Q);
             break;
             
         default:
@@ -224,6 +240,10 @@ public class RootScene extends Scene {
             scoreScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
+        case KEEP_PLAYING_Q:
+            questionScene.onSceneTouchEvent(pSceneTouchEvent);
+            break;
+            
         case RESTART_Q:
             questionScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
@@ -232,7 +252,8 @@ public class RootScene extends Scene {
             questionScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
-        case WIN_SCENE:
+        case GAME_WIN_SCENE:
+            gameWinScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
         default:
             break;
@@ -251,6 +272,10 @@ public class RootScene extends Scene {
             break;
             
         case GAME_OVER_SCENE:
+            gameManager.update();
+            break;
+            
+        case GAME_WIN_SCENE:
             gameManager.update();
             break;
             

@@ -15,7 +15,7 @@ public class SimpleTile {
     protected boolean wasChanged;
 
 
-    protected SimpleTile(int x, int y, int value) {
+    public SimpleTile(int x, int y, int value) {
         this.x = x;
         this.y = y;
         this.value = value;

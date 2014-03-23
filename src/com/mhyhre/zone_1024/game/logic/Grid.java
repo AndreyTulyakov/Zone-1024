@@ -255,15 +255,22 @@ public class Grid extends SimpleGrid {
     }
 
     public void testInit() {
+       /*
+        
         int value = 2;
-        for (int x = 0; x < size.getWidth()-1; x++) {
+        for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
                 
                 tiles[x][y] = new SimpleTile(x, y, value);
-                value *= 2;
+                value = 2*(x*y)+2;
             }
         }
         
+        */        
+        tiles[0][0] = new SimpleTile(0, 0, 512);
+        tiles[0][1] = new SimpleTile(0, 1, 512);
     }
+
+
 
 }
