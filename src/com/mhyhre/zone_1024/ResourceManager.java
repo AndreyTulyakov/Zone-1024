@@ -94,7 +94,8 @@ public class ResourceManager {
         regions.put("Yes", TextureRegionFactory.extractFromTexture(atlas, 0, 0, 80, 80, false));
         regions.put("No", TextureRegionFactory.extractFromTexture(atlas, 80, 0, 80, 80, false));
         regions.put("Cell", TextureRegionFactory.extractFromTexture(atlas, 180, 0, 130, 130, false));        
-        
+        regions.put("QuestionIcon", TextureRegionFactory.extractFromTexture(atlas, 0, 160, 80, 80, false));        
+                
         region = TextureRegionFactory.extractFromTexture(atlas, 0, 80, 80, 80, false);
         regions.put("ButtonVibration", region);
 
@@ -132,24 +133,34 @@ public class ResourceManager {
         FontFactory.setAssetBasePath("font/");
         Font mFont;
 
-        final ITexture TextureFontPixelWhite = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+        final ITexture TextureFontPixelWhite32 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
 
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite, MainActivity.Me.getAssets(), "PTM55F.ttf", 48, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite32, MainActivity.Me.getAssets(), "8bitlimo.ttf", 56, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono32", mFont);
 
         final ITexture TextureFontPixelWhite24 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
 
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "PTM55F.ttf", 36, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "8bitlimo.ttf", 36, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono24", mFont);
+        
+        final ITexture TextureFontPixelWhite16 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
 
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "PTM55F.ttf", 24, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite16, MainActivity.Me.getAssets(), "8bitlimo.ttf", 32, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono16", mFont);
+        
+        
+        final ITexture TextureFontPixelWhite24Filled = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24Filled, MainActivity.Me.getAssets(), "PTM55F.ttf", 36, true,
+                Color.WHITE);
+        mFont.load();
+        fonts.put("WhiteMono24FILLED", mFont);
 
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadFonts: OK");
     }

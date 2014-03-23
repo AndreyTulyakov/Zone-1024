@@ -40,9 +40,13 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private void setup() {
         Log.i(MainActivity.DEBUG_ID, "GameManager: Setup");
         this.grid = new Grid(size);
-        this.over = false;
         this.won = false;
         this.score = 0;
+        
+        over = false;
+        
+        grid.testInit();
+
         
         this.addStartTiles();
     }

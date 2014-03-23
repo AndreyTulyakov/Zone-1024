@@ -7,6 +7,10 @@ package com.mhyhre.zone_1024.scenes;
 
 import java.util.Map;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
@@ -16,11 +20,12 @@ import com.mhyhre.zone_1024.touch.TouchSlidingEventDetector;
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;
 
-public class RootScene extends Scene {
+public class RootScene extends Scene implements SensorEventListener {
     
     public enum GameStates {
         // Q - Question
         LOADER,
+        ABOUT,
         NEW_GAME,
         STOP_Q,
         SCORES_VIEW,
@@ -39,6 +44,7 @@ public class RootScene extends Scene {
     private QuestionScene questionScene;
     private ScoreScene scoreScene;
     private GameOverScene gameOverScene;
+    private AboutScene aboutScene;
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -60,6 +66,9 @@ public class RootScene extends Scene {
         
         loaderScene = new LoaderScene();
         attachChild(loaderScene);
+        
+        aboutScene = new AboutScene();
+        attachChild(aboutScene);
         
         scoreScene = new ScoreScene();
         attachChild(scoreScene);
@@ -86,12 +95,16 @@ public class RootScene extends Scene {
         questionScene.hide();
         gameScene.hide();
         gameOverScene.hide();
-        
+        aboutScene.hide();
         
         switch(state) {
         
         case LOADER:
             loaderScene.show();
+            break;
+            
+        case ABOUT:
+            aboutScene.show();
             break;
             
         case GAME_PROCESS:
@@ -152,6 +165,10 @@ public class RootScene extends Scene {
             setState(GameStates.RESTART_Q);
             break;
             
+        case ABOUT:
+            setState(GameStates.LOADER);
+            break;
+            
         case GAME_PROCESS:
             setState(GameStates.STOP_Q);
             break;
@@ -189,6 +206,10 @@ public class RootScene extends Scene {
 
         case LOADER:
             loaderScene.onSceneTouchEvent(pSceneTouchEvent);
+            break;
+            
+        case ABOUT:
+            aboutScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
         case GAME_OVER_SCENE:
@@ -241,6 +262,33 @@ public class RootScene extends Scene {
             break;
         }   
         super.onManagedUpdate(pSecondsElapsed);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+        {
+            switch (state) {
+            
+            case GAME_PROCESS:
+
+                break;
+                
+            case LOADER:
+                loaderScene.onAccelerometerEvent(event);
+                break;
+                
+            default:
+                break;
+            }   
+        }
     }
 
 }

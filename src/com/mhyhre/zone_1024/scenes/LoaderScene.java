@@ -1,5 +1,9 @@
 package com.mhyhre.zone_1024.scenes;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
@@ -9,46 +13,66 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 import org.andengine.util.adt.color.Color;
 
+import android.hardware.SensorEvent;
+import android.util.Log;
+
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
+import com.mhyhre.zone_1024.utils.AccelerometrListener;
 
 
-public class LoaderScene extends SimpleScene {
+public class LoaderScene extends SimpleScene implements AccelerometrListener {
 
+    private static final float WAKE_UP_TIME = 2;
+    private static final float ACCELEROMETR_SENSITIVITY = 1.0f;
+    /*
     private static final Color blue = new Color(0.51f, 0.549f, 1.0f);
     private static final Color red = new Color(1.0f, 0.549f, 0.51f);
-
+    private static final Color green = new Color(0.549f, 1.0f, 0.51f);
+    */
+    
+    private List<Entity> slowShowList;
+    private Text textTitle;
+    private Text textPressToStart;
+    private float pressAlphaSum;
+    private float wakeUpCounter;
+    private float elemetsAlpha;
     
     public LoaderScene() {
+        
+        slowShowList = new LinkedList<Entity>();
         
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
         
-        IFont font = MainActivity.resources.getFont("WhiteMono32");
-        IFont fontBlack = MainActivity.resources.getFont("WhiteMono24");
+        IFont font32 = MainActivity.resources.getFont("WhiteMono32");
+        IFont font16 = MainActivity.resources.getFont("WhiteMono16");
         
 
-        addTitle(font);
-        addStartButton(fontBlack);
-        addExitButton(fontBlack);
-        addVibroButton();
-        addSoundButton();
+
+        addStartButton(font16);
+        addExitButton();
+        //addVibroButton();
+        //addSoundButton();
+        addAboutButton();
+        
+        addTitle(font32);
     }
 
     private void addTitle(IFont font) {
         String strTextTitle = MainActivity.Me.getString(R.string.app_name);
-        Text textTitle = new Text(0, 0, font, strTextTitle, MainActivity.getVboManager());
+        textTitle = new Text(0, 0, font, strTextTitle, MainActivity.getVboManager());
         textTitle.setPosition(MainActivity.getHalfWidth() * 1.5f, MainActivity.getHalfHeight());
         attachChild(textTitle);
-        
     }
 
 
     
     private void addStartButton(IFont font) {
-        Rectangle bigStartButton = new Rectangle(MainActivity.getWidth()/4, 30, 200, 60, MainActivity.getVboManager()) {
+        
+        Rectangle bigStartButton = new Rectangle(0, 0, MainActivity.getWidth()-160, MainActivity.getHalfHeight(), MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
@@ -58,18 +82,22 @@ public class LoaderScene extends SimpleScene {
                 return true;
             }
         };
-        bigStartButton.setColor(blue);
+        bigStartButton.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight()/4);
+        bigStartButton.setVisible(false);
         attachChild(bigStartButton);
         registerTouchArea(bigStartButton);
 
-        String strTextStart = MainActivity.Me.getString(R.string.start);
-        Text textStart = new Text(0, 0, font, strTextStart, MainActivity.getVboManager());
-        textStart.setPosition(bigStartButton);
-        attachChild(textStart);
+        
+        String strTextPressToStart = MainActivity.Me.getString(R.string.press_to_start);
+        textPressToStart = new Text(0, 0, font, strTextPressToStart, MainActivity.getVboManager());
+        textPressToStart.setPosition(bigStartButton);
+        attachChild(textPressToStart);
     }
     
-    private void addExitButton(IFont font) {
-        Rectangle bigExitButton = new Rectangle((MainActivity.getWidth()/4)*3, 30, 200, 60, MainActivity.getVboManager()) {
+    private void addExitButton() {
+        
+        Sprite bigExitButton = new Sprite((MainActivity.getWidth()/8)*7,  MainActivity.getHeight() - 60,
+                MainActivity.resources.getTextureRegion("No"), MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
@@ -79,16 +107,12 @@ public class LoaderScene extends SimpleScene {
                 return true;
             }
         };
-        bigExitButton.setColor(red);
         attachChild(bigExitButton);
         registerTouchArea(bigExitButton);
 
-        String strTextStart = MainActivity.Me.getString(R.string.exit);
-        Text textStart = new Text(0, 0, font, strTextStart, MainActivity.getVboManager());
-        textStart.setPosition(bigExitButton);
-        attachChild(textStart);
+        slowShowList.add(bigExitButton);
     }
-    
+    /*
     private void addSoundButton() {
         
         Sprite mSpriteSound = new Sprite(0, 0, MainActivity.resources.getTextureRegion("ButtonSound"), MainActivity.Me.getVertexBufferObjectManager()) {
@@ -97,10 +121,10 @@ public class LoaderScene extends SimpleScene {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
 
                     if (PreferenceManager.isSoundEnabled() == true) {
-                        this.setColor(red);
+                        this.setAlpha(0.5f);
                         PreferenceManager.setSoundEnabled(false);
                     } else {
-                        this.setColor(blue);
+                        this.setAlpha(1.0f);
                         PreferenceManager.setSoundEnabled(true);
                         MainActivity.resources.playSound("roboClick");
                     }
@@ -109,14 +133,15 @@ public class LoaderScene extends SimpleScene {
                 return true;
             }
         };
-        mSpriteSound.setPosition((MainActivity.getWidth()/8)*5, MainActivity.getHeight() - 40);
+        mSpriteSound.setPosition((MainActivity.getWidth()/8)*3, MainActivity.getHeight() - 40);
         attachChild(mSpriteSound);
         registerTouchArea(mSpriteSound);
-
+        slowShowList.add(mSpriteSound);
+        
         if (PreferenceManager.isSoundEnabled()) {
-            mSpriteSound.setColor(blue);
+            mSpriteSound.setAlpha(1.0f);
         } else {
-            mSpriteSound.setColor(red);
+            mSpriteSound.setAlpha(0.5f);
         }
     }
 
@@ -127,10 +152,10 @@ public class LoaderScene extends SimpleScene {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
 
                     if (PreferenceManager.isVibroEnabled() == true) {
-                        this.setColor(red);
+                        this.setAlpha(0.5f);
                         PreferenceManager.setVibroEnabled(false);
                     } else {
-                        this.setColor(blue);
+                        this.setAlpha(1.0f);
                         PreferenceManager.setVibroEnabled(true);
                         MainActivity.vibrate(40);
                     }
@@ -140,22 +165,93 @@ public class LoaderScene extends SimpleScene {
             }
             
         };
-        mSpriteVibro.setPosition((MainActivity.getWidth()/8)*7, MainActivity.getHeight() - 40);
+        mSpriteVibro.setPosition((MainActivity.getWidth()/8)*5, MainActivity.getHeight() - 40);
         attachChild(mSpriteVibro);
         registerTouchArea(mSpriteVibro);
-
+        slowShowList.add(mSpriteVibro);
+        
         if (PreferenceManager.isVibroEnabled()) {
-            mSpriteVibro.setColor(blue);
+            mSpriteVibro.setAlpha(1.0f);
         } else {
-            mSpriteVibro.setColor(red);
+            mSpriteVibro.setAlpha(0.5f);
         }
+    }
+    */
+    
+    private void addAboutButton() {
+        
+        Sprite aboutButton = new Sprite((MainActivity.getWidth()/8),  MainActivity.getHeight() - 60,
+                MainActivity.resources.getTextureRegion("QuestionIcon"), MainActivity.getVboManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
+                    MainActivity.vibrate(30);
+                    RootScene.Me.setState(GameStates.ABOUT);
+                }
+                return true;
+            }
+        };
+        attachChild(aboutButton);
+        registerTouchArea(aboutButton);
+        slowShowList.add(aboutButton);
     }
     
     @Override
     public void show() {
-        AlphaModifier alphaMode = new AlphaModifier(2, 0.0f, 1.0f);
+        wakeUp();
+        AlphaModifier alphaMode = new AlphaModifier(1.5f, 0.0f, 1.0f);
         alphaMode.setAutoUnregisterWhenFinished(true);
-        this.registerEntityModifier(alphaMode);
+        textTitle.setAlpha(0);
+        textTitle.registerEntityModifier(alphaMode);
         super.show();
+    }
+
+    private static float lastAccelerometrSum = 0;
+    @Override
+    public void onAccelerometerEvent(SensorEvent event) {
+        float[] values = event.values;
+        
+        float sum = (Math.abs(values[0]) +  Math.abs(values[1]) + Math.abs(values[2]));
+        Log.i(MainActivity.DEBUG_ID, "Accelerometr sum:" + sum);
+        if(Math.abs(sum-lastAccelerometrSum) > ACCELEROMETR_SENSITIVITY) {
+            wakeUp();
+        }
+        lastAccelerometrSum = sum;
+    }
+    
+    public void wakeUp() {
+        wakeUpCounter = WAKE_UP_TIME;
+        elemetsAlpha = 1.0f;
+        for(Entity entity: slowShowList) {
+            entity.setAlpha(elemetsAlpha);
+        }
+
+    }
+    
+    @Override
+    protected void onManagedUpdate(float pSecondsElapsed) {
+
+        pressAlphaSum += 1.5f * pSecondsElapsed;
+        if(pressAlphaSum > Math.PI) {
+            pressAlphaSum = 0;
+        }
+        textPressToStart.setAlpha((float)Math.sin(pressAlphaSum));
+        
+        if(wakeUpCounter <= 0) {
+            wakeUpCounter = 0;
+            
+            if(elemetsAlpha > 0.0f) {
+                for(Entity entity: slowShowList) {
+                    entity.setAlpha(elemetsAlpha);
+                }
+                elemetsAlpha -= 0.005f;
+            } else {
+                elemetsAlpha = 0;
+            }
+        } else {
+            wakeUpCounter -= pSecondsElapsed;
+        }
+            
+        super.onManagedUpdate(pSecondsElapsed);
     }
 }

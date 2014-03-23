@@ -254,4 +254,16 @@ public class Grid extends SimpleGrid {
         return false;
     }
 
+    public void testInit() {
+        int value = 2;
+        for (int x = 0; x < size.getWidth()-1; x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
+                
+                tiles[x][y] = new SimpleTile(x, y, value);
+                value *= 2;
+            }
+        }
+        
+    }
+
 }
