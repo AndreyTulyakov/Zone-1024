@@ -7,13 +7,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.text.format.Time;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.utils.TimeAndDate;
 
 public class ScoresTable {
     
@@ -21,9 +23,8 @@ public class ScoresTable {
     private static final char FILE_TYPE_ID = 'S';    
     private static final String SCORES_FILENAME = "scores.txt";
     public static final int MAXIMAL_COUNT_OF_RECORDS = 8;
-    public static final int MAXIMAL_NAME_LENGTH = 10;
     
-    private Map<String, Integer> scores;
+    private Map<TimeAndDate, Integer> scores;
     
     public static ScoresTable getInstance() {
         if(instance == null) {
@@ -34,7 +35,7 @@ public class ScoresTable {
     
     private ScoresTable() {
         
-        scores = new HashMap<String, Integer>();
+        scores = new HashMap<TimeAndDate, Integer>();
         readScores();
     }
     
@@ -55,20 +56,27 @@ public class ScoresTable {
                 throw new IllegalStateException("Incorrect records count!");
             }
             
-            byte[] name = new byte[MAXIMAL_NAME_LENGTH];
-            
             for(int i = 0; i < countOfRecords; i++) {
-                dataStream.read(name);
+                
+                int s = dataStream.readInt();
+                int m = dataStream.readInt();
+                int h = dataStream.readInt();
+                
+                int d = dataStream.readInt();
+                int mo = dataStream.readInt();
+                int y = dataStream.readInt();
+                
+                TimeAndDate timeDate = new TimeAndDate(s,m,h,d,mo,y);
                 int score = dataStream.readInt();
                 
-                scores.put(new String(name), score);
+                scores.put(timeDate, score);
             }
             
             
           } catch (FileNotFoundException e) {  
-              // Do nothing.
+              // Do nothing
           } catch (IOException e) {
-              // Do nothing.
+              clearRecords();
           } catch (IllegalStateException e) {
               Log.i(MainActivity.DEBUG_ID, "ScoresTable: " + e.getMessage());
           } finally {
@@ -88,13 +96,17 @@ public class ScoresTable {
             dataStream.writeChar(FILE_TYPE_ID);
             dataStream.writeInt(scores.size());
             
-            for (String name : scores.keySet()) {
-                if(name.length() != MAXIMAL_NAME_LENGTH) {
-                    throw new IllegalStateException("Name with strange length!");
-                }
+            for (TimeAndDate timeDate: scores.keySet()) {
+
+                dataStream.writeInt(timeDate.getSeconds());
+                dataStream.writeInt(timeDate.getMinutes());
+                dataStream.writeInt(timeDate.getHours());
                 
-                dataStream.writeChars(name);
-                dataStream.writeInt(scores.get(name));
+                dataStream.writeInt(timeDate.getDay());
+                dataStream.writeInt(timeDate.getMonth());
+                dataStream.writeInt(timeDate.getYear());
+                
+                dataStream.writeInt(scores.get(dataStream));
             }
             
         } catch (FileNotFoundException e) {  
@@ -108,29 +120,31 @@ public class ScoresTable {
         }
     }
     
+    public void addTestRecord() {
+        addRecord(1024);
+    }
     
-    public void addRecord(String name, int score) {
+    public void clearRecords() {
+        scores.clear();
+    }
+    
+    
+    public void addRecord(int score) {
         
         if(isNeedAdd(score) == false){
             return;
         }
         
-        if(name.length() > MAXIMAL_NAME_LENGTH) {
-            name = name.substring(0, MAXIMAL_NAME_LENGTH);
-        }
+        Calendar cal = Calendar.getInstance(); 
+        TimeAndDate timeDate = new TimeAndDate(
+                cal.get(Calendar.SECOND), cal.get(Calendar.MINUTE), cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
         
-        if(name.length() < MAXIMAL_NAME_LENGTH) {
-            char[] bytes = new char[MAXIMAL_NAME_LENGTH-name.length()];
-            Arrays.fill(bytes, '.');
-            String str = new String(bytes);
-            name.concat(str);
-        }
-        
-        scores.put(name, score);
+        scores.put(timeDate, score);
     }
 
     
-    public Map<String, Integer> getScores() {
+    public Map<TimeAndDate, Integer> getScores() {
         return scores;
     }
     
@@ -139,8 +153,8 @@ public class ScoresTable {
         if(scores.keySet().size() < MAXIMAL_COUNT_OF_RECORDS) {
             return true;
         } else {
-            for(String name: scores.keySet()) {
-                if(scores.get(name) < currentScore) {
+            for(TimeAndDate key: scores.keySet()) {
+                if(scores.get(key) < currentScore) {
                     return true;
                 }
             }

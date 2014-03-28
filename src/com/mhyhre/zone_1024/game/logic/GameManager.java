@@ -3,6 +3,7 @@ package com.mhyhre.zone_1024.game.logic;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.scenes.RootScene;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.Direction;
@@ -30,6 +31,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private GameManager() {
         this.size = new Size(4, 4);
         setup();
+        
     }
 
     private void setup() {
@@ -37,10 +39,8 @@ public final class GameManager implements MoveEventListener, GameControllable {
         this.grid = new Grid(size);
         this.score = 0;
         this.keepPlaying = false;
-        
-        //grid.testInit();
 
-        
+        grid.testInit();
         this.addStartTiles();
     }
     
@@ -53,6 +53,12 @@ public final class GameManager implements MoveEventListener, GameControllable {
                 if(keepPlaying == false) {
                     grid.lock();
                     RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
+                    
+                    // Add scores
+                    ScoresTable scores = ScoresTable.getInstance();
+                    if(scores.isNeedAdd(score)) {
+                        scores.addRecord(score);
+                    }
                 }
                 
             }

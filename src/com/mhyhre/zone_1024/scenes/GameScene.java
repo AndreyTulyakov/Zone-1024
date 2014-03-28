@@ -47,7 +47,7 @@ public class GameScene extends SimpleScene {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
 
-        textEntityScores.setText(strScore + GameManager.getInstance().getScore());
+        textEntityScores.setText(strScore + " " + GameManager.getInstance().getScore());
         gameField.update(gameManager.getGrid());
         super.onManagedUpdate(pSecondsElapsed);
     }
