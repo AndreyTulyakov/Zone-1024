@@ -135,8 +135,6 @@ public class ScoresTable {
     
     public void addRecord(String name, int score) {
         
-        Log.i(MainActivity.DEBUG_ID, "Add record " + name + " - " + score + "...");
-        
         if(isNeedAdd(score) == false){
             return;
         }
@@ -152,10 +150,7 @@ public class ScoresTable {
             }
         }
         
-        scores.add(new Pair<Integer, String>(score, name));
-        
-        Log.i(MainActivity.DEBUG_ID, "Record Added: " + name + " - " + score + "...");
-        
+        scores.add(new Pair<Integer, String>(score, name));     
     }
 
     
