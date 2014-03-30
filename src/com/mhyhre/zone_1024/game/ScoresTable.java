@@ -7,25 +7,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
+import java.util.ArrayList;
+import java.util.List;
 import android.util.Log;
+import android.util.Pair;
 
 import com.mhyhre.zone_1024.MainActivity;
 
 public class ScoresTable {
     
-    private static ScoresTable instance = null;
-    private static final char FILE_TYPE_ID = 'S';    
+    private static ScoresTable instance = null;  
     private static final String SCORES_FILENAME = "scores.txt";
     public static final int MAXIMAL_COUNT_OF_RECORDS = 8;
     public static final int MAXIMAL_NAME_LENGTH = 8;   
     
-    private Map<String, Integer> scores;
+    private List<Pair<Integer, String>> scores;
     
     public static ScoresTable getInstance() {
         if(instance == null) {
@@ -36,45 +32,47 @@ public class ScoresTable {
     
     private ScoresTable() {
         
-        scores = new TreeMap<String, Integer>();
+        scores = new ArrayList<Pair<Integer, String>>(MAXIMAL_COUNT_OF_RECORDS);
         readScores();
     }
     
     private void readScores() {
+        
+        FileInputStream inputStream = null;   
         DataInputStream dataStream = null;
         
         try {
-            FileInputStream inputStream = MainActivity.Me.openFileInput(SCORES_FILENAME);
+            inputStream = MainActivity.Me.openFileInput(SCORES_FILENAME);
             dataStream = new DataInputStream(inputStream);
-            
-            int id = dataStream.readChar();
-            if((char)id != FILE_TYPE_ID) {
-                throw new IllegalStateException("Incorrect file id!");
-            }
             
             int countOfRecords = dataStream.readInt();
             if(countOfRecords < 0 || countOfRecords >= MAXIMAL_COUNT_OF_RECORDS) {
                 throw new IllegalStateException("Incorrect records count!");
             }
-            
-            byte[] nameBuffer = new byte[MAXIMAL_NAME_LENGTH];
+                       
+            char[] nameBuffer = new char[MAXIMAL_NAME_LENGTH];
             
             for(int i = 0; i < countOfRecords; i++) {
+
+                for(int characterIndex = 0; characterIndex < MAXIMAL_NAME_LENGTH; characterIndex++){
+                    nameBuffer[characterIndex] = dataStream.readChar();
+                }
                 
-                dataStream.readFully(nameBuffer);
-                String name = Arrays.toString(nameBuffer);
+                String name = new String(nameBuffer);
                 int score = dataStream.readInt();
                 
-                scores.put(name, score);
+                scores.add(new Pair<Integer, String>(score, name));
             }
             
+
             
           } catch (FileNotFoundException e) {  
-              // Do nothing
+              Log.i(MainActivity.DEBUG_ID, "ScoresTable::readScores:FileNotFoundException:" + e.getMessage());
           } catch (IOException e) {
+              Log.i(MainActivity.DEBUG_ID, "ScoresTable::readScores:IOException:" + e.getMessage());
               clearRecords();
           } catch (IllegalStateException e) {
-              Log.i(MainActivity.DEBUG_ID, "ScoresTable: " + e.getMessage());
+              Log.i(MainActivity.DEBUG_ID, "readScores:IllegalStateException: " + e.getMessage());
           } finally {
               silentClose(dataStream);
           }
@@ -82,25 +80,26 @@ public class ScoresTable {
     
     
     public void saveScores() {
+        
+        FileOutputStream outputStream = null;
         DataOutputStream dataStream = null;
         
         try {
-            FileOutputStream outputStream = MainActivity.Me.openFileOutput(SCORES_FILENAME, MainActivity.MODE_PRIVATE);
+            outputStream = MainActivity.Me.openFileOutput(SCORES_FILENAME, MainActivity.MODE_PRIVATE);
             dataStream = new DataOutputStream(outputStream);
-            
-            dataStream.writeChar(FILE_TYPE_ID);
+
             dataStream.writeInt(scores.size());
             
-            for (String timeDate: scores.keySet()) {
+            for (Pair<Integer, String> entry: scores) {
 
-                dataStream.writeChars(timeDate);
-                dataStream.writeInt(scores.get(dataStream));
+                dataStream.writeChars(entry.second);
+                dataStream.writeInt(entry.first);
             }
             
-        } catch (FileNotFoundException e) {  
-            // Do nothing.
+        } catch (FileNotFoundException e) {
+            Log.i(MainActivity.DEBUG_ID, "ScoresTable::saveScores:" + e.getMessage());
         } catch (IOException e) {
-            // Do nothing.
+            Log.i(MainActivity.DEBUG_ID, "ScoresTable::saveScores:" + e.getMessage());
         } catch (IllegalStateException e) {
             Log.i(MainActivity.DEBUG_ID, "ScoresTable::saveScores:" + e.getMessage());
         } finally {
@@ -116,13 +115,7 @@ public class ScoresTable {
         scores.clear();
     }
     
-    
-    public void addRecord(String name, int score) {
-        
-        if(isNeedAdd(score) == false){
-            return;
-        }
-        
+    private String prepareName(String name) {
         if(name.length() == 0) {
             name = "PLAYER";
         }
@@ -136,24 +129,47 @@ public class ScoresTable {
         }
         
         name = name.replace(' ', '.');
+        return name;
+    }
+    
+    
+    public void addRecord(String name, int score) {
         
-        Log.i(MainActivity.DEBUG_ID, "Added Score Record:[" + name + "] - " + score);
+        Log.i(MainActivity.DEBUG_ID, "Add record " + name + " - " + score + "...");
         
-        scores.put(name, score);
+        if(isNeedAdd(score) == false){
+            return;
+        }
+        
+        name = prepareName(name);
+        
+        // If dublicate - return
+        for(Pair<Integer, String> value: scores) {
+            if(value.second.equals(name)) {
+                if(value.first == score) {
+                    return;
+                }
+            }
+        }
+        
+        scores.add(new Pair<Integer, String>(score, name));
+        
+        Log.i(MainActivity.DEBUG_ID, "Record Added: " + name + " - " + score + "...");
+        
     }
 
     
-    public Map<String, Integer> getScores() {
+    public List<Pair<Integer, String>> getScores() {
         return scores;
     }
     
     public boolean isNeedAdd(int currentScore) {
         
-        if(scores.keySet().size() < MAXIMAL_COUNT_OF_RECORDS) {
+        if(scores.size() < MAXIMAL_COUNT_OF_RECORDS) {
             return true;
         } else {
-            for(String key: scores.keySet()) {
-                if(scores.get(key) < currentScore) {
+            for(Pair<Integer, String> value: scores) {
+                if(value.first < currentScore) {
                     return true;
                 }
             }

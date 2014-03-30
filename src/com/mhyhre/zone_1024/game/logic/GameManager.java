@@ -2,14 +2,11 @@ package com.mhyhre.zone_1024.game.logic;
 
 import android.util.Log;
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.scenes.RootScene;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.MoveEventListener;
 import com.mhyhre.zone_1024.utils.Size;
-import com.mhyhre.zone_1024.utils.TextInput;
-import com.mhyhre.zone_1024.utils.TextInputListener;
 
 public final class GameManager implements MoveEventListener, GameControllable {
 
@@ -43,10 +40,6 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
         grid.testInit();
         this.addStartTiles();
-
-        ScoresTable.getInstance().addRecord("X", 10);
-        ScoresTable.getInstance().addRecord("ANON", 24);
-        ScoresTable.getInstance().addRecord(" Du Bi", 36);
     }
 
     public void update() {

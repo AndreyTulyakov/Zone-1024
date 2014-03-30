@@ -21,6 +21,9 @@ public class TextInput {
     
     private static boolean cancelPressed;
     private static boolean okPressed;
+    private static boolean nowShowed;
+
+
     private static String resultText;
 
 
@@ -37,6 +40,8 @@ public class TextInput {
 
     public static void showTextInput(final String inTitle, final String inMessage, final BaseGameActivity context) {
         
+        
+        
         title = inTitle;
         message = inMessage;
         
@@ -47,6 +52,9 @@ public class TextInput {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                
+                nowShowed = true;
+                
                 final AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
                 alert.setTitle(TextInput.title);
@@ -66,7 +74,8 @@ public class TextInput {
                         
                         if(listener != null) {
                             listener.textChanged(resultText);
-                        }
+                        }    
+                        nowShowed = false;
                     }
                 });
 
@@ -79,6 +88,7 @@ public class TextInput {
                         if(listener != null) {
                             listener.textChanged(resultText);
                         }
+                        nowShowed = false;
                     }
                 });
 
@@ -106,6 +116,10 @@ public class TextInput {
 
     public static String getResultText() {
         return resultText;
+    }
+    
+    public static boolean isNowShowed() {
+        return nowShowed;
     }
 
 }

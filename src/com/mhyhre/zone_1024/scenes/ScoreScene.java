@@ -1,12 +1,15 @@
 package com.mhyhre.zone_1024.scenes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.IFont;
 import org.andengine.util.adt.align.HorizontalAlign;
+
+import android.util.Pair;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
@@ -45,19 +48,19 @@ public class ScoreScene extends SimpleScene {
 
         hideAllTexts();
 
-        Map<String, Integer> scores = scoresTable.getScores();
+        List<Pair<Integer, String>> scores = scoresTable.getScores();
 
         
         float recordHeight = 50;
-        float offset = -recordHeight * (scores.keySet().size() / 2.0f);
+        float offset = -recordHeight * (scores.size() / 2.0f);
  
         
         int counter = 1;
-        for(String name: scores.keySet()) {
+        for(Pair<Integer, String> value: scores) {
             Text text = texts.get(counter);
             
-            text.setText(name + " - " + scores.get(name));
-            text.setPosition(text.getX(), offset + recordHeight * counter);
+            text.setText(value.second + " - " + value.first);
+            text.setPosition(text.getX(), offset + recordHeight * (scores.size() - counter));
             text.setVisible(true);
             
             counter++;

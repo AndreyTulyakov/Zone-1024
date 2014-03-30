@@ -16,27 +16,32 @@ import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.TextInput;
 import com.mhyhre.zone_1024.utils.TextInputListener;
 
-public class GameWinScene extends SimpleScene implements TextInputListener  {
-    
+public class GameWinScene extends SimpleScene implements TextInputListener {
+
     private Rectangle backgroundRect;
     private final float INPUT_DELAY = 2;
     private float timeSum;
     private boolean lockInput;
-    
+
     public GameWinScene() {
         setBackgroundEnabled(false);
-        
+
         IFont font = MainActivity.resources.getFont("WhiteMono32");
-        
+
         // Generate background rectangle
-        backgroundRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), 
-                MainActivity.getWidth(), MainActivity.getWidth(), MainActivity.getVboManager()) {
+        backgroundRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getWidth(),
+                MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
                     Log.i(MainActivity.DEBUG_ID, "Win Scene: click on!");
                     MainActivity.vibrate(30);
-                    addRecordScores();
+
+                    if (ScoresTable.getInstance().isNeedAdd(GameManager.getInstance().getScore())) {
+                        addRecordScores();
+                    } else {
+                        RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
+                    }
                 }
                 return true;
             }
@@ -47,21 +52,21 @@ public class GameWinScene extends SimpleScene implements TextInputListener  {
 
         addTitle(font);
     }
-    
-    public void addRecordScores() {
-        if (ScoresTable.getInstance().isNeedAdd(GameManager.getInstance().getScore())) {
+
+    private void addRecordScores() {
+        if(TextInput.isNowShowed() == false) {
             TextInput.setListener(this);
-            TextInput.showTextInput("Enter you name!", "Maximum " +ScoresTable.MAXIMAL_NAME_LENGTH + " characters", MainActivity.Me);
+            TextInput.showTextInput("Enter you name!", "Maximum " + ScoresTable.MAXIMAL_NAME_LENGTH + " characters", MainActivity.Me);
         }
     }
-    
+
     private void addTitle(IFont font) {
         String strTextTitle = MainActivity.Me.getString(R.string.won);
         Text textTitle = new Text(0, 0, font, strTextTitle, MainActivity.getVboManager());
         textTitle.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         attachChild(textTitle);
     }
-    
+
     @Override
     public void show() {
         backgroundRect.setAlpha(0);
@@ -74,24 +79,24 @@ public class GameWinScene extends SimpleScene implements TextInputListener  {
         lockInput = true;
         super.show();
     }
-    
+
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
-        
-        if(lockInput) {
+
+        if (lockInput) {
             timeSum += pSecondsElapsed;
-            if(timeSum > INPUT_DELAY) {
+            if (timeSum > INPUT_DELAY) {
                 lockInput = false;
                 Log.i(MainActivity.DEBUG_ID, "Win Scene: unlock input!");
             }
         }
- 
+
         super.onManagedUpdate(pSecondsElapsed);
     }
-    
+
     @Override
     public boolean onSceneTouchEvent(TouchEvent pSceneTouchEvent) {
-        if(lockInput == false) {
+        if (lockInput == false) {
             return super.onSceneTouchEvent(pSceneTouchEvent);
         }
         return true;
@@ -99,7 +104,7 @@ public class GameWinScene extends SimpleScene implements TextInputListener  {
 
     @Override
     public void textChanged(String text) {
-        if(TextInput.isOkPressed()) {
+        if (TextInput.isOkPressed()) {
             ScoresTable.getInstance().addRecord(TextInput.getResultText(), GameManager.getInstance().getScore());
         }
         RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
