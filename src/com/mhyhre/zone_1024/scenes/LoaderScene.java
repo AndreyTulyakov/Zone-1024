@@ -48,6 +48,7 @@ public class LoaderScene extends SimpleScene{
 
         addStartButton(font16);
         addExitButton();
+        addScoresButton();
         //addVibroButton();
         //addSoundButton();
         addAboutButton();
@@ -106,6 +107,27 @@ public class LoaderScene extends SimpleScene{
 
         slowShowList.add(bigExitButton);
     }
+    
+    
+    private void addScoresButton() {
+        
+        Sprite scoresButton = new Sprite(MainActivity.getHalfWidth(),  MainActivity.getHeight() - 60,
+                MainActivity.resources.getTextureRegion("ScoresIcon"), MainActivity.getVboManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
+                    MainActivity.vibrate(30);
+                    RootScene.Me.setState(GameStates.SCORES_VIEW);
+                }
+                return true;
+            }
+        };
+        attachChild(scoresButton);
+        registerTouchArea(scoresButton);
+
+        slowShowList.add(scoresButton);
+    }
+    
     /*
     private void addSoundButton() {
         

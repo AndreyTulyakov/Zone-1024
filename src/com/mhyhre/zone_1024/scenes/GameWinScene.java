@@ -10,12 +10,16 @@ import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
+import com.mhyhre.zone_1024.game.ScoresTable;
+import com.mhyhre.zone_1024.game.logic.GameManager;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
+import com.mhyhre.zone_1024.utils.TextInput;
+import com.mhyhre.zone_1024.utils.TextInputListener;
 
-public class GameWinScene extends SimpleScene {
+public class GameWinScene extends SimpleScene implements TextInputListener  {
     
     private Rectangle backgroundRect;
-    private final float INPUT_DELAY = 3;
+    private final float INPUT_DELAY = 2;
     private float timeSum;
     private boolean lockInput;
     
@@ -32,7 +36,7 @@ public class GameWinScene extends SimpleScene {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
                     Log.i(MainActivity.DEBUG_ID, "Win Scene: click on!");
                     MainActivity.vibrate(30);
-                    RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
+                    addRecordScores();
                 }
                 return true;
             }
@@ -44,6 +48,12 @@ public class GameWinScene extends SimpleScene {
         addTitle(font);
     }
     
+    public void addRecordScores() {
+        if (ScoresTable.getInstance().isNeedAdd(GameManager.getInstance().getScore())) {
+            TextInput.setListener(this);
+            TextInput.showTextInput("Enter you name!", "Maximum " +ScoresTable.MAXIMAL_NAME_LENGTH + " characters", MainActivity.Me);
+        }
+    }
     
     private void addTitle(IFont font) {
         String strTextTitle = MainActivity.Me.getString(R.string.won);
@@ -56,7 +66,7 @@ public class GameWinScene extends SimpleScene {
     public void show() {
         backgroundRect.setAlpha(0);
 
-        AlphaModifier alphaMod = new AlphaModifier(4, 0, 0.75f);
+        AlphaModifier alphaMod = new AlphaModifier(2, 0, 0.75f);
         alphaMod.setAutoUnregisterWhenFinished(true);
         backgroundRect.registerEntityModifier(alphaMod);
 
@@ -85,5 +95,13 @@ public class GameWinScene extends SimpleScene {
             return super.onSceneTouchEvent(pSceneTouchEvent);
         }
         return true;
+    }
+
+    @Override
+    public void textChanged(String text) {
+        if(TextInput.isOkPressed()) {
+            ScoresTable.getInstance().addRecord(TextInput.getResultText(), GameManager.getInstance().getScore());
+        }
+        RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
     }
 }

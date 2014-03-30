@@ -1,7 +1,6 @@
 package com.mhyhre.zone_1024.game.logic;
 
 import android.util.Log;
-
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.game.ScoresTable;
 import com.mhyhre.zone_1024.scenes.RootScene;
@@ -9,6 +8,8 @@ import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.MoveEventListener;
 import com.mhyhre.zone_1024.utils.Size;
+import com.mhyhre.zone_1024.utils.TextInput;
+import com.mhyhre.zone_1024.utils.TextInputListener;
 
 public final class GameManager implements MoveEventListener, GameControllable {
 
@@ -20,9 +21,9 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private boolean keepPlaying = false;
     private final Size size;
     private Grid grid;
-    
+
     public static GameManager getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new GameManager();
         }
         return instance;
@@ -31,7 +32,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private GameManager() {
         this.size = new Size(4, 4);
         setup();
-        
+
     }
 
     private void setup() {
@@ -42,32 +43,32 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
         grid.testInit();
         this.addStartTiles();
+
+        ScoresTable.getInstance().addRecord("X", 10);
+        ScoresTable.getInstance().addRecord("ANON", 24);
+        ScoresTable.getInstance().addRecord(" Du Bi", 36);
     }
-    
+
     public void update() {
 
         grid.update();
-        if(grid.isLocked() == false) {
-        
-            if(grid.hasNumberOrMore(winNumber)){
-                if(keepPlaying == false) {
+        if (grid.isLocked() == false) {
+
+            if (grid.hasNumberOrMore(winNumber)) {
+                if (keepPlaying == false) {
                     grid.lock();
                     RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
-                    
-                    // Add scores
-                    ScoresTable scores = ScoresTable.getInstance();
-                    if(scores.isNeedAdd(score)) {
-                        scores.addRecord(score);
-                    }
                 }
-                
+
             }
         } else {
-            if(keepPlaying == true) {
+            if (keepPlaying == true) {
                 grid.unlock();
             }
         }
     }
+
+  
 
     public void restart() {
         Log.i(MainActivity.DEBUG_ID, "GameManager: Restart!");
@@ -87,13 +88,13 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     @Override
     public void onMoveEvent(Direction direction) {
-        
-        if(grid.isLocked() == false) {
+
+        if (grid.isLocked() == false) {
             grid.lock();
             grid.move(direction);
             score = grid.calculateTotalValues();
 
-            if(grid.canMove() == false) {
+            if (grid.canMove() == false) {
                 grid.lock();
                 keepPlaying = false;
                 RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
@@ -101,12 +102,14 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
         }
     }
-    
+
     public int getScore() {
         return score;
     }
-    
+
     public void setKeepPlaying() {
         keepPlaying = true;
     }
+
+
 }

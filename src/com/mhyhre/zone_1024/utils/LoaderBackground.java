@@ -29,7 +29,6 @@ public class LoaderBackground extends SpriteBatch {
 
         tileColor = TileColors.getInstance();
         valuesList = Arrays.asList(2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096);
-        int side = (int) Math.sqrt(COUNT_OF_SPRITES);
         size = new Size(4, 8);
         tiles = new ArrayList<SimpleTile>(COUNT_OF_SPRITES);
         random = new Random();

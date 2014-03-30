@@ -43,6 +43,7 @@ public class RootScene extends Scene {
     private GameOverScene gameOverScene;
     private AboutScene aboutScene;
     private GameWinScene gameWinScene;
+
     
     private GameManager gameManager;
     private TouchSlidingEventDetector moveEventDetector;
@@ -125,6 +126,7 @@ public class RootScene extends Scene {
             break;
             
         case KEEP_PLAYING_Q:
+            
             questionScene.show();
             break;
             
@@ -176,7 +178,7 @@ public class RootScene extends Scene {
         case ABOUT:
             setState(GameStates.LOADER);
             break;
-            
+
         case GAME_PROCESS:
             setState(GameStates.STOP_Q);
             break;

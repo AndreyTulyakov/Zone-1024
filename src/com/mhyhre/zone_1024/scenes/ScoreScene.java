@@ -3,15 +3,14 @@ package com.mhyhre.zone_1024.scenes;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.IFont;
+import org.andengine.util.adt.align.HorizontalAlign;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.game.ScoresTable;
-import com.mhyhre.zone_1024.utils.TimeAndDate;
 
 public class ScoreScene extends SimpleScene {
     
@@ -19,16 +18,20 @@ public class ScoreScene extends SimpleScene {
     ArrayList<Text> texts;
     
     public ScoreScene() {
-        setBackgroundEnabled(false);
+        setBackground(new Background(0.0f, 0.1f, 0.0f));
+        setBackgroundEnabled(true);
+        
+        this.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         
         scoresTable = ScoresTable.getInstance();
         
-        IFont font = MainActivity.resources.getFont("WhiteMono24");
+        IFont font = MainActivity.resources.getFont("WhiteMonoScores");
         
         // Configure text labels
         texts = new ArrayList<Text>(ScoresTable.MAXIMAL_COUNT_OF_RECORDS);
         for(int i = 0; i < ScoresTable.MAXIMAL_COUNT_OF_RECORDS + 1; i++) {
             Text text = new Text(0, 0, font, "", 64, MainActivity.getVboManager());
+            text.setHorizontalAlign(HorizontalAlign.LEFT);
             texts.add(text);
             attachChild(text);
         }
@@ -42,19 +45,19 @@ public class ScoreScene extends SimpleScene {
 
         hideAllTexts();
 
-        Map<TimeAndDate, Integer> scores = scoresTable.getScores();
+        Map<String, Integer> scores = scoresTable.getScores();
 
         
-        float recordHeight = 40;
+        float recordHeight = 50;
         float offset = -recordHeight * (scores.keySet().size() / 2.0f);
  
         
         int counter = 1;
-        for(TimeAndDate date: scores.keySet()) {
+        for(String name: scores.keySet()) {
             Text text = texts.get(counter);
             
-            text.setText(date + " - " + scores.get(date));
-            text.setPosition(0, offset + recordHeight * counter);
+            text.setText(name + " - " + scores.get(name));
+            text.setPosition(text.getX(), offset + recordHeight * counter);
             text.setVisible(true);
             
             counter++;

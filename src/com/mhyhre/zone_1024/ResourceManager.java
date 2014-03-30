@@ -17,9 +17,15 @@ import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.atlas.bitmap.BuildableBitmapTextureAtlas;
+import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSource;
+import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
+import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder.TextureAtlasBuilderException;
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.texture.region.TextureRegionFactory;
+import org.andengine.opengl.texture.region.TiledTextureRegion;
+
 import android.graphics.Color;
 import android.util.Log;
 
@@ -27,14 +33,14 @@ import android.util.Log;
 public class ResourceManager {
 
     private Map<String, ITextureRegion> regions;
-    private Map<String, ITiledTextureRegion> tiledRegions;
+    private Map<String, TiledTextureRegion> tiledRegions;
     private Map<String, BitmapTextureAtlas> atlases;
     private Map<String, Font> fonts;
     private Map<String, Sound> sounds;
 
     public ResourceManager() {
         regions = new HashMap<String, ITextureRegion>();
-        tiledRegions = new HashMap<String, ITiledTextureRegion>();
+        tiledRegions = new HashMap<String, TiledTextureRegion>();
         atlases = new HashMap<String, BitmapTextureAtlas>();
         fonts = new HashMap<String, Font>();
         sounds = new HashMap<String, Sound>();
@@ -46,7 +52,7 @@ public class ResourceManager {
         return regions.get(key);
     }
 
-    public ITiledTextureRegion getTiledTextureRegion(String key) {
+    public TiledTextureRegion getTiledTextureRegion(String key) {
         if (!tiledRegions.containsKey(key))
             Log.e(MainActivity.DEBUG_ID, "ResourceManager::getTiledTextureRegion: invalid key - " + key);
         return tiledRegions.get(key);
@@ -84,7 +90,7 @@ public class ResourceManager {
         ITextureRegion region;
 
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-
+        
         // Load ui graphics
         atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 256, TextureOptions.BILINEAR);
         BitmapTextureAtlasTextureRegionFactory.createFromAsset(atlas, MainActivity.Me, "User_Interface.png", 0, 0);
@@ -95,13 +101,14 @@ public class ResourceManager {
         regions.put("No", TextureRegionFactory.extractFromTexture(atlas, 80, 0, 80, 80, false));
         regions.put("Cell", TextureRegionFactory.extractFromTexture(atlas, 180, 0, 130, 130, false));        
         regions.put("QuestionIcon", TextureRegionFactory.extractFromTexture(atlas, 0, 160, 80, 80, false));        
-                
+        regions.put("ScoresIcon", TextureRegionFactory.extractFromTexture(atlas, 80, 160, 80, 80, false));        
+                       
         region = TextureRegionFactory.extractFromTexture(atlas, 0, 80, 80, 80, false);
         regions.put("ButtonVibration", region);
 
         region = TextureRegionFactory.extractFromTexture(atlas, 80, 80, 80, 80, false);
         regions.put("ButtonSound", region);
-        
+    
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadAtlases: OK");
     }
 
@@ -156,13 +163,18 @@ public class ResourceManager {
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono16", mFont);
-        
-        
+  
         final ITexture TextureFontPixelWhite24Filled = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
         mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24Filled, MainActivity.Me.getAssets(), "PTM55F.ttf", 36, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono24FILLED", mFont);
+        
+        final ITexture TextureFontPixelWhiteScores = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhiteScores, MainActivity.Me.getAssets(), "novem.ttf", 36, true,
+                Color.WHITE);
+        mFont.load();
+        fonts.put("WhiteMonoScores", mFont);
 
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadFonts: OK");
     }

@@ -14,8 +14,7 @@ public class AboutScene extends SimpleScene {
     
     private static final String ABOUT_FILENAME = "about.txt";
     private Text textInfo;
-    private ScoreScene scoreScene;
-    
+
     public AboutScene() {
         setBackground(new Background(0.0f, 0.1f, 0.0f));
         setBackgroundEnabled(true);
@@ -23,31 +22,11 @@ public class AboutScene extends SimpleScene {
         final String strAbout = loadInfo(ABOUT_FILENAME);
         
         textInfo = new Text(0, 0, MainActivity.resources.getFont("WhiteMono24"), strAbout, MainActivity.Me.getVertexBufferObjectManager());
-        textInfo.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight()/2);
+        textInfo.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         attachChild(textInfo);
         
-        scoreScene = new ScoreScene();
-        scoreScene.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight()*1.5f);
-        this.attachChild(scoreScene);
     }
-    
-    @Override
-    public void show() {
-        if(scoreScene != null) {
-            scoreScene.show();
-        }
-        super.show();
-    }
-    
-    @Override
-    public void hide() {
-        if(scoreScene != null) {
-            scoreScene.hide();
-        }
-        super.hide();
-    }
-    
-    
+  
     private String loadInfo(String filename) {
 
         String text = "";

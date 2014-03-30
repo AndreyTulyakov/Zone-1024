@@ -92,7 +92,7 @@ public class QuestionScene extends SimpleScene {
                         break;
                         
                     case KEEP_PLAYING_Q:
-                        RootScene.Me.setState(GameStates.ABOUT);
+                        RootScene.Me.setState(GameStates.SCORES_VIEW);
                         break;
                         
                     default:
