@@ -1,6 +1,5 @@
 package com.mhyhre.zone_1024.game;
 
-import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -13,6 +12,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.utils.StreamUtils;
 
 public class ScoresTable {
     
@@ -74,7 +74,7 @@ public class ScoresTable {
           } catch (IllegalStateException e) {
               Log.i(MainActivity.DEBUG_ID, "readScores:IllegalStateException: " + e.getMessage());
           } finally {
-              silentClose(dataStream);
+              StreamUtils.silentClose(dataStream);
           }
     }
     
@@ -103,7 +103,7 @@ public class ScoresTable {
         } catch (IllegalStateException e) {
             Log.i(MainActivity.DEBUG_ID, "ScoresTable::saveScores:" + e.getMessage());
         } finally {
-            silentClose(dataStream);
+            StreamUtils.silentClose(dataStream);
         }
     }
     
@@ -172,16 +172,6 @@ public class ScoresTable {
         return false;
     }
     
-    private void silentClose(Closeable target) {
-        if(target == null) {
-            return;
-        }
-        
-        try {
-            target.close();
-        } catch (IOException e) {
-            // Do nothing
-        }
-    }
+
     
 }

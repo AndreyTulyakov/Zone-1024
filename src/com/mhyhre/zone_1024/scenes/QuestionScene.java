@@ -14,9 +14,9 @@ import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 
 public class QuestionScene extends SimpleScene {
 
-    private final String strStop = MainActivity.Me.getString(R.string.q_stop_game);
     private final String strRestart = MainActivity.Me.getString(R.string.q_restart_game);
     private final String strKeepPlaying = MainActivity.Me.getString(R.string.q_keep_playing);
+    private final String strContinueGame = MainActivity.Me.getString(R.string.q_continue_game);
     private Text textQuestion;
     
     public QuestionScene() {
@@ -50,13 +50,14 @@ public class QuestionScene extends SimpleScene {
                         RootScene.Me.setState(GameStates.NEW_GAME);
                         break;
                         
-                    case STOP_Q:
-                        RootScene.Me.setState(GameStates.LOADER);
-                        break;
-                        
                     case KEEP_PLAYING_Q:
                         RootScene.Me.setState(GameStates.GAME_PROCESS);
                         GameManager.getInstance().setKeepPlaying();
+                        break;
+                        
+                    case CONTINUE_GAME_Q:
+                        GameManager.getInstance().loadGame();
+                        RootScene.Me.setState(GameStates.GAME_PROCESS);
                         break;
                         
                     default:
@@ -87,12 +88,12 @@ public class QuestionScene extends SimpleScene {
                         RootScene.Me.setState(GameStates.LOADER);
                         break;
                         
-                    case STOP_Q:
-                        RootScene.Me.setState(GameStates.GAME_PROCESS);
-                        break;
-                        
                     case KEEP_PLAYING_Q:
                         RootScene.Me.setState(GameStates.SCORES_VIEW);
+                        break;
+                        
+                    case CONTINUE_GAME_Q:
+                        RootScene.Me.setState(GameStates.NEW_GAME);
                         break;
                         
                     default:
@@ -116,12 +117,12 @@ public class QuestionScene extends SimpleScene {
             textQuestion.setText(strRestart);
             break;
             
-        case STOP_Q:
-            textQuestion.setText(strStop);
-            break;
-            
         case KEEP_PLAYING_Q:
             textQuestion.setText(strKeepPlaying);
+            break;
+            
+        case CONTINUE_GAME_Q:
+            textQuestion.setText(strContinueGame);
             break;
             
         default:

@@ -13,6 +13,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.LoaderBackground;
@@ -20,12 +21,6 @@ import com.mhyhre.zone_1024.utils.LoaderBackground;
 
 public class LoaderScene extends SimpleScene{
 
-    /*
-    private static final Color blue = new Color(0.51f, 0.549f, 1.0f);
-    private static final Color red = new Color(1.0f, 0.549f, 0.51f);
-    private static final Color green = new Color(0.549f, 1.0f, 0.51f);
-    */
-    
     private List<Entity> slowShowList;
     private Text textTitle;
     private Text textPressToStart;
@@ -72,7 +67,12 @@ public class LoaderScene extends SimpleScene{
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
                     MainActivity.vibrate(30);
-                    RootScene.Me.setState(GameStates.NEW_GAME);
+                    
+                    if(PreferenceManager.isGameWasNotEnded()) {
+                        RootScene.Me.setState(GameStates.CONTINUE_GAME_Q);
+                    } else {
+                        RootScene.Me.setState(GameStates.NEW_GAME);
+                    }
                 }
                 return true;
             }

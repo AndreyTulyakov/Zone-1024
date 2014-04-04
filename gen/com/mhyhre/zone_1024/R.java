@@ -29,6 +29,7 @@ public final class R {
         public static final int exit=0x7f040007;
         public static final int game_over=0x7f040008;
         public static final int press_to_start=0x7f040009;
+        public static final int q_continue_game=0x7f04000c;
         public static final int q_keep_playing=0x7f040005;
         public static final int q_restart_game=0x7f040004;
         public static final int q_stop_game=0x7f040003;

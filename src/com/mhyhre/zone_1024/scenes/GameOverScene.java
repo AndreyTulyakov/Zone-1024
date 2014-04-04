@@ -1,19 +1,10 @@
 package com.mhyhre.zone_1024.scenes;
 
-import javax.microedition.khronos.opengles.GL10;
-
-import org.andengine.engine.camera.Camera;
 import org.andengine.entity.modifier.AlphaModifier;
-import org.andengine.entity.modifier.DelayModifier;
-import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.text.Text;
-import org.andengine.entity.text.TickerText;
-import org.andengine.entity.text.TickerText.TickerTextOptions;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
-import org.andengine.opengl.util.GLState;
-
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;

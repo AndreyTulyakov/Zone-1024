@@ -12,7 +12,8 @@ public class PreferenceManager {
     
     private static boolean vibroEnabled = true;
     private static boolean soundEnabled = true;
-    
+    private static boolean gameWasNotEnded = false;
+
     
     public static PreferenceManager getInstance(Activity activity, String preferenceId) {
         if(instance == null) {
@@ -39,6 +40,8 @@ public class PreferenceManager {
 
         setVibroEnabled(mySharedPreferences.getBoolean("isVibroEnabled", true));
         setSoundEnabled(mySharedPreferences.getBoolean("isSoundEnabled", true));
+        
+        setGameWasNotEnded(mySharedPreferences.getBoolean("gameWasNotEnded", false));
     }
     
     protected void savePreferences() {
@@ -49,6 +52,8 @@ public class PreferenceManager {
         editor.putInt("appVersion", 2);
         editor.putBoolean("isVibroEnabled", isVibroEnabled());
         editor.putBoolean("isSoundEnabled", isSoundEnabled());
+        
+        editor.putBoolean("gameWasNotEnded", isGameWasNotEnded());
         editor.commit();
     }
 
@@ -69,5 +74,11 @@ public class PreferenceManager {
         soundEnabled = enabled;
     }
 
+    public static boolean isGameWasNotEnded() {
+        return gameWasNotEnded;
+    }
 
+    public static void setGameWasNotEnded(boolean gameWasNotEnded) {
+        PreferenceManager.gameWasNotEnded = gameWasNotEnded;
+    }
 }

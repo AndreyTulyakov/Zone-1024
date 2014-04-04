@@ -5,6 +5,8 @@
 
 package com.mhyhre.zone_1024;
 
+import java.io.IOException;
+
 import org.andengine.BuildConfig;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
@@ -41,10 +43,13 @@ public class MainActivity extends SimpleBaseGameActivity {
     
     private AssetManager assetManager;
     private Vibrator vibrator;
-    private PreferenceManager preferenceManager;
+    private static PreferenceManager preferenceManager;
     
     @Override
     public EngineOptions onCreateEngineOptions() {
+        
+        Log.i(DEBUG_ID, this.getClass().getSimpleName() + ".onCreateEngineOptions");
+        
         Me = this;
         assetManager = getAssets();
         
@@ -110,20 +115,49 @@ public class MainActivity extends SimpleBaseGameActivity {
             sceneRoot.onSceneBackPress();
         }
     }
+    
+    @Override
+    public void onDestroyResources() throws IOException {
+        Log.i(DEBUG_ID, "MainActivity: onDestroyResources()");
+        super.onDestroyResources();
+    }
+    
 
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+    
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+    }
+    
+    
+    
+    
+    @Override
+    protected void onPause() {
+        Log.i(DEBUG_ID, "Game paused");
+        this.getEngine().stop();
+        super.onPause();
+    }
+    
+    
+    @Override
+    public void onResume() {
+        Log.i(DEBUG_ID, "Game resumed");
+        this.getEngine().start();
+        super.onResume();
     }
 
     public void onDestroy() {
 
         preferenceManager.savePreferences();
-        
+
         if (BuildConfig.DEBUG)
             Log.i(DEBUG_ID, this.getClass().getSimpleName() + ".onDestroy");
         
         super.onDestroy();
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     public static float getWidth() {
@@ -147,12 +181,18 @@ public class MainActivity extends SimpleBaseGameActivity {
             Me.vibrator.vibrate(milliseconds);
         }
     }
+
     
     public static VertexBufferObjectManager getVboManager() {
         if(Me != null) {
             return Me.getVertexBufferObjectManager();
         }
         return null;
+    }
+
+
+    public static PreferenceManager getPreferenceManager() {
+        return preferenceManager;
     }
 
 }

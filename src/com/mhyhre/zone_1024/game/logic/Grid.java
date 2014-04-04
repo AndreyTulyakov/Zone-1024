@@ -253,6 +253,12 @@ public class Grid extends SimpleGrid {
 
         return false;
     }
+    
+    public void setTile(int x, int y, SimpleTile tile) {
+        if(size.inRange(x, y)){
+            tiles[x][y] = tile;
+        }
+    }
 
     public void testInit() {
        

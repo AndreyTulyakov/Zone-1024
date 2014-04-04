@@ -2,6 +2,7 @@ package com.mhyhre.zone_1024.game.logic;
 
 import android.util.Log;
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.scenes.RootScene;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.Direction;
@@ -39,8 +40,32 @@ public final class GameManager implements MoveEventListener, GameControllable {
         this.score = 0;
         this.keepPlaying = false;
         this.gameFinished = false;
+        
         //grid.testInit();
         this.addStartTiles();
+    }
+    
+    public void loadGame() {
+        if(PreferenceManager.isGameWasNotEnded()) {
+            this.grid = GridUtils.loadFromFile();
+            this.score = grid.calculateTotalValues();
+            if (grid.hasNumberOrMore(winNumber)) {
+                keepPlaying = true;
+            } else {
+                keepPlaying = false;
+            }
+            this.gameFinished = false;
+        } else {
+            setup();
+        }
+    }
+    
+    public void saveGame() {
+        
+        PreferenceManager.setGameWasNotEnded(!isGameFinished());
+        if(isGameFinished() == false) {
+            GridUtils.saveToFile(grid);
+        }
     }
 
     public void update() {
@@ -80,6 +105,10 @@ public final class GameManager implements MoveEventListener, GameControllable {
     public SimpleGrid getGrid() {
         return grid;
     }
+    
+    public Grid getExGrid() {
+        return grid;
+    }
 
     @Override
     public void onMoveEvent(Direction direction) {
@@ -92,16 +121,15 @@ public final class GameManager implements MoveEventListener, GameControllable {
             if (grid.canMove() == false) {
                 grid.lock();
                 
+                gameFinished = true; 
+                PreferenceManager.setGameWasNotEnded(false);
+                
                 if(keepPlaying) {
                     keepPlaying = false;
-                    gameFinished = true;
                     RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
-
                 } else {
-                    RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
-                    gameFinished = true;                   
+                    RootScene.Me.setState(GameStates.GAME_OVER_SCENE);                     
                 }
-
 
             }
 
@@ -122,6 +150,10 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     public boolean isGameFinished() {
         return gameFinished;
+    }
+
+    public void setGameFinished(boolean gameFinished) {
+        this.gameFinished = gameFinished;
     }
 
 
