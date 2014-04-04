@@ -105,10 +105,6 @@ public final class GameManager implements MoveEventListener, GameControllable {
     public SimpleGrid getGrid() {
         return grid;
     }
-    
-    public Grid getExGrid() {
-        return grid;
-    }
 
     @Override
     public void onMoveEvent(Direction direction) {

@@ -17,6 +17,7 @@ import org.andengine.entity.util.FPSLogger;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
+import com.mhyhre.zone_1024.game.logic.GameManager;
 import com.mhyhre.zone_1024.scenes.RootScene;
 
 import android.content.res.AssetManager;
@@ -152,6 +153,9 @@ public class MainActivity extends SimpleBaseGameActivity {
 
     public void onDestroy() {
 
+        if(preferenceManager.isGameWasNotEnded()) {
+            GameManager.getInstance().saveGame();
+        }
         preferenceManager.savePreferences();
 
         if (BuildConfig.DEBUG)
