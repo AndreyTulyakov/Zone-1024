@@ -160,7 +160,7 @@ public class RootScene extends Scene {
     }
     
     private void preTerminateOperations() {
-        ScoresTable.getInstance().saveScores();
+        // Nothing to do now
     }
 
     public static GameStates getState() {
@@ -203,7 +203,9 @@ public class RootScene extends Scene {
             break;
             
         case GAME_WIN_SCENE:
-            setState(GameStates.KEEP_PLAYING_Q);
+            if(GameManager.getInstance().isGameFinished() == false) {
+                setState(GameStates.KEEP_PLAYING_Q);
+            }
             break;
             
         default:

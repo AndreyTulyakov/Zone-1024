@@ -16,6 +16,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private int score;
     private final int winNumber = 1024;
     private boolean keepPlaying = false;
+    private boolean gameFinished = false;
     private final Size size;
     private Grid grid;
 
@@ -37,8 +38,8 @@ public final class GameManager implements MoveEventListener, GameControllable {
         this.grid = new Grid(size);
         this.score = 0;
         this.keepPlaying = false;
-
-        grid.testInit();
+        this.gameFinished = false;
+        //grid.testInit();
         this.addStartTiles();
     }
 
@@ -50,6 +51,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
             if (grid.hasNumberOrMore(winNumber)) {
                 if (keepPlaying == false) {
                     grid.lock();
+                    score = grid.calculateTotalValues();
                     RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
                 }
 
@@ -89,8 +91,18 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
             if (grid.canMove() == false) {
                 grid.lock();
-                keepPlaying = false;
-                RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
+                
+                if(keepPlaying) {
+                    keepPlaying = false;
+                    gameFinished = true;
+                    RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
+
+                } else {
+                    RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
+                    gameFinished = true;                   
+                }
+
+
             }
 
         }
@@ -102,6 +114,14 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     public void setKeepPlaying() {
         keepPlaying = true;
+    }
+
+    public boolean isKeepPlaying() {
+        return keepPlaying;
+    }
+
+    public boolean isGameFinished() {
+        return gameFinished;
     }
 
 

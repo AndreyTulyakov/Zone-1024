@@ -12,4 +12,5 @@
     <string name="game_over">Game over.</string>
     <string name="press_to_start">press to start</string>
     <string name="won">Congratulations!\nYou won!</string>
+    <string name="clear_scores">Press there during 5 sec.\nto clear scores...</string>
 </resources>

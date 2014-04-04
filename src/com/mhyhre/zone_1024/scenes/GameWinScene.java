@@ -40,7 +40,11 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
                     if (ScoresTable.getInstance().isNeedAdd(GameManager.getInstance().getScore())) {
                         addRecordScores();
                     } else {
-                        RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
+                        if(GameManager.getInstance().isGameFinished() == false) {
+                            RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
+                        } else {
+                            RootScene.Me.setState(GameStates.SCORES_VIEW);
+                        }
                     }
                 }
                 return true;
@@ -106,7 +110,12 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
     public void textChanged(String text) {
         if (TextInput.isOkPressed()) {
             ScoresTable.getInstance().addRecord(TextInput.getResultText(), GameManager.getInstance().getScore());
+            ScoresTable.getInstance().saveScores();
         }
-        RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
+        if(GameManager.getInstance().isGameFinished() == false) {
+            RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
+        } else {
+            RootScene.Me.setState(GameStates.SCORES_VIEW);
+        }
     }
 }

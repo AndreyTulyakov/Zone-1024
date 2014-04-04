@@ -23,6 +23,7 @@ public class LoaderBackground extends SpriteBatch {
     private final ITextureRegion cellRegion;
     private TileColors tileColor;
     private float tilesRandomAngle;
+    private Color modulation;
 
     public LoaderBackground(float x, float y) {
         super(x, y, MainActivity.resources.getTextureAtlas("User_Interface"), COUNT_OF_SPRITES, MainActivity.getVboManager());
@@ -32,6 +33,8 @@ public class LoaderBackground extends SpriteBatch {
         size = new Size(4, 8);
         tiles = new ArrayList<SimpleTile>(COUNT_OF_SPRITES);
         random = new Random();
+        
+        modulation = new Color(0.6f+0.4f*random.nextFloat(),0.8f+0.2f*random.nextFloat(),0.8f+0.4f*random.nextFloat());
 
         cellRegion = MainActivity.resources.getTextureRegion("Cell");
 
@@ -67,6 +70,16 @@ public class LoaderBackground extends SpriteBatch {
             } 
         }
     }
+    
+    private float fixColor(float component) {
+        if(component > 0.999f) {
+            component = 0.999f;
+        }
+        if(component < 0) {
+            component = 0;
+        }
+        return component;
+    }
 
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
@@ -77,8 +90,13 @@ public class LoaderBackground extends SpriteBatch {
         for (SimpleTile tile : tiles) {
             Color c = tileColor.getColorByCellValue(tile.getValue());
             float cAll = (c.getRed()+ c.getGreen()+ c.getBlue())/3;
+
+            float red = fixColor(cAll * modulation.getRed());
+            float green = fixColor(cAll * modulation.getGreen());
+            float blue = fixColor(cAll * modulation.getBlue());
+            
             this.draw(cellRegion, tile.getX(), tile.getY(), cellRegion.getWidth(), cellRegion.getHeight(),
-                    tilesRandomAngle, cAll,cAll,cAll, 0.5f);
+                    tilesRandomAngle, red, green, blue, 0.5f);
         }
         this.submit();
 

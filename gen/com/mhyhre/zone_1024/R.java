@@ -25,6 +25,7 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
+        public static final int clear_scores=0x7f04000b;
         public static final int exit=0x7f040007;
         public static final int game_over=0x7f040008;
         public static final int press_to_start=0x7f040009;
