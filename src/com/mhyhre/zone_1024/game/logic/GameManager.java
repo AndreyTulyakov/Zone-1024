@@ -16,7 +16,6 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     private int score;
     private final int winNumber = 1024;
-    private boolean keepPlaying = false;
     private boolean gameFinished = false;
     private final Size size;
     private Grid grid;
@@ -38,57 +37,58 @@ public final class GameManager implements MoveEventListener, GameControllable {
         Log.i(MainActivity.DEBUG_ID, "GameManager: Setup");
         this.grid = new Grid(size);
         this.score = 0;
-        this.keepPlaying = false;
         this.gameFinished = false;
-        
-        //grid.testInit();
+
+        grid.testInit();
         this.addStartTiles();
     }
-    
+
     public void loadGame() {
-        if(PreferenceManager.isGameWasNotEnded()) {
+        if (MainActivity.getPreferenceManager().isGameWasNotEnded()) {
             this.grid = GridUtils.loadFromFile();
             this.score = grid.calculateTotalValues();
-            if (grid.hasNumberOrMore(winNumber)) {
-                keepPlaying = true;
-            } else {
-                keepPlaying = false;
-            }
             this.gameFinished = false;
         } else {
             setup();
         }
     }
-    
+
     public void saveGame() {
-        
+
         PreferenceManager.setGameWasNotEnded(!isGameFinished());
-        if(isGameFinished() == false) {
+        if (isGameFinished() == false) {
             GridUtils.saveToFile(grid);
         }
     }
 
     public void update() {
-
+        
         grid.update();
+        
+        if (gameFinished) {
+            return;
+        }
+
         if (grid.isLocked() == false) {
 
-            if (grid.hasNumberOrMore(winNumber)) {
-                if (keepPlaying == false) {
-                    grid.lock();
-                    score = grid.calculateTotalValues();
-                    RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
-                }
+            score = grid.calculateTotalValues();
 
+            // If won
+            if (grid.hasNumberOrMore(winNumber)) {
+                score = grid.calculateTotalValues();
+                PreferenceManager.setGameWasNotEnded(false);
+                gameFinished = true;
+                RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
             }
-        } else {
-            if (keepPlaying == true) {
-                grid.unlock();
+
+            // If game ended
+            if (grid.isCanMoving() == false) {
+                gameFinished = true;
+                PreferenceManager.setGameWasNotEnded(false);
+                RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
             }
         }
     }
-
-  
 
     public void restart() {
         Log.i(MainActivity.DEBUG_ID, "GameManager: Restart!");
@@ -108,40 +108,13 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     @Override
     public void onMoveEvent(Direction direction) {
-
         if (grid.isLocked() == false) {
-            grid.lock();
             grid.move(direction);
-            score = grid.calculateTotalValues();
-
-            if (grid.canMove() == false) {
-                grid.lock();
-                
-                gameFinished = true; 
-                PreferenceManager.setGameWasNotEnded(false);
-                
-                if(keepPlaying) {
-                    keepPlaying = false;
-                    RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
-                } else {
-                    RootScene.Me.setState(GameStates.GAME_OVER_SCENE);                     
-                }
-
-            }
-
         }
     }
 
     public int getScore() {
         return score;
-    }
-
-    public void setKeepPlaying() {
-        keepPlaying = true;
-    }
-
-    public boolean isKeepPlaying() {
-        return keepPlaying;
     }
 
     public boolean isGameFinished() {
@@ -151,6 +124,5 @@ public final class GameManager implements MoveEventListener, GameControllable {
     public void setGameFinished(boolean gameFinished) {
         this.gameFinished = gameFinished;
     }
-
 
 }

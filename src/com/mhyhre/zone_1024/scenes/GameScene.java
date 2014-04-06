@@ -7,7 +7,6 @@ package com.mhyhre.zone_1024.scenes;
 
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
-import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
@@ -28,7 +27,7 @@ public class GameScene extends SimpleScene {
         
         strScore = MainActivity.Me.getString(R.string.scores);
 
-        background = new Background(0.0f, 0.0f, 0.0f);
+        background = new Background(0.2f, 0.2f, 0.2f);
         setBackground(background);
         setBackgroundEnabled(true);
 

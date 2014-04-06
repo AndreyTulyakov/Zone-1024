@@ -4,10 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import android.util.Log;
 import android.util.Pair;
 
-import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
@@ -16,10 +14,12 @@ public class Grid extends SimpleGrid {
 
     private Random random;
     private boolean locked;
+    private boolean canMoving;
 
     public Grid(Size size) {
         super(size);
         random = new Random();
+        canMoving = true;
     }
 
     public Position randomAvaibleCell() {
@@ -79,11 +79,11 @@ public class Grid extends SimpleGrid {
         return null;
     }
 
-    public void lock() {
+    private void lock() {
         locked = true;
     }
 
-    public void unlock() {
+    private void unlock() {
         locked = false;
     }
 
@@ -145,8 +145,8 @@ public class Grid extends SimpleGrid {
      * @return return scores in this move
      */
     public int move(Direction direction) {
-
-        Log.i(MainActivity.DEBUG_ID, "Grid::Move::To " + direction.name());
+        
+        lock();
 
         int scores = 0;
 
@@ -171,7 +171,6 @@ public class Grid extends SimpleGrid {
                     Position targetPosition = findTargetForTile(currentPosition, direction);
 
                     if (currentPosition.equals(targetPosition) == true) {
-                        Log.i(MainActivity.DEBUG_ID, "Grid::Move::Position" + currentPosition.toString() + " Cant move to " + direction.name());
                         continue;
                     } else {
 
@@ -198,15 +197,13 @@ public class Grid extends SimpleGrid {
             addRandomTile();
         }
         
-        if (canMove() == false) {
-            
-        }
+        canMoving = canMakeMove();
         
         unlock();
         return scores;
     }
 
-    public boolean canMove() {
+    private boolean canMakeMove() {
 
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
@@ -262,7 +259,7 @@ public class Grid extends SimpleGrid {
 
     public void testInit() {
        
-        
+       /*
         int value = 1;
         
             for (int y = 0; y < size.getHeight(); y++) {
@@ -271,10 +268,14 @@ public class Grid extends SimpleGrid {
                 tiles[x][y] = new SimpleTile(x, y, value);
             }
         }
-        
+        */
                
-        //tiles[0][0] = new SimpleTile(0, 0, 512);
-        //tiles[0][1] = new SimpleTile(0, 1, 512);
+        tiles[0][0] = new SimpleTile(0, 0, 512);
+        tiles[0][1] = new SimpleTile(0, 1, 512);
+    }
+
+    public boolean isCanMoving() {
+        return canMoving;
     }
 
 

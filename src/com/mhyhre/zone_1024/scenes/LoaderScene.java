@@ -21,7 +21,6 @@ import com.mhyhre.zone_1024.utils.LoaderBackground;
 
 public class LoaderScene extends SimpleScene{
 
-    private List<Entity> slowShowList;
     private Text textTitle;
     private Text textPressToStart;
     private float pressAlphaSum;
@@ -29,8 +28,6 @@ public class LoaderScene extends SimpleScene{
     private LoaderBackground loaderBackground;
     
     public LoaderScene() {
-        
-        slowShowList = new LinkedList<Entity>();
         
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
@@ -68,7 +65,7 @@ public class LoaderScene extends SimpleScene{
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
                     MainActivity.vibrate(30);
                     
-                    if(PreferenceManager.isGameWasNotEnded()) {
+                    if(MainActivity.getPreferenceManager().isGameWasNotEnded()) {
                         RootScene.Me.setState(GameStates.CONTINUE_GAME_Q);
                     } else {
                         RootScene.Me.setState(GameStates.NEW_GAME);
@@ -105,7 +102,6 @@ public class LoaderScene extends SimpleScene{
         attachChild(bigExitButton);
         registerTouchArea(bigExitButton);
 
-        slowShowList.add(bigExitButton);
     }
     
     
@@ -125,7 +121,6 @@ public class LoaderScene extends SimpleScene{
         attachChild(scoresButton);
         registerTouchArea(scoresButton);
 
-        slowShowList.add(scoresButton);
     }
     
     /*
@@ -209,7 +204,7 @@ public class LoaderScene extends SimpleScene{
         };
         attachChild(aboutButton);
         registerTouchArea(aboutButton);
-        slowShowList.add(aboutButton);
+        
     }
     
     @Override
@@ -220,13 +215,6 @@ public class LoaderScene extends SimpleScene{
         textTitle.setAlpha(0);
         textTitle.registerEntityModifier(alphaMode);
         
-        AlphaModifier alphaMode2 = new AlphaModifier(3f, 0.0f, 0.8f);
-        alphaMode2.setAutoUnregisterWhenFinished(true);
-        
-        for(Entity entity: slowShowList) {
-            entity.setAlpha(0);
-            entity.registerEntityModifier(alphaMode2);
-        }
         // For blink synchronization
         pressAlphaSum = 0;
         

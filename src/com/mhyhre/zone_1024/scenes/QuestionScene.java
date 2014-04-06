@@ -49,12 +49,7 @@ public class QuestionScene extends SimpleScene {
                     case RESTART_Q:
                         RootScene.Me.setState(GameStates.NEW_GAME);
                         break;
-                        
-                    case KEEP_PLAYING_Q:
-                        RootScene.Me.setState(GameStates.GAME_PROCESS);
-                        GameManager.getInstance().setKeepPlaying();
-                        break;
-                        
+                       
                     case CONTINUE_GAME_Q:
                         GameManager.getInstance().loadGame();
                         RootScene.Me.setState(GameStates.GAME_PROCESS);
@@ -88,10 +83,6 @@ public class QuestionScene extends SimpleScene {
                         RootScene.Me.setState(GameStates.LOADER);
                         break;
                         
-                    case KEEP_PLAYING_Q:
-                        RootScene.Me.setState(GameStates.SCORES_VIEW);
-                        break;
-                        
                     case CONTINUE_GAME_Q:
                         RootScene.Me.setState(GameStates.NEW_GAME);
                         break;
@@ -115,10 +106,6 @@ public class QuestionScene extends SimpleScene {
         
         case RESTART_Q:
             textQuestion.setText(strRestart);
-            break;
-            
-        case KEEP_PLAYING_Q:
-            textQuestion.setText(strKeepPlaying);
             break;
             
         case CONTINUE_GAME_Q:

@@ -29,7 +29,6 @@ public class RootScene extends Scene {
         RESTART_Q,
         GAME_WIN_SCENE,
         GAME_OVER_SCENE,
-        KEEP_PLAYING_Q,
         TERMINATE,
         CONTINUE_GAME_Q;
     }
@@ -129,10 +128,6 @@ public class RootScene extends Scene {
             questionScene.show();
             break;
             
-        case KEEP_PLAYING_Q: 
-            questionScene.show();
-            break;
-            
         case RESTART_Q:
             questionScene.show();
             break;
@@ -193,14 +188,8 @@ public class RootScene extends Scene {
             setState(GameStates.LOADER);
             break;           
             
-        case KEEP_PLAYING_Q:
-            setState(GameStates.GAME_PROCESS);
-            break;
-            
         case GAME_WIN_SCENE:
-            if(GameManager.getInstance().isGameFinished() == false) {
-                setState(GameStates.KEEP_PLAYING_Q);
-            }
+            setState(GameStates.SCORES_VIEW);
             break;
             
         default:
@@ -237,10 +226,6 @@ public class RootScene extends Scene {
             
         case SCORES_VIEW:
             scoreScene.onSceneTouchEvent(pSceneTouchEvent);
-            break;
-            
-        case KEEP_PLAYING_Q:
-            questionScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
         case CONTINUE_GAME_Q:

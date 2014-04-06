@@ -29,7 +29,7 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
         IFont font = MainActivity.resources.getFont("WhiteMono32");
 
         // Generate background rectangle
-        backgroundRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getWidth(),
+        backgroundRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getHeight(),
                 MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
@@ -37,14 +37,11 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
                     Log.i(MainActivity.DEBUG_ID, "Win Scene: click on!");
                     MainActivity.vibrate(30);
 
+                    
                     if (ScoresTable.getInstance().isNeedAdd(GameManager.getInstance().getScore())) {
                         addRecordScores();
                     } else {
-                        if(GameManager.getInstance().isGameFinished() == false) {
-                            RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
-                        } else {
-                            RootScene.Me.setState(GameStates.SCORES_VIEW);
-                        }
+                        RootScene.Me.setState(GameStates.SCORES_VIEW);
                     }
                 }
                 return true;
@@ -58,6 +55,7 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
     }
 
     private void addRecordScores() {
+        Log.i(MainActivity.DEBUG_ID, "WinScene: addRecordScores text input.");
         if(TextInput.isNowShowed() == false) {
             TextInput.setListener(this);
             TextInput.showTextInput("Enter you name!", "Maximum " + ScoresTable.MAXIMAL_NAME_LENGTH + " characters", MainActivity.Me);
@@ -108,14 +106,14 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
 
     @Override
     public void textChanged(String text) {
+        
         if (TextInput.isOkPressed()) {
             ScoresTable.getInstance().addRecord(TextInput.getResultText(), GameManager.getInstance().getScore());
             ScoresTable.getInstance().saveScores();
-        }
-        if(GameManager.getInstance().isGameFinished() == false) {
-            RootScene.Me.setState(GameStates.KEEP_PLAYING_Q);
-        } else {
             RootScene.Me.setState(GameStates.SCORES_VIEW);
+        } else {
+            RootScene.Me.setState(GameStates.LOADER);
         }
+
     }
 }

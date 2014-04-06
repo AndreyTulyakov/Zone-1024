@@ -1,12 +1,11 @@
 package com.mhyhre.zone_1024.utils;
 
-import org.andengine.entity.sprite.ButtonSprite;
-import org.andengine.entity.sprite.ButtonSprite.OnClickListener;
 import org.andengine.ui.activity.BaseGameActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnShowListener;
 import android.view.Gravity;
 import android.view.inputmethod.InputMethodManager;
@@ -93,6 +92,18 @@ public class TextInput {
                 });
 
                 final AlertDialog dialog = alert.create();
+                dialog.setOnCancelListener(new OnCancelListener() {
+                    
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                       
+                        nowShowed = false;
+                        if(listener != null) {
+                            listener.textChanged(null);
+                        }
+                        
+                    }
+                });
                 dialog.setOnShowListener(new OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
@@ -100,6 +111,8 @@ public class TextInput {
                         final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
                     }
+                    
+                    
                 });
                 dialog.show();
             }

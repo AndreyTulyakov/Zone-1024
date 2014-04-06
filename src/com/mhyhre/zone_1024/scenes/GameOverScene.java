@@ -23,7 +23,7 @@ public class GameOverScene extends SimpleScene {
         
         // Generate background rectangle
         backgroundRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), 
-                MainActivity.getWidth(), MainActivity.getWidth(), MainActivity.getVboManager()) {
+                MainActivity.getWidth(), MainActivity.getHeight(), MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {

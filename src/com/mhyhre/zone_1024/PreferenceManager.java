@@ -74,7 +74,7 @@ public class PreferenceManager {
         soundEnabled = enabled;
     }
 
-    public static boolean isGameWasNotEnded() {
+    public boolean isGameWasNotEnded() {
         return gameWasNotEnded;
     }
 
