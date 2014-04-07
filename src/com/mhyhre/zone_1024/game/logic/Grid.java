@@ -2,10 +2,14 @@ package com.mhyhre.zone_1024.game.logic;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
+import android.util.Log;
 import android.util.Pair;
 
+import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.logic.SimpleTile.AfterMove;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
@@ -15,6 +19,7 @@ public class Grid extends SimpleGrid {
     private Random random;
     private boolean locked;
     private boolean canMoving;
+
 
     public Grid(Size size) {
         super(size);
@@ -58,10 +63,10 @@ public class Grid extends SimpleGrid {
             tiles[column][row] = tile;
         }
     }
-
-    private void removeTile(Position cellPosition) {
-        if (inGridRange(cellPosition)) {
-            tiles[cellPosition.getX()][cellPosition.getY()] = null;
+    
+    private void removeTile(int x, int y) {
+        if (inGridRange(x, y)) {
+            tiles[x][y] = null;
         }
     }
 
@@ -80,10 +85,12 @@ public class Grid extends SimpleGrid {
     }
 
     private void lock() {
+        Log.i(MainActivity.DEBUG_ID, "Grid locked");
         locked = true;
     }
 
     private void unlock() {
+        Log.i(MainActivity.DEBUG_ID, "Grid unlocked");
         locked = false;
     }
 
@@ -93,12 +100,58 @@ public class Grid extends SimpleGrid {
 
     public void update() {
 
+        boolean readyFlag = true;
+        
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
                 if (tiles[x][y] != null) {
                     tiles[x][y].update();
+                    readyFlag &= tiles[x][y].isMoveComplete();
                 }
             }
+        }
+        
+        ListIterator<SimpleTile> iter = movingTiles.listIterator();
+        while(iter.hasNext()) {
+            
+            SimpleTile tile = iter.next();
+            tile.update();
+            readyFlag &= tile.isMoveComplete();
+            if(tile.isMoveComplete()) {
+                iter.remove();
+            }
+        }
+        
+        // Must write aftermove changes
+        if(isLocked() && readyFlag == true){
+            
+            // remove moving tiles
+            movingTiles.clear();
+            
+            for (int x = 0; x < size.getWidth(); x++) {
+                for (int y = 0; y < size.getHeight(); y++) {
+                    
+                    SimpleTile tile = tiles[x][y];
+                    
+                    if (tile != null) {
+                        switch (tile.getAfterMove()) {
+
+                        case MUST_SUMMED:
+                            tile.setValue(tile.getValue()*2);
+                            tile.bang();
+                            break;
+                        case NONE:
+                            removeTile(x,y);
+                            insertTile(tile.getTargetX(), tile.getTargetY(), tile);
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+            }
+            addRandomTile();
+            unlock();
         }
     }
 
@@ -132,10 +185,12 @@ public class Grid extends SimpleGrid {
             for (int y = 0; y < size.getHeight(); y++) {
                 if (tiles[x][y] != null) {
                     tiles[x][y].setWasChanged(false);
+                    tiles[x][y].setAfterMove(AfterMove.NONE);
                 }
             }
         }
     }
+
 
     public boolean availableCell(Position cell) {
         return tiles[cell.getX()][cell.getY()] == null;
@@ -144,11 +199,13 @@ public class Grid extends SimpleGrid {
     /**
      * @return return scores in this move
      */
-    public int move(Direction direction) {
+    public void move(Direction direction) {
+        
+        if(isLocked() == true) {
+            return;
+        }
         
         lock();
-
-        int scores = 0;
 
         // Creating traversal path
         Pair<List<Integer>, List<Integer>> traversal = GridUtils.getTraversalList(direction, size.getWidth());
@@ -158,7 +215,6 @@ public class Grid extends SimpleGrid {
         resetTilesMovingInfo();
         Position currentPosition = new Position(0, 0);
 
-        boolean somethingWasMoved = false;
 
         // Creating loop by traversals
         for (Integer x : traversalX) {
@@ -176,31 +232,32 @@ public class Grid extends SimpleGrid {
 
                         SimpleTile targetTile = getTile(targetPosition);
 
+                        // ≈сли €чейка не взаимодействует с другими €чейками
+                        // If target is free cell
                         if (targetTile == null) {
-                            tile.setPosition(targetPosition.getX(), targetPosition.getY());
+                            removeTile(x, y);
                             insertTile(targetPosition.getX(), targetPosition.getY(), tile);
-                            removeTile(currentPosition);
+                            tile.setTargetPosition(targetPosition.getX(), targetPosition.getY());
+                            tile.setAfterMove(AfterMove.NONE);
+                            
                         } else {
-                            targetTile.setValue(targetTile.getValue() * 2);
+                            // if target a sum tile
+                            removeTile(x, y);
+                            movingTiles.add(tile);
+                            tile.setTargetPosition(targetTile.getTargetX(), targetTile.getTargetY());
+
+                            targetTile.setAfterMove(AfterMove.MUST_SUMMED);
                             targetTile.setWasChanged(true);
-                            targetTile.bang();
-                            removeTile(currentPosition);
-                            scores += targetTile.getValue();
                         }
-                        somethingWasMoved = true;
                     }
                 }
             }
         }
 
-        if (somethingWasMoved) {
-            addRandomTile();
-        }
+
         
         canMoving = canMakeMove();
-        
-        unlock();
-        return scores;
+
     }
 
     private boolean canMakeMove() {

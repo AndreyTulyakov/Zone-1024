@@ -5,41 +5,65 @@ package com.mhyhre.zone_1024.game.logic;
  */
 public class SimpleTile {
     
-    public static final float ZOOM_BANG_FACTOR = 1.3f;
+    public enum AfterMove {
+        MUST_BE_DELETED,
+        NONE,
+        MUST_SUMMED;
+    }
     
-    protected int x;
-    protected int y;
+    public static final float ZOOM_BANG_FACTOR = 1.3f;
+    public static final float MOVING_COMPLETE_DISTANCE = 0.21f;
+    public static final float TILE_MOVING_SPEED = 0.2f;
+    
+    protected float x;
+    protected float y;
+    protected int targetX;
+    protected int targetY;
     protected int value;
     protected float zoom = 1;
-    
     protected boolean wasChanged;
+    protected AfterMove afterMove;
 
 
     public SimpleTile(int x, int y, int value) {
         this.x = x;
         this.y = y;
+        this.targetX = x;
+        this.targetY = y;
         this.value = value;
+        this.afterMove = AfterMove.NONE;
     }
     
-    public int getX() {
+    public boolean isMoveComplete() {
+        if(Math.abs(x-targetX) <= MOVING_COMPLETE_DISTANCE) {
+            if(Math.abs(y-targetY) <= MOVING_COMPLETE_DISTANCE) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
     
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setTargetPosition(int x, int y) {
+        this.x = targetX;
+        this.y = targetY;
+        targetX = x;
+        targetY = y;
     }
 
     public int getValue() {
@@ -66,7 +90,6 @@ public class SimpleTile {
         }
     }
     
-    
     public boolean isWasChanged() {
         return wasChanged;
     }
@@ -76,6 +99,47 @@ public class SimpleTile {
     }
     
     public void update() {
+        
+        if(isMoveComplete() == false) {
+            moveToTarget();
+        } else {
+            x = targetX;
+            y = targetY;
+        }
         updateZoom();
+    }
+
+    private void moveToTarget() {
+        if(x < targetX) {
+            x += TILE_MOVING_SPEED;
+        }
+        
+        if(x > targetX) {
+            x -= TILE_MOVING_SPEED;
+        }
+        
+        if(y < targetY) {
+            y += TILE_MOVING_SPEED;
+        }
+        
+        if(y > targetY) {
+            y -= TILE_MOVING_SPEED;
+        }
+    }
+
+    public AfterMove getAfterMove() {
+        return afterMove;
+    }
+
+    public void setAfterMove(AfterMove afterMove) {
+        this.afterMove = afterMove;
+    }
+
+    public int getTargetX() {
+        return targetX;
+    }
+
+    public int getTargetY() {
+        return targetY;
     }
 }

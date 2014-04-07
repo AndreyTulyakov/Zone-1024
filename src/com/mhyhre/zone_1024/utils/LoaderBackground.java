@@ -60,7 +60,9 @@ public class LoaderBackground extends SpriteBatch {
         
         for(int x = 0; x < size.getWidth(); x++) {
             for(int y = 0; y < size.getHeight(); y++) {
+                
                 SimpleTile tile = tiles.get(y * size.getWidth() + x);
+                
                 if(tile.getY() < -(cellRegion.getWidth()+5)) {
                     tile.setY(rebornY);
                     int value = valuesList.get(random.nextInt(valuesList.size()));

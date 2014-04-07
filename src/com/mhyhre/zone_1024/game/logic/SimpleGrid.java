@@ -1,6 +1,8 @@
 package com.mhyhre.zone_1024.game.logic;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
@@ -12,10 +14,13 @@ public class SimpleGrid {
 
     protected Size size;
     protected SimpleTile[][] tiles;
+    protected List<SimpleTile> movingTiles;
+
 
     public SimpleGrid(Size size) {
         this.size = size;
         tiles = new SimpleTile[size.getWidth()][size.getHeight()];
+        movingTiles = new LinkedList<SimpleTile>();
     }
     
     public SimpleTile getTile(Position position) {
@@ -39,6 +44,9 @@ public class SimpleGrid {
                     allTiles.add(tiles[x][y]);
                 }
             }
+        }
+        for(SimpleTile tile: movingTiles) {
+            allTiles.add(tile);
         }
         return allTiles;
     }
@@ -83,7 +91,13 @@ public class SimpleGrid {
     }
     
     public boolean isBusyCell(Position cell) {
-        return tiles[cell.getX()][cell.getY()] != null;
+        SimpleTile tile = tiles[cell.getX()][cell.getY()];
+        if(tile != null) {
+            if(tile.getTargetX() == cell.getX() && tile.getTargetY() == cell.getY()) {
+                return true;
+            }
+        }
+        return false;
     }
     public Size getSize() {
         return size;
