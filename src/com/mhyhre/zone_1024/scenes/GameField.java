@@ -11,15 +11,18 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.color.Color;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.logic.Grid;
 import com.mhyhre.zone_1024.game.logic.SimpleGrid;
 import com.mhyhre.zone_1024.game.logic.SimpleTile;
 import com.mhyhre.zone_1024.utils.Size;
 import com.mhyhre.zone_1024.utils.TileColors;
 
-
 public class GameField extends SimpleScene {
-    
+
     private final ITextureRegion cellRegion;
+    private final ITextureRegion jokerCellRegion;
+    private final ITextureRegion demonCellRegion;
+    
     private final int BETWEEN_CELLS_SIZE = 2;
     private final Size cellsOffset;
 
@@ -29,27 +32,29 @@ public class GameField extends SimpleScene {
     private TileColors tileColors;
 
     private Size size;
-    
-    
+
     public GameField(Size size) {
         setBackgroundEnabled(false);
         show();
-        
+
         this.size = size;
         tileColors = TileColors.getInstance();
-        
+
+        // Select regions
         cellRegion = MainActivity.resources.getTextureRegion("Cell");
-        cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
+        jokerCellRegion = MainActivity.resources.getTextureRegion("JokerCell");
+        demonCellRegion = MainActivity.resources.getTextureRegion("DemonCell");
         
+        cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
+
         // Generate background rectangle
-        fieldRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), 
-                MainActivity.getWidth(), MainActivity.getWidth(), MainActivity.getVboManager());
+        fieldRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getWidth(),
+                MainActivity.getVboManager());
         fieldRect.setColor(0.6f, 0.6f, 0.6f);
         attachChild(fieldRect);
 
         createTilesGraphics();
     }
-    
 
     private void createTilesGraphics() {
 
@@ -69,55 +74,75 @@ public class GameField extends SimpleScene {
             Text text = new Text(0, 0, textFont, "0", 8, MainActivity.getVboManager());
             attachChild(text);
             text.setVisible(false);
-            text.setColor(0,0,0);
+            text.setColor(0, 0, 0);
             cellsTextEntityList.add(text);
         }
 
     }
 
     public void update(SimpleGrid grid) {
-        
-        if(grid == null) {
+
+        if (grid == null) {
             return;
         }
-        
+
         hideCellsText();
 
         List<SimpleTile> tiles = grid.getAllTiles();
         int counter = 0;
-        
-        for(SimpleTile tile: tiles) {
+
+        for (SimpleTile tile : tiles) {
             drawCell(tile.getX(), tile.getY(), tile.getValue(), tile.getZoom(), counter);
             counter++;
         }
-        
+
         tilesSpriteBatch.submit();
     }
-    
-   
+
     private void drawCell(float x, float y, int value, float zoom, int counter) {
-        
+
         Color cellColor = tileColors.getColorByCellValue(value);
 
-        float cellX = (x * (cellsOffset.getWidth()+BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
-        float cellY = (y * (cellsOffset.getHeight()+BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
-        
+        float cellX = (x * (cellsOffset.getWidth() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
+        float cellY = (y * (cellsOffset.getHeight() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
+
         // Draw cells texture
-        tilesSpriteBatch.draw(cellRegion, cellX, cellY, 
-                cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom,
-                cellColor.getRed(), cellColor.getGreen(), cellColor.getBlue(), 1);
-     
+        switch (value) {
+        
+        case Grid.JOKER_VALUE:
+            tilesSpriteBatch.draw(jokerCellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(),
+                    cellColor.getBlue(), 1);
+            break;
+            
+        case Grid.DEMON_VALUE:
+            tilesSpriteBatch.draw(demonCellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(),
+                    cellColor.getBlue(), 1);
+            break;
+            
+        default:
+            tilesSpriteBatch.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(),
+                    cellColor.getBlue(), 1);
+        }
+
+
         // Draw cells text
         Text cellText = cellsTextEntityList.get(counter);
         cellText.setText("" + value);
-        cellText.setColor(0, 0, 0);
-        cellText.setPosition(tilesSpriteBatch.getX() + cellX + cellRegion.getWidth() / 2,
-                tilesSpriteBatch.getY() + cellY + cellRegion.getWidth() / 2);
         cellText.setVisible(true);
+        if (value == Grid.JOKER_VALUE) {
+            cellText.setVisible(false);
+        }
+        if (value == Grid.DEMON_VALUE) {
+            cellText.setVisible(false);
+        }
+
+        cellText.setColor(0, 0, 0);
+        cellText.setPosition(tilesSpriteBatch.getX() + cellX + cellRegion.getWidth() / 2, tilesSpriteBatch.getY() + cellY + cellRegion.getWidth() / 2);
+        
     }
-    
+
     private void hideCellsText() {
-        for(Text text: cellsTextEntityList) {
+        for (Text text : cellsTextEntityList) {
             text.setVisible(false);
         }
     }

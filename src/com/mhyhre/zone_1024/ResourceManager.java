@@ -94,14 +94,18 @@ public class ResourceManager {
 
         regions.put("Yes", TextureRegionFactory.extractFromTexture(atlas, 0, 0, 80, 80, false));
         regions.put("No", TextureRegionFactory.extractFromTexture(atlas, 80, 0, 80, 80, false));
-        regions.put("Cell", TextureRegionFactory.extractFromTexture(atlas, 180, 0, 130, 130, false));        
-        regions.put("QuestionIcon", TextureRegionFactory.extractFromTexture(atlas, 0, 160, 80, 80, false));        
-        regions.put("ScoresIcon", TextureRegionFactory.extractFromTexture(atlas, 80, 160, 80, 80, false));        
-                       
-        region = TextureRegionFactory.extractFromTexture(atlas, 0, 80, 80, 80, false);
+        
+        regions.put("QuestionIcon", TextureRegionFactory.extractFromTexture(atlas, 320, 0, 80, 80, false));        
+        regions.put("ScoresIcon", TextureRegionFactory.extractFromTexture(atlas, 400, 0, 80, 80, false));        
+          
+        regions.put("Cell", TextureRegionFactory.extractFromTexture(atlas, 130, 126, 130, 130, false));
+        regions.put("JokerCell", TextureRegionFactory.extractFromTexture(atlas, 260, 126, 130, 130, false));
+        regions.put("DemonCell", TextureRegionFactory.extractFromTexture(atlas, 0, 126, 130, 130, false));                
+        
+        region = TextureRegionFactory.extractFromTexture(atlas, 160, 0, 80, 80, false);
         regions.put("ButtonVibration", region);
 
-        region = TextureRegionFactory.extractFromTexture(atlas, 80, 80, 80, 80, false);
+        region = TextureRegionFactory.extractFromTexture(atlas, 240, 0, 80, 80, false);
         regions.put("ButtonSound", region);
     
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadAtlases: OK");

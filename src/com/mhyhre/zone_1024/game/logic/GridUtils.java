@@ -53,6 +53,7 @@ public final class GridUtils {
             inputStream = MainActivity.Me.openFileInput(GRID_STORE_FILENAME);
             dataStream = new DataInputStream(inputStream);
 
+            grid.setStep(dataStream.readInt());
             
             for(int y = 0; y < size.getHeight(); y++) {
                 for(int x = 0; x < size.getWidth(); x++) {
@@ -65,7 +66,10 @@ public final class GridUtils {
                     }
                 }
             }
-  
+            
+            grid.setJokerBeenStep(dataStream.readInt());
+            grid.setDemonBeenStep(dataStream.readInt());
+            
           } catch (FileNotFoundException e) {  
               return null;
           } catch (IOException e) {
@@ -90,6 +94,8 @@ public final class GridUtils {
             outputStream = MainActivity.Me.openFileOutput(GRID_STORE_FILENAME, MainActivity.MODE_PRIVATE);
             dataStream = new DataOutputStream(outputStream);
 
+            dataStream.writeInt(grid.getStep());
+            
             for(int y = 0; y < size.getHeight(); y++) {
                 for(int x = 0; x < size.getWidth(); x++) {
                     SimpleTile tile = grid.getTile(x, y);
@@ -100,6 +106,8 @@ public final class GridUtils {
                     }
                 }
             }
+            dataStream.writeInt(grid.getJokerBeenStep());
+            dataStream.writeInt(grid.getDemonBeenStep());
             
         } catch (FileNotFoundException e) {
             return;

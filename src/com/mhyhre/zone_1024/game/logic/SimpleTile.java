@@ -12,8 +12,8 @@ public class SimpleTile {
     }
     
     public static final float ZOOM_BANG_FACTOR = 1.3f;
-    public static final float MOVING_COMPLETE_DISTANCE = 0.21f;
-    public static final float TILE_MOVING_SPEED = 0.2f;
+    public static final float MOVING_COMPLETE_DISTANCE = 0.18f;
+    public static final float TILE_MOVING_SPEED = 0.33f;
     
     protected float x;
     protected float y;
@@ -84,7 +84,7 @@ public class SimpleTile {
     
     protected void updateZoom() {
         if(zoom > 1.0f) {
-            zoom -= 0.01f;
+            zoom -= 0.025f;
         } else {
             zoom = 1.0f;
         }

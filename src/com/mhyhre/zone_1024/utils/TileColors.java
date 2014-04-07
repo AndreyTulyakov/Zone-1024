@@ -20,6 +20,9 @@ public class TileColors {
     private TileColors() {
         colorBase = new SparseArray<Color>();
         
+        colorBase.put(-1, new Color(1.00f, 1.00f, 1.00f));
+        colorBase.put(-2, new Color(1.00f, 0.95f, 0.95f));
+        
         colorBase.put(2, new Color(1.00f, 1.00f, 1.00f));
         colorBase.put(4, new Color(0.90f, 0.90f, 0.90f));
         colorBase.put(8, new Color(0.80f, 0.80f, 0.80f));
@@ -41,7 +44,7 @@ public class TileColors {
         
         Color result = colorBase.get(value);
         if(result == null) {
-            return Color.RED;
+            return Color.WHITE;
         }
         return result;
     }

@@ -19,6 +19,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     private boolean gameFinished = false;
     private final Size size;
     private Grid grid;
+    
 
     public static GameManager getInstance() {
         if (instance == null) {
@@ -38,8 +39,10 @@ public final class GameManager implements MoveEventListener, GameControllable {
         this.grid = new Grid(size);
         this.score = 0;
         this.gameFinished = false;
+        
+        
 
-        grid.testInit();
+        //grid.testInit();
         this.addStartTiles();
     }
 
@@ -61,7 +64,17 @@ public final class GameManager implements MoveEventListener, GameControllable {
         }
     }
 
+    //FIXME
+    private static int timeSlower = 0;
+    
     public void update() {
+        
+        timeSlower++;
+        if(timeSlower < 10) {
+          //  return;
+        } else {
+            timeSlower = 0;
+        }
         
         grid.update();
         

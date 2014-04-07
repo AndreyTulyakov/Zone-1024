@@ -1,9 +1,11 @@
 package com.mhyhre.zone_1024.game.logic;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.util.Log;
+
+import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
 
@@ -15,12 +17,16 @@ public class SimpleGrid {
     protected Size size;
     protected SimpleTile[][] tiles;
     protected List<SimpleTile> movingTiles;
+    
+    private LinkedList<SimpleTile> allTiles;
+    protected boolean locked;
 
 
     public SimpleGrid(Size size) {
         this.size = size;
         tiles = new SimpleTile[size.getWidth()][size.getHeight()];
         movingTiles = new LinkedList<SimpleTile>();
+        allTiles = new LinkedList<SimpleTile>();
     }
     
     public SimpleTile getTile(Position position) {
@@ -35,9 +41,38 @@ public class SimpleGrid {
         }
     }
     
-    public ArrayList<SimpleTile> getAllTiles() {
+    protected void lock() {
+        Log.i(MainActivity.DEBUG_ID, "Grid locked");
+        locked = true;
+    }
+
+    protected void unlock() {
+        Log.i(MainActivity.DEBUG_ID, "Grid unlocked");
+        locked = false;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    
+    protected void insertTile(int column, int row, SimpleTile tile) {
+        if (inGridRange(column, row)) {
+            tiles[column][row] = tile;
+        }
+    }
+
+    protected void removeTile(int x, int y) {
+        if (inGridRange(x, y)) {
+            tiles[x][y] = null;
+        }
+    }
+    
+    
+    public LinkedList<SimpleTile> getAllTiles() {
         
-        ArrayList<SimpleTile> allTiles = new ArrayList<SimpleTile>();
+        allTiles.clear();
+        
         for(int x = 0; x < size.getWidth(); x++) {
             for(int y = 0; y < size.getHeight(); y++) {
                 if(tiles[x][y] != null) {
@@ -89,6 +124,31 @@ public class SimpleGrid {
         }
         return scores;
     }
+    
+
+    public boolean cellsAvailable() {
+        return availableCells().size() > 0;
+    }
+
+    public boolean isCellAvailable(Position cell) {
+        if (inGridRange(cell)) {
+            return tiles[cell.getX()][cell.getY()] != null;
+        }
+        return false;
+    }
+    
+    public List<Position> availableCells() {
+        LinkedList<Position> freePositions = new LinkedList<Position>();
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
+                if (tiles[x][y] == null) {
+                    freePositions.add(new Position(x, y));
+                }
+            }
+        }
+        return freePositions;
+    }
+
     
     public boolean isBusyCell(Position cell) {
         SimpleTile tile = tiles[cell.getX()][cell.getY()];
