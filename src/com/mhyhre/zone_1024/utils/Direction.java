@@ -7,27 +7,20 @@ package com.mhyhre.zone_1024.utils;
 
 public enum Direction {
     
-    NONE(0,0),
-    UP(0,1),
-    DOWN(0,-1),
-    LEFT(-1,0),
-    RIGHT(1,0);
+    UP(new Vector2D(0,1)),
+    RIGHT(new Vector2D(1,0)),
+    DOWN(new Vector2D(0,-1)),
+    LEFT(new Vector2D(-1,0));
     
-    private final int vectorX;
-    private final int vectorY;
     
-    private Direction(int xDirection, int yDirection) {
-        this.vectorX = xDirection;
-        this.vectorY = yDirection;
+    private final Vector2D vector;
+    
+    private Direction(Vector2D vector) {
+        this.vector = vector;
     }
     
-    public int getVectorX() {
-        return vectorX;
+    public Vector2D getVector() {
+        return vector;
     }
-
-    public int getVectorY() {
-        return vectorY;
-    }
-    
     
 }

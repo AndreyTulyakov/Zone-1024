@@ -19,7 +19,7 @@ import com.mhyhre.zone_1024.utils.TextInputListener;
 public class GameWinScene extends SimpleScene implements TextInputListener {
 
     private Rectangle backgroundRect;
-    private final float INPUT_DELAY = 2;
+    private final float INPUT_DELAY = 1.5f;
     private float timeSum;
     private boolean lockInput;
 

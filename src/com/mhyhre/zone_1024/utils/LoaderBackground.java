@@ -26,7 +26,7 @@ public class LoaderBackground extends SpriteBatch {
     private Color modulation;
 
     public LoaderBackground(float x, float y) {
-        super(x, y, MainActivity.resources.getTextureAtlas("User_Interface"), COUNT_OF_SPRITES, MainActivity.getVboManager());
+        super(x, y, MainActivity.resources.getTextureAtlas("Cells"), COUNT_OF_SPRITES, MainActivity.getVboManager());
 
         tileColor = TileColors.getInstance();
         valuesList = Arrays.asList(2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096);

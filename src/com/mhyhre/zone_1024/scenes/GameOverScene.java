@@ -12,7 +12,7 @@ import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 public class GameOverScene extends SimpleScene {
 
     private Rectangle backgroundRect;
-    private final float inputDelay = 3;
+    private final float inputDelay = 1.5f;
     private float timeSum;
     private boolean lockInput;
     
@@ -52,7 +52,7 @@ public class GameOverScene extends SimpleScene {
     public void show() {
         backgroundRect.setAlpha(0);
 
-        AlphaModifier alphaMod = new AlphaModifier(4, 0, 0.75f);
+        AlphaModifier alphaMod = new AlphaModifier(2, 0, 0.75f);
         alphaMod.setAutoUnregisterWhenFinished(true);
         backgroundRect.registerEntityModifier(alphaMod);
 

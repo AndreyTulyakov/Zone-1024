@@ -82,12 +82,11 @@ public class ResourceManager {
     public void loadAtlases() {
 
         BitmapTextureAtlas atlas;
-        ITextureRegion region;
 
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
         
         // Load ui graphics
-        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 256, TextureOptions.BILINEAR);
+        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 128, TextureOptions.BILINEAR);
         BitmapTextureAtlasTextureRegionFactory.createFromAsset(atlas, MainActivity.Me, "User_Interface.png", 0, 0);
         atlas.load();
         atlases.put("User_Interface", atlas);
@@ -97,17 +96,30 @@ public class ResourceManager {
         
         regions.put("QuestionIcon", TextureRegionFactory.extractFromTexture(atlas, 320, 0, 80, 80, false));        
         regions.put("ScoresIcon", TextureRegionFactory.extractFromTexture(atlas, 400, 0, 80, 80, false));        
-          
-        regions.put("Cell", TextureRegionFactory.extractFromTexture(atlas, 130, 126, 130, 130, false));
-        regions.put("JokerCell", TextureRegionFactory.extractFromTexture(atlas, 260, 126, 130, 130, false));
-        regions.put("DemonCell", TextureRegionFactory.extractFromTexture(atlas, 0, 126, 130, 130, false));                
         
-        region = TextureRegionFactory.extractFromTexture(atlas, 160, 0, 80, 80, false);
-        regions.put("ButtonVibration", region);
-
-        region = TextureRegionFactory.extractFromTexture(atlas, 240, 0, 80, 80, false);
-        regions.put("ButtonSound", region);
-    
+        regions.put("ButtonVibration", TextureRegionFactory.extractFromTexture(atlas, 160, 0, 80, 80, false)); 
+        regions.put("ButtonSound", TextureRegionFactory.extractFromTexture(atlas, 240, 0, 80, 80, false)); 
+        
+        
+        // Load cells
+        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 256, TextureOptions.BILINEAR);
+        BitmapTextureAtlasTextureRegionFactory.createFromAsset(atlas, MainActivity.Me, "cells.png", 0, 0);
+        atlas.load();
+        
+        atlases.put("Cells", atlas);
+        
+        regions.put("Cell", TextureRegionFactory.extractFromTexture(atlas, 256, 0, 128, 128, false));
+        
+        regions.put("DemonSleep0", TextureRegionFactory.extractFromTexture(atlas, 0, 0, 128, 128, false));
+        regions.put("DemonSleep1", TextureRegionFactory.extractFromTexture(atlas, 128, 0, 128, 128, false));
+        
+        regions.put("DemonMoving", TextureRegionFactory.extractFromTexture(atlas, 384, 0, 128, 128, false));
+        
+        regions.put("DemonLeft", TextureRegionFactory.extractFromTexture(atlas, 0, 128, 128, 128, false));                
+        regions.put("DemonUp", TextureRegionFactory.extractFromTexture(atlas, 128, 128, 128, 128, false)); 
+        regions.put("DemonRight", TextureRegionFactory.extractFromTexture(atlas, 256, 128, 128, 128, false)); 
+        regions.put("DemonDown", TextureRegionFactory.extractFromTexture(atlas, 384, 128, 128, 128, false)); 
+        
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadAtlases: OK");
     }
 

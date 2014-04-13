@@ -54,6 +54,8 @@ public class SimpleGrid {
     public boolean isLocked() {
         return locked;
     }
+    
+    
 
     
     protected void insertTile(int column, int row, SimpleTile tile) {

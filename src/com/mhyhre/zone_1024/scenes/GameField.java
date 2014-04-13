@@ -2,7 +2,6 @@ package com.mhyhre.zone_1024.scenes;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.batch.SpriteBatch;
 import org.andengine.entity.text.Text;
@@ -11,8 +10,9 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.color.Color;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.logic.DemonBot;
+import com.mhyhre.zone_1024.game.logic.DemonBot.Intention;
 import com.mhyhre.zone_1024.game.logic.Grid;
-import com.mhyhre.zone_1024.game.logic.SimpleGrid;
 import com.mhyhre.zone_1024.game.logic.SimpleTile;
 import com.mhyhre.zone_1024.utils.Size;
 import com.mhyhre.zone_1024.utils.TileColors;
@@ -20,9 +20,7 @@ import com.mhyhre.zone_1024.utils.TileColors;
 public class GameField extends SimpleScene {
 
     private final ITextureRegion cellRegion;
-    private final ITextureRegion jokerCellRegion;
-    private final ITextureRegion demonCellRegion;
-    
+
     private final int BETWEEN_CELLS_SIZE = 2;
     private final Size cellsOffset;
 
@@ -30,6 +28,11 @@ public class GameField extends SimpleScene {
     private SpriteBatch tilesSpriteBatch;
     private ArrayList<Text> cellsTextEntityList;
     private TileColors tileColors;
+    private ITextureRegion demonRegion;
+    
+    private float demonAnimTime = 0;
+    private final float demonFrameDureation = 1.0f;
+    private boolean demonSleepAnimSwitcher = false;
 
     private Size size;
 
@@ -40,11 +43,11 @@ public class GameField extends SimpleScene {
         this.size = size;
         tileColors = TileColors.getInstance();
 
+        demonRegion = null;
+
         // Select regions
         cellRegion = MainActivity.resources.getTextureRegion("Cell");
-        jokerCellRegion = MainActivity.resources.getTextureRegion("JokerCell");
-        demonCellRegion = MainActivity.resources.getTextureRegion("DemonCell");
-        
+
         cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
 
         // Generate background rectangle
@@ -58,8 +61,7 @@ public class GameField extends SimpleScene {
 
     private void createTilesGraphics() {
 
-        tilesSpriteBatch = new SpriteBatch(MainActivity.resources.getTextureAtlas("User_Interface"), size.getWidth() * size.getHeight(),
-                MainActivity.getVboManager());
+        tilesSpriteBatch = new SpriteBatch(MainActivity.resources.getTextureAtlas("Cells"), size.getWidth() * size.getHeight(), MainActivity.getVboManager());
         tilesSpriteBatch.setPosition(MainActivity.getHalfWidth() - ((fieldRect.getWidth() / 2) - BETWEEN_CELLS_SIZE), MainActivity.getHalfHeight()
                 - ((fieldRect.getHeight() / 2) - BETWEEN_CELLS_SIZE));
         attachChild(tilesSpriteBatch);
@@ -80,7 +82,7 @@ public class GameField extends SimpleScene {
 
     }
 
-    public void update(SimpleGrid grid) {
+    public void update(Grid grid) {
 
         if (grid == null) {
             return;
@@ -90,6 +92,34 @@ public class GameField extends SimpleScene {
 
         List<SimpleTile> tiles = grid.getAllTiles();
         int counter = 0;
+
+        DemonBot demon = grid.getDemon();
+        if (demon.isWasChanged()) {
+            demonRegion = MainActivity.resources.getTextureRegion("DemonMoving");
+        } else {
+            if (demon.getBehaviorIntention() == Intention.NONE) {
+                demonRegion = MainActivity.resources.getTextureRegion(demonSleepAnimSwitcher ? "DemonSleep0" : "DemonSleep1");
+            } else {
+                switch (demon.getIntentionDirection()) {
+                case DOWN:
+                    demonRegion = MainActivity.resources.getTextureRegion("DemonDown");
+                    break;
+
+                case LEFT:
+                    demonRegion = MainActivity.resources.getTextureRegion("DemonLeft");
+                    break;
+
+                case RIGHT:
+                    demonRegion = MainActivity.resources.getTextureRegion("DemonRight");
+                    break;
+
+                case UP:
+                    demonRegion = MainActivity.resources.getTextureRegion("DemonUp");
+                    break;
+
+                }
+            }
+        }
 
         for (SimpleTile tile : tiles) {
             drawCell(tile.getX(), tile.getY(), tile.getValue(), tile.getZoom(), counter);
@@ -103,47 +133,48 @@ public class GameField extends SimpleScene {
 
         Color cellColor = tileColors.getColorByCellValue(value);
 
-        float cellX = (x * (cellsOffset.getWidth() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
-        float cellY = (y * (cellsOffset.getHeight() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
+        float cellX = 4 + (x * (cellsOffset.getWidth() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
+        float cellY = 4 + (y * (cellsOffset.getHeight() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
 
         // Draw cells texture
-        switch (value) {
-        
-        case Grid.JOKER_VALUE:
-            tilesSpriteBatch.draw(jokerCellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(),
-                    cellColor.getBlue(), 1);
-            break;
-            
-        case Grid.DEMON_VALUE:
-            tilesSpriteBatch.draw(demonCellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(),
-                    cellColor.getBlue(), 1);
-            break;
-            
-        default:
-            tilesSpriteBatch.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(), cellColor.getGreen(),
-                    cellColor.getBlue(), 1);
-        }
+        if (value == Grid.DEMON_VALUE) {
 
+            tilesSpriteBatch.draw(demonRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(),
+                    cellColor.getGreen(), cellColor.getBlue(), 1);
+        } else {
+            tilesSpriteBatch.draw(cellRegion, cellX, cellY, cellRegion.getWidth(), cellRegion.getHeight(), 0, zoom, zoom, cellColor.getRed(),
+                    cellColor.getGreen(), cellColor.getBlue(), 1);
+        }
 
         // Draw cells text
         Text cellText = cellsTextEntityList.get(counter);
         cellText.setText("" + value);
         cellText.setVisible(true);
-        if (value == Grid.JOKER_VALUE) {
-            cellText.setVisible(false);
-        }
+
         if (value == Grid.DEMON_VALUE) {
             cellText.setVisible(false);
         }
 
         cellText.setColor(0, 0, 0);
         cellText.setPosition(tilesSpriteBatch.getX() + cellX + cellRegion.getWidth() / 2, tilesSpriteBatch.getY() + cellY + cellRegion.getWidth() / 2);
-        
+
     }
 
     private void hideCellsText() {
         for (Text text : cellsTextEntityList) {
             text.setVisible(false);
         }
+    }
+    
+    @Override
+    protected void onManagedUpdate(float pSecondsElapsed) {
+        demonAnimTime += pSecondsElapsed;
+        
+        if(demonAnimTime > demonFrameDureation) {
+            demonAnimTime = 0;
+            demonSleepAnimSwitcher = !demonSleepAnimSwitcher;
+        }
+        
+        super.onManagedUpdate(pSecondsElapsed);
     }
 }

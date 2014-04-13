@@ -59,4 +59,9 @@ public final class Position implements Cloneable {
     public String toString() {
         return "[x=" + x + ", y=" + y + "]";
     }
+    
+    public Position addVector(Vector2D vector) {
+        Position node = new Position(x + vector.getX(), y + vector.getY());
+        return node;
+    }
 }

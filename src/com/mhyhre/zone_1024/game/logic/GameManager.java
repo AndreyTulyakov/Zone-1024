@@ -64,17 +64,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
         }
     }
 
-    //FIXME
-    private static int timeSlower = 0;
-    
     public void update() {
-        
-        timeSlower++;
-        if(timeSlower < 10) {
-          //  return;
-        } else {
-            timeSlower = 0;
-        }
         
         grid.update();
         
@@ -95,6 +85,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
             }
 
             // If game ended
+            Log.i(MainActivity.DEBUG_ID, "Can move grid:" + grid.isCanMoving());
             if (grid.isCanMoving() == false) {
                 gameFinished = true;
                 PreferenceManager.setGameWasNotEnded(false);
@@ -115,7 +106,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
         }
     }
 
-    public SimpleGrid getGrid() {
+    public Grid getGrid() {
         return grid;
     }
 

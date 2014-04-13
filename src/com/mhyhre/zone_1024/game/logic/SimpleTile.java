@@ -11,9 +11,9 @@ public class SimpleTile {
         MUST_SUMMED;
     }
     
-    public static final float ZOOM_BANG_FACTOR = 1.3f;
-    public static final float MOVING_COMPLETE_DISTANCE = 0.18f;
-    public static final float TILE_MOVING_SPEED = 0.33f;
+    protected static final float ZOOM_BANG_FACTOR = 1.3f;
+    protected static final float MOVING_COMPLETE_DISTANCE = 0.25f;
+    protected static final float TILE_MOVING_SPEED = 0.20f;
     
     protected float x;
     protected float y;
@@ -35,6 +35,7 @@ public class SimpleTile {
     }
     
     public boolean isMoveComplete() {
+        
         if(Math.abs(x-targetX) <= MOVING_COMPLETE_DISTANCE) {
             if(Math.abs(y-targetY) <= MOVING_COMPLETE_DISTANCE) {
                 return true;
@@ -101,7 +102,7 @@ public class SimpleTile {
     public void update() {
         
         if(isMoveComplete() == false) {
-            moveToTarget();
+            moveToTarget(TILE_MOVING_SPEED);
         } else {
             x = targetX;
             y = targetY;
@@ -109,21 +110,21 @@ public class SimpleTile {
         updateZoom();
     }
 
-    private void moveToTarget() {
+    protected void moveToTarget(float tileSpeed) {
         if(x < targetX) {
-            x += TILE_MOVING_SPEED;
+            x += tileSpeed;
         }
         
         if(x > targetX) {
-            x -= TILE_MOVING_SPEED;
+            x -= tileSpeed;
         }
         
         if(y < targetY) {
-            y += TILE_MOVING_SPEED;
+            y += tileSpeed;
         }
         
         if(y > targetY) {
-            y -= TILE_MOVING_SPEED;
+            y -= tileSpeed;
         }
     }
 

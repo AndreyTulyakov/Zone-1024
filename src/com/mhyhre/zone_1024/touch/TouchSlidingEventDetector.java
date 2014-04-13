@@ -38,7 +38,7 @@ public class TouchSlidingEventDetector {
                 Direction direction = calculateMovement(
                         touchStart, new TouchPoint(touchEvent.getX(), touchEvent.getY()), MINIMAL_OFFSET, VECTOR_FACTOR);
                 
-                if(direction != Direction.NONE) {
+                if(direction != null) {
                     listener.onMoveEvent(direction);
                 }
             }
@@ -46,7 +46,7 @@ public class TouchSlidingEventDetector {
             if(touchEvent.isActionMove()) {
                 Direction direction = calculateMovement(
                         touchStart, new TouchPoint(touchEvent.getX(), touchEvent.getY()), MINIMAL_OFFSET, VECTOR_FACTOR);
-                if(direction != Direction.NONE) {
+                if(direction != null) {
                     isTouched = false;
                     listener.onMoveEvent(direction);
                 }
@@ -90,7 +90,7 @@ public class TouchSlidingEventDetector {
             }
         }
             
-        return Direction.NONE;
+        return null;
     }
     
 }

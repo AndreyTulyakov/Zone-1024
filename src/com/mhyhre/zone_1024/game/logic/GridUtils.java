@@ -13,6 +13,7 @@ import java.util.List;
 import android.util.Pair;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.game.logic.DemonBot.Intention;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Size;
 import com.mhyhre.zone_1024.utils.StreamUtils;
@@ -20,6 +21,7 @@ import com.mhyhre.zone_1024.utils.StreamUtils;
 public final class GridUtils {
     
     public static final String GRID_STORE_FILENAME = "grs.bin";
+    public static final char FILE_TYPE_ID = 'G';
 
     public static Pair<List<Integer>,List<Integer>> getTraversalList(Direction dir, int lenght) {
 
@@ -31,10 +33,10 @@ public final class GridUtils {
             yValues.add(i);
         }
         
-        if(dir.getVectorX() > 0) {
+        if(dir.getVector().getX() > 0) {
             Collections.reverse(xValues);
         }
-        if(dir.getVectorY() > 0) {
+        if(dir.getVector().getY() > 0) {
             Collections.reverse(yValues);
         }
         
@@ -52,9 +54,21 @@ public final class GridUtils {
         try {
             inputStream = MainActivity.Me.openFileInput(GRID_STORE_FILENAME);
             dataStream = new DataInputStream(inputStream);
-
-            grid.setStep(dataStream.readInt());
             
+            char typeId = dataStream.readChar();
+            
+            if(typeId != FILE_TYPE_ID) {
+                return null;
+            }
+            
+
+            DemonBot demon = grid.getDemon();
+            
+            // Load demon data
+            demon.setHunger(dataStream.readInt());
+            demon.setBehaviorIntention(Intention.values()[dataStream.readInt()]);
+            demon.setIntentionDirection(Direction.values()[dataStream.readInt()]);
+
             for(int y = 0; y < size.getHeight(); y++) {
                 for(int x = 0; x < size.getWidth(); x++) {
                     
@@ -66,9 +80,6 @@ public final class GridUtils {
                     }
                 }
             }
-            
-            grid.setJokerBeenStep(dataStream.readInt());
-            grid.setDemonBeenStep(dataStream.readInt());
             
           } catch (FileNotFoundException e) {  
               return null;
@@ -94,7 +105,14 @@ public final class GridUtils {
             outputStream = MainActivity.Me.openFileOutput(GRID_STORE_FILENAME, MainActivity.MODE_PRIVATE);
             dataStream = new DataOutputStream(outputStream);
 
-            dataStream.writeInt(grid.getStep());
+            dataStream.writeChar(FILE_TYPE_ID);
+            
+            DemonBot demon = grid.getDemon();
+            
+            // Save demon data
+            dataStream.writeInt(demon.getHunger());
+            dataStream.writeInt(demon.getBehaviorIntention().ordinal());
+            dataStream.writeInt(demon.getIntentionDirection().ordinal());
             
             for(int y = 0; y < size.getHeight(); y++) {
                 for(int x = 0; x < size.getWidth(); x++) {
@@ -106,8 +124,6 @@ public final class GridUtils {
                     }
                 }
             }
-            dataStream.writeInt(grid.getJokerBeenStep());
-            dataStream.writeInt(grid.getDemonBeenStep());
             
         } catch (FileNotFoundException e) {
             return;
