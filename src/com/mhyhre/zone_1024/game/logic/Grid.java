@@ -247,6 +247,7 @@ public class Grid extends SimpleGrid {
 
     // Need correct positions
     public boolean hasNeighborWithEqualValue(int x, int y) {
+        
         SimpleTile tile = getTile(x, y);
         SimpleTile left = getTile(x - 1, y);
         SimpleTile right = getTile(x + 1, y);
@@ -302,23 +303,20 @@ public class Grid extends SimpleGrid {
     public void testInit() {
 
         
-        int value = 2;
+        int value = 1;
           
-        for (int y = 0; y < size.getHeight(); y++)
+        for (int y = 0; y < 4; y++)
         {
-            for (int x = 0; x < size.getWidth()-1; x++)
+            for (int x = 0; x < 3; x++)
             {
                 if(tiles[x][y] == null) {
-                    value+=2;
+                    value=128*x;
                     tiles[x][y] = new SimpleTile(x, y, value);
                 }
             }
         }
          
 
-        /*
-        tiles[0][0] = new SimpleTile(0, 0, JOKER_VALUE);
-         */
         
     }
 

@@ -2,8 +2,6 @@ package com.mhyhre.zone_1024.scenes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
@@ -16,7 +14,6 @@ import android.util.Pair;
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.game.ScoresTable;
-import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 
 public class ScoreScene extends SimpleScene {
     

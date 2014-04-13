@@ -120,7 +120,9 @@ public class SimpleGrid {
             for(int y = 0; y < size.getHeight(); y++) {
                 SimpleTile tile = tiles[x][y];
                 if(tile != null) {
-                    scores += tile.value;
+                    if(tile.value > 0) {
+                        scores += tile.value;
+                    }
                 }
             }
         }

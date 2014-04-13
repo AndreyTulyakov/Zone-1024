@@ -1,9 +1,5 @@
 package com.mhyhre.zone_1024.scenes;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.andengine.entity.Entity;
 import org.andengine.entity.modifier.AlphaModifier;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.Background;
@@ -13,7 +9,6 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.LoaderBackground;

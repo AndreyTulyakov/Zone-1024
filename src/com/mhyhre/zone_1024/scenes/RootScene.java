@@ -10,9 +10,7 @@ import java.util.Map;
 import android.util.Log;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.game.logic.GameManager;
-import com.mhyhre.zone_1024.game.logic.GridUtils;
 import com.mhyhre.zone_1024.touch.TouchSlidingEventDetector;
 import org.andengine.entity.scene.Scene;
 import org.andengine.input.touch.TouchEvent;

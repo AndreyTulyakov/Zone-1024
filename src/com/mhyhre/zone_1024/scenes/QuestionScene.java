@@ -15,7 +15,6 @@ import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 public class QuestionScene extends SimpleScene {
 
     private final String strRestart = MainActivity.Me.getString(R.string.q_restart_game);
-    private final String strKeepPlaying = MainActivity.Me.getString(R.string.q_keep_playing);
     private final String strContinueGame = MainActivity.Me.getString(R.string.q_continue_game);
     private Text textQuestion;
     

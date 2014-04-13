@@ -113,6 +113,7 @@ public class ScoresTable {
     
     public void clearRecords() {
         scores.clear();
+        saveScores();
     }
     
     private String prepareName(String name) {
@@ -150,7 +151,8 @@ public class ScoresTable {
             }
         }
         
-        scores.add(new Pair<Integer, String>(score, name));     
+        scores.add(new Pair<Integer, String>(score, name));   
+        saveScores();
     }
 
     
