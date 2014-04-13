@@ -35,13 +35,10 @@ public final class GameManager implements MoveEventListener, GameControllable {
     }
 
     private void setup() {
-        Log.i(MainActivity.DEBUG_ID, "GameManager: Setup");
         this.grid = new Grid(size);
         this.score = 0;
         this.gameFinished = false;
         
-        
-
         //grid.testInit();
         this.addStartTiles();
     }
@@ -85,7 +82,6 @@ public final class GameManager implements MoveEventListener, GameControllable {
             }
 
             // If game ended
-            Log.i(MainActivity.DEBUG_ID, "Can move grid:" + grid.isCanMoving());
             if (grid.isCanMoving() == false) {
                 gameFinished = true;
                 PreferenceManager.setGameWasNotEnded(false);

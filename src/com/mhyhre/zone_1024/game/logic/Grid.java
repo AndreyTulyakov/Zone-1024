@@ -310,7 +310,7 @@ public class Grid extends SimpleGrid {
             for (int x = 0; x < 3; x++)
             {
                 if(tiles[x][y] == null) {
-                    value=128*x;
+                    value++;
                     tiles[x][y] = new SimpleTile(x, y, value);
                 }
             }
@@ -326,6 +326,10 @@ public class Grid extends SimpleGrid {
 
     public DemonBot getDemon() {
         return demon;
+    }
+
+    public boolean isLastMovingSuccess() {
+        return lastMovingSuccess;
     }
 
 }

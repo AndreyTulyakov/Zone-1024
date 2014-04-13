@@ -51,6 +51,9 @@ public class GameOverScene extends SimpleScene {
     @Override
     public void show() {
         backgroundRect.setAlpha(0);
+        
+        
+        MainActivity.resources.playSound("GameOver");
 
         AlphaModifier alphaMod = new AlphaModifier(2, 0, 0.75f);
         alphaMod.setAutoUnregisterWhenFinished(true);

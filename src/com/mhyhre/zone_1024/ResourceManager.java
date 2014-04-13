@@ -71,6 +71,7 @@ public class ResourceManager {
         return sounds.get(key);
     }
 
+
     public void playSound(String key) {
         if (!sounds.containsKey(key))
             Log.e(MainActivity.DEBUG_ID, "ResourceManager::playSound: invalid key - " + key);
@@ -125,15 +126,12 @@ public class ResourceManager {
 
     public void loadSounds() {
         SoundFactory.setAssetBasePath("sound/");
-
-        addSound("untitled.ogg", "roboClick");
-        addSound("SwitchOn.ogg", "switchOn");
-        addSound("error.ogg", "error");
-        addSound("yes_1.ogg", "yes1");
-        addSound("yes_2.ogg", "yes2");
-        addSound("shoot01.ogg", "shoot01");
         
+        addSound("WinSound.ogg", "Win");
+        addSound("GameOver.ogg", "GameOver");        
+        addSound("DemonEat.ogg", "DemonEat");
     }
+    
 
     private void addSound(String filename, String name) {
         Sound snd = null;

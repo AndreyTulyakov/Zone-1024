@@ -72,6 +72,8 @@ public class GameWinScene extends SimpleScene implements TextInputListener {
     @Override
     public void show() {
         backgroundRect.setAlpha(0);
+        
+        MainActivity.resources.playSound("Win");
 
         AlphaModifier alphaMod = new AlphaModifier(2, 0, 0.75f);
         alphaMod.setAutoUnregisterWhenFinished(true);

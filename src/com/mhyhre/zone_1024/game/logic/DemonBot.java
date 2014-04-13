@@ -64,6 +64,8 @@ public class DemonBot extends SimpleTile {
                 grid.removeTile(position.getX(), position.getY());
                 grid.insertTile(targetPos.getX(), targetPos.getY(), demonTile);
                 
+                MainActivity.resources.playSound("DemonEat");
+                
                 setAfterMove(AfterMove.NONE);
             }
 

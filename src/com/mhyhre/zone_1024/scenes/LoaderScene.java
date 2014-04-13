@@ -9,6 +9,7 @@ import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.font.IFont;
 
 import com.mhyhre.zone_1024.MainActivity;
+import com.mhyhre.zone_1024.PreferenceManager;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.scenes.RootScene.GameStates;
 import com.mhyhre.zone_1024.utils.LoaderBackground;
@@ -27,6 +28,7 @@ public class LoaderScene extends SimpleScene{
         setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
         
+        
         IFont font32 = MainActivity.resources.getFont("WhiteMono48");
         IFont font16 = MainActivity.resources.getFont("WhiteMono16");
         
@@ -36,8 +38,8 @@ public class LoaderScene extends SimpleScene{
         addStartButton(font16);
         addExitButton();
         addScoresButton();
-        //addVibroButton();
-        //addSoundButton();
+        addVibroButton();
+        addSoundButton();
         addAboutButton();
         
         addTitle(font32);
@@ -54,7 +56,7 @@ public class LoaderScene extends SimpleScene{
     
     private void addStartButton(IFont font) {
         
-        Rectangle bigStartButton = new Rectangle(0, 0, MainActivity.getWidth()-160, MainActivity.getHalfHeight(), MainActivity.getVboManager()) {
+        Rectangle bigStartButton = new Rectangle(0, 0, MainActivity.getWidth()-160, MainActivity.getHalfHeight()*1.2f, MainActivity.getVboManager()) {
             @Override
             public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
@@ -69,7 +71,7 @@ public class LoaderScene extends SimpleScene{
                 return true;
             }
         };
-        bigStartButton.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight()/4);
+        bigStartButton.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
         bigStartButton.setVisible(false);
         attachChild(bigStartButton);
         registerTouchArea(bigStartButton);
@@ -77,7 +79,7 @@ public class LoaderScene extends SimpleScene{
         
         String strTextPressToStart = MainActivity.Me.getString(R.string.press_to_start);
         textPressToStart = new Text(0, 0, font, strTextPressToStart, MainActivity.getVboManager());
-        textPressToStart.setPosition(bigStartButton);
+        textPressToStart.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight()/4);
         attachChild(textPressToStart);
     }
     
@@ -118,7 +120,7 @@ public class LoaderScene extends SimpleScene{
 
     }
     
-    /*
+    
     private void addSoundButton() {
         
         Sprite mSpriteSound = new Sprite(0, 0, MainActivity.resources.getTextureRegion("ButtonSound"), MainActivity.Me.getVertexBufferObjectManager()) {
@@ -132,18 +134,17 @@ public class LoaderScene extends SimpleScene{
                     } else {
                         this.setAlpha(1.0f);
                         PreferenceManager.setSoundEnabled(true);
-                        MainActivity.resources.playSound("roboClick");
+                        MainActivity.resources.playSound("DemonEat");
                     }
                     MainActivity.vibrate(40);
                 }
                 return true;
             }
         };
-        mSpriteSound.setPosition((MainActivity.getWidth()/8)*3, MainActivity.getHeight() - 40);
+        mSpriteSound.setPosition((MainActivity.getWidth()/8), 60);
         attachChild(mSpriteSound);
         registerTouchArea(mSpriteSound);
-        slowShowList.add(mSpriteSound);
-        
+
         if (PreferenceManager.isSoundEnabled()) {
             mSpriteSound.setAlpha(1.0f);
         } else {
@@ -171,18 +172,17 @@ public class LoaderScene extends SimpleScene{
             }
             
         };
-        mSpriteVibro.setPosition((MainActivity.getWidth()/8)*5, MainActivity.getHeight() - 40);
+        mSpriteVibro.setPosition(((MainActivity.getWidth()/8)*7), 60);
         attachChild(mSpriteVibro);
         registerTouchArea(mSpriteVibro);
-        slowShowList.add(mSpriteVibro);
-        
+  
         if (PreferenceManager.isVibroEnabled()) {
             mSpriteVibro.setAlpha(1.0f);
         } else {
             mSpriteVibro.setAlpha(0.5f);
         }
     }
-    */
+   
     
     private void addAboutButton() {
         
@@ -215,10 +215,11 @@ public class LoaderScene extends SimpleScene{
         
         super.show();
     }
-
+    
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
 
+        
         pressAlphaSum += 1.5f * pSecondsElapsed;
         if(pressAlphaSum > Math.PI) {
             pressAlphaSum = 0;

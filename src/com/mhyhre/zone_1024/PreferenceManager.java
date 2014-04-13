@@ -22,6 +22,7 @@ public class PreferenceManager {
         return instance;
     }
     
+    
     private PreferenceManager(Activity activity, String preferenceId) {
         if(activity == null || preferenceId == null) {
             throw new IllegalArgumentException();
@@ -32,6 +33,7 @@ public class PreferenceManager {
         
         loadPreferences();
     }
+    
     
     public void loadPreferences() {
 

@@ -83,6 +83,7 @@ public class RootScene extends Scene {
         attachChild(gameWinScene);
         
         setState(GameStates.LOADER);
+
     }
     
     public void setState(GameStates state) {
