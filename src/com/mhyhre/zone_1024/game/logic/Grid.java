@@ -6,6 +6,7 @@ import java.util.Random;
 
 import android.util.Pair;
 
+import com.mhyhre.zone_1024.game.logic.DemonBot.Intention;
 import com.mhyhre.zone_1024.game.logic.SimpleTile.AfterMove;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Position;
@@ -114,12 +115,12 @@ public class Grid extends SimpleGrid {
             }
 
             if (lastMovingSuccess) {
+               resetTilesMovingInfo();
+               demon.onStep();
                addRandomTile();
             }
             
-            resetTilesMovingInfo();
-            
-            demon.onStep();
+
             
 
             canMoving = canMakeMove();
@@ -302,7 +303,7 @@ public class Grid extends SimpleGrid {
 
     public void testInit() {
 
-        
+        /*
         int value = 1;
           
         for (int y = 0; y < 4; y++)
@@ -315,8 +316,23 @@ public class Grid extends SimpleGrid {
                 }
             }
         }
-         
+         */
+        /*
+        Position targetPosition = new Position(0, 0);
+        demon = new DemonBot(targetPosition.getX(), targetPosition.getY(), DEMON_VALUE, this);
+        insertTile(targetPosition.getX(), targetPosition.getY(), demon);
+        demon.setBehaviorIntention(Intention.EAT_BY_DIRECTION);
+        demon.setIntentionDirection(Direction.RIGHT);
+        demon.setHunger(0);
 
+        tiles[0][1] = new SimpleTile(0, 1, 16);
+        tiles[0][2] = new SimpleTile(0, 2, 32);
+        tiles[0][3] = new SimpleTile(0, 3, 64);
+        
+        tiles[1][0] = new SimpleTile(1, 0, 128);
+        tiles[1][1] = new SimpleTile(1, 1, 128);
+        tiles[1][2] = new SimpleTile(1, 2, 16);
+        */
         
     }
 

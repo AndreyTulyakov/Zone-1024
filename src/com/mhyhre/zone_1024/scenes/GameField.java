@@ -70,7 +70,7 @@ public class GameField extends SimpleScene {
         int textCount = size.getWidth() * size.getHeight();
         cellsTextEntityList = new ArrayList<Text>(textCount);
 
-        IFont textFont = MainActivity.resources.getFont("WhiteMono24FILLED");
+        IFont textFont = MainActivity.resources.getFont("WhiteMono32");
 
         for (int i = 0; i < textCount; i++) {
             Text text = new Text(0, 0, textFont, "0", 8, MainActivity.getVboManager());

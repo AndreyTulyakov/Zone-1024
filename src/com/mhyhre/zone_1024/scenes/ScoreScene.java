@@ -25,7 +25,7 @@ public class ScoreScene extends SimpleScene {
     private static double currentTime = 0;
     
     public ScoreScene() {
-        setBackground(new Background(0.0f, 0.1f, 0.0f));
+        setBackground(new Background(0.0f, 0.0f, 0.0f));
         setBackgroundEnabled(true);
         
         this.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
@@ -33,13 +33,20 @@ public class ScoreScene extends SimpleScene {
         currentTime = 0;
         
         scoresTable = ScoresTable.getInstance();
-        
-        IFont font = MainActivity.resources.getFont("WhiteMonoScores");
+ 
+        IFont font = MainActivity.resources.getFont("WhiteMono32");
+        IFont fontRecords = MainActivity.resources.getFont("WhiteMono24");
         
         // Configure text labels
         texts = new ArrayList<Text>(ScoresTable.MAXIMAL_COUNT_OF_RECORDS);
-        for(int i = 0; i < ScoresTable.MAXIMAL_COUNT_OF_RECORDS + 1; i++) {
-            Text text = new Text(0, 0, font, "", 64, MainActivity.getVboManager());
+        
+        Text textScores = new Text(0, 0, font, "", 64, MainActivity.getVboManager());
+        textScores.setHorizontalAlign(HorizontalAlign.LEFT);
+        texts.add(textScores);
+        attachChild(textScores);
+        
+        for(int i = 1; i < ScoresTable.MAXIMAL_COUNT_OF_RECORDS + 1; i++) {
+            Text text = new Text(0, 0, fontRecords, "", 64, MainActivity.getVboManager());
             text.setHorizontalAlign(HorizontalAlign.LEFT);
             texts.add(text);
             attachChild(text);

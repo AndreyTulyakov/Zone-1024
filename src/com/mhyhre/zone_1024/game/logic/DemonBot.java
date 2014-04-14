@@ -44,22 +44,24 @@ public class DemonBot extends SimpleTile {
 
         Log.i(MainActivity.DEBUG_ID, "Demon intension:" + behaviorIntention.name());
    
+        SimpleTile demonTile = null;
         Position position = getPosition();
 
         // Если что-то замышляли - убидеться что можем
         if (behaviorIntention != Intention.NONE) {
-
-            Position targetPos = position.addVector(intentionDirection.getVector());
-            SimpleTile demonTile;
-
+            
             // Если можем - исполнить
             if (isCanEatIntention()) {
+                
+                Position targetPos = position.addVector(intentionDirection.getVector());
 
                 SimpleTile targetTile = grid.getTile(targetPos);
                 hunger += targetTile.getValue();
                 grid.removeTile(targetPos.getX(), targetPos.getY());
-
+                
+                
                 demonTile = grid.getTile(position);
+                
                 demonTile.setTargetPosition(targetPos.getX(), targetPos.getY());
                 grid.removeTile(position.getX(), position.getY());
                 grid.insertTile(targetPos.getX(), targetPos.getY(), demonTile);
@@ -77,23 +79,23 @@ public class DemonBot extends SimpleTile {
         if (hunger <= 0 && behaviorIntention == Intention.NONE) {
 
             // Замыслили съесть?
-            tryEatingSomething();
+            thinkingAboutEatingSomething();
         }
     }
 
     private boolean isCanEatIntention() {
 
-        Position pos = new Position(targetX, targetY);
+        Position pos = getPosition();
         Position targetPos = pos.addVector(intentionDirection.getVector());
 
         SimpleTile targetTile = grid.getTile(targetPos);
-        if (targetTile != null && targetTile.getValue() > 0) {
+        if (targetTile != null && targetTile.getValue() > 0 && grid.getSize().inRange(targetPos.getX(), targetPos.getY())) {
             return true;
         }
         return false;
     }
 
-    private void tryEatingSomething() {
+    private void thinkingAboutEatingSomething() {
 
         Direction profitDirection = Direction.UP;
         int maximalCellIndex = 0;

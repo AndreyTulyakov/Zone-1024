@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Zone-1024</string>
+    <string name="scores">РЕЗУЛЬТАТ:</string>
+    <string name="scores_table">ТАБЛИЦА РЕЗУЛЬТАТОВ:</string>
+    <string name="q_stop_game">Остановить игру?</string>
+    <string name="q_restart_game">Перезапустить игру?</string>
+    <string name="q_keep_playing">Продолжить играть?!</string>  
+    <string name="start">Старт</string>
+    <string name="exit">Выход</string>
+    <string name="game_over">Конец игры</string>
+    <string name="press_to_start">нажмите для старта...</string>
+    <string name="won">Поздравляем!\nВы выиграли!</string>
+    <string name="clear_scores">Нажмите и удерживаете 5 сек.\nдля очистки таблицы...</string>
+    <string name="q_continue_game">Продолжить игру?</string>  
+    <string name="demon_hunger">НАСЫЩЕНИЕ:</string>
+    <string name="about_text">Как играть?\n\nДвигайте поле вверх, вниз, вправо\n или влево.\nПопытайтесь получить число 1024\n в клетке.\nПомните, демон может съесть\nвашу клетку, если он голоден!\n\nАндрей Туляков. 2014</string> 
+
+</resources>

@@ -31,7 +31,7 @@ public class GameScene extends SimpleScene {
         strScore = MainActivity.Me.getString(R.string.scores);
         strDemonHunger = MainActivity.Me.getString(R.string.demon_hunger);
         
-        background = new Background(0.2f, 0.2f, 0.2f);
+        background = new Background(0.05f, 0.05f, 0.05f);
         setBackground(background);
         setBackgroundEnabled(true);
 

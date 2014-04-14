@@ -150,40 +150,28 @@ public class ResourceManager {
         Font mFont;
         
         final ITexture TextureFontPixelWhite48 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite48, MainActivity.Me.getAssets(), "jupiterc.ttf", 80, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite48, MainActivity.Me.getAssets(), "casale1_r.ttf", 56, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono48", mFont);
 
         final ITexture TextureFontPixelWhite32 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite32, MainActivity.Me.getAssets(), "jupiterc.ttf", 56, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite32, MainActivity.Me.getAssets(), "casale1_r.ttf", 32, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono32", mFont);
 
         final ITexture TextureFontPixelWhite24 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "jupiterc.ttf", 36, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "casale1_r.ttf", 24, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono24", mFont);
         
         final ITexture TextureFontPixelWhite16 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite16, MainActivity.Me.getAssets(), "jupiterc.ttf", 32, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite16, MainActivity.Me.getAssets(), "casale1_r.ttf", 20, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono16", mFont);
-  
-        final ITexture TextureFontPixelWhite24Filled = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24Filled, MainActivity.Me.getAssets(), "PTM55F.ttf", 36, true,
-                Color.WHITE);
-        mFont.load();
-        fonts.put("WhiteMono24FILLED", mFont);
-        
-        final ITexture TextureFontPixelWhiteScores = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhiteScores, MainActivity.Me.getAssets(), "novem.ttf", 36, true,
-                Color.WHITE);
-        mFont.load();
-        fonts.put("WhiteMonoScores", mFont);
 
         Log.i(MainActivity.DEBUG_ID, "ResourceManager::loadFonts: OK");
     }

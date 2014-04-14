@@ -79,7 +79,7 @@ public class LoaderScene extends SimpleScene{
         
         String strTextPressToStart = MainActivity.Me.getString(R.string.press_to_start);
         textPressToStart = new Text(0, 0, font, strTextPressToStart, MainActivity.getVboManager());
-        textPressToStart.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight()/4);
+        textPressToStart.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight()/3);
         attachChild(textPressToStart);
     }
     
