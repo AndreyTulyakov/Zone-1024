@@ -1,7 +1,5 @@
 package com.mhyhre.zone_1024.game.logic;
 
-import android.util.Log;
-
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Position;
@@ -45,7 +43,7 @@ public class DemonBot extends SimpleTile {
         SimpleTile demonTile = null;
         Position position = getPosition();
 
-        // Если что-то замышляли - убидеться что можем
+        // Если что-то замышляли
         if (behaviorIntention != Intention.NONE) {
             
             // Если можем - исполнить

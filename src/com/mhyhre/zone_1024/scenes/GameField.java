@@ -24,11 +24,11 @@ public class GameField extends SimpleScene {
     private final int BETWEEN_CELLS_SIZE = 2;
     private final Size cellsOffset;
 
-    private Rectangle fieldRect;
     private SpriteBatch tilesSpriteBatch;
     private ArrayList<Text> cellsTextEntityList;
     private TileColors tileColors;
     private ITextureRegion demonRegion;
+    private Rectangle fieldRect;
     
     private float demonAnimTime = 0;
     private final float demonFrameDureation = 1.0f;
@@ -51,19 +51,30 @@ public class GameField extends SimpleScene {
         cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
 
         // Generate background rectangle
-        fieldRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getWidth(),
+        Rectangle fieldRectBack = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getWidth(),
                 MainActivity.getVboManager());
-        fieldRect.setColor(0.6f, 0.6f, 0.6f);
+        fieldRectBack.setColor(1.0f, 1.0f, 1.0f);
+        attachChild(fieldRectBack);
+        
+        fieldRect = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(),
+                MainActivity.getWidth()-BETWEEN_CELLS_SIZE*2, MainActivity.getWidth()-BETWEEN_CELLS_SIZE*2,
+                MainActivity.getVboManager());
+        fieldRect.setColor(0.5f, 0.5f, 0.5f);
         attachChild(fieldRect);
 
         createTilesGraphics();
     }
 
     private void createTilesGraphics() {
+        
+        float xOffset = (size.getWidth() * cellRegion.getWidth()) + (size.getWidth()-1) * BETWEEN_CELLS_SIZE;
+        xOffset = (MainActivity.getWidth() - xOffset) / 2.0f;
 
+        float yOffset = (size.getHeight() * cellRegion.getHeight()) + (size.getHeight()-1) * BETWEEN_CELLS_SIZE;
+        yOffset = (MainActivity.getHeight() - yOffset) / 2.0f;
+        
         tilesSpriteBatch = new SpriteBatch(MainActivity.resources.getTextureAtlas("Cells"), size.getWidth() * size.getHeight(), MainActivity.getVboManager());
-        tilesSpriteBatch.setPosition(MainActivity.getHalfWidth() - ((fieldRect.getWidth() / 2) - BETWEEN_CELLS_SIZE), MainActivity.getHalfHeight()
-                - ((fieldRect.getHeight() / 2) - BETWEEN_CELLS_SIZE));
+        tilesSpriteBatch.setPosition(xOffset, yOffset);
         attachChild(tilesSpriteBatch);
 
         // Create cells label
@@ -133,8 +144,8 @@ public class GameField extends SimpleScene {
 
         Color cellColor = tileColors.getColorByCellValue(value);
 
-        float cellX = 4 + (x * (cellsOffset.getWidth() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
-        float cellY = 4 + (y * (cellsOffset.getHeight() + BETWEEN_CELLS_SIZE)) + BETWEEN_CELLS_SIZE;
+        float cellX = x * (cellRegion.getWidth() + BETWEEN_CELLS_SIZE);
+        float cellY = y * (cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
 
         // Draw cells texture
         if (value == Grid.DEMON_VALUE) {
