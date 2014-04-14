@@ -42,23 +42,22 @@ public class GameScene extends SimpleScene {
         final IFont font = MainActivity.resources.getFont("WhiteMono32");
 
         textEntityScores = new Text(0, 0, font, "", 32, MainActivity.Me.getVertexBufferObjectManager());
-        textEntityScores.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight() - 40);
+        textEntityScores.setPosition(MainActivity.getHalfWidth(), (MainActivity.getHeight()/8)*7 + font.getLineHeight()/2);
         attachChild(textEntityScores);
         
         textDemonHunger = new Text(0, 0, font, "", 32, MainActivity.Me.getVertexBufferObjectManager());
-        textDemonHunger.setPosition(MainActivity.getHalfWidth(), 40);
+        textDemonHunger.setPosition(MainActivity.getHalfWidth(), MainActivity.getHeight()/8 - font.getLineHeight()/2);
         attachChild(textDemonHunger);
     }
 
 
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
-
-        textEntityScores.setText(strScore + " " + GameManager.getInstance().getScore());
-        gameField.update(gameManager.getGrid());
         
+        gameField.update(gameManager.getGrid());
         DemonBot demon = gameManager.getGrid().getDemon();
         
+        textEntityScores.setText(strScore + " " + GameManager.getInstance().getScore());
         textDemonHunger.setText(strDemonHunger + " " + demon.getHunger());
         
         super.onManagedUpdate(pSecondsElapsed);

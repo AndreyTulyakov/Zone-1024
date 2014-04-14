@@ -22,7 +22,6 @@ public class GameField extends SimpleScene {
     private final ITextureRegion cellRegion;
 
     private final int BETWEEN_CELLS_SIZE = 2;
-    private final Size cellsOffset;
 
     private SpriteBatch tilesSpriteBatch;
     private ArrayList<Text> cellsTextEntityList;
@@ -47,8 +46,6 @@ public class GameField extends SimpleScene {
 
         // Select regions
         cellRegion = MainActivity.resources.getTextureRegion("Cell");
-
-        cellsOffset = new Size((int) cellRegion.getWidth() + BETWEEN_CELLS_SIZE, (int) cellRegion.getHeight() + BETWEEN_CELLS_SIZE);
 
         // Generate background rectangle
         Rectangle fieldRectBack = new Rectangle(MainActivity.getHalfWidth(), MainActivity.getHalfHeight(), MainActivity.getWidth(), MainActivity.getWidth(),
