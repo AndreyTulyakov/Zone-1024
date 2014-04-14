@@ -32,7 +32,7 @@ public class LoaderScene extends SimpleScene{
         IFont font32 = MainActivity.resources.getFont("WhiteMono48");
         IFont font16 = MainActivity.resources.getFont("WhiteMono16");
         
-        loaderBackground = new LoaderBackground(MainActivity.getHalfWidth(), 0);
+        loaderBackground = new LoaderBackground(0, 0);
         attachChild(loaderBackground);
 
         addStartButton(font16);

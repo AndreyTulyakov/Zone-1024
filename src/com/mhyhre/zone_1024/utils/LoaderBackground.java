@@ -15,7 +15,8 @@ import com.mhyhre.zone_1024.game.logic.SimpleTile;
 
 public class LoaderBackground extends SpriteBatch {
 
-    private static final int COUNT_OF_SPRITES = 4*8;
+    private static final int COUNT_OF_SPRITES = 4*9;
+    private static final int BETWEEN_CELLS_SIZE = 2;
     private Size size;
     private ArrayList<SimpleTile> tiles;
     private List<Integer> valuesList;
@@ -30,7 +31,7 @@ public class LoaderBackground extends SpriteBatch {
 
         tileColor = TileColors.getInstance();
         valuesList = Arrays.asList(2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096);
-        size = new Size(4, 8);
+        size = new Size(4, 9);
         tiles = new ArrayList<SimpleTile>(COUNT_OF_SPRITES);
         random = new Random();
         
@@ -38,16 +39,20 @@ public class LoaderBackground extends SpriteBatch {
 
         cellRegion = MainActivity.resources.getTextureRegion("Cell");
 
-        tilesRandomAngle = random.nextBoolean() ? 0 : 45;
+        tilesRandomAngle = random.nextInt(3) * 15.0f;
      
         fillTiles();
     }
 
     private void fillTiles() {
+        
+        float xOffset = (size.getWidth() * cellRegion.getWidth()) + (size.getWidth()-1) * BETWEEN_CELLS_SIZE;
+        xOffset = (MainActivity.getWidth() - xOffset) / 2.0f;
+        
         for(int x = 0; x < size.getWidth(); x++) {
             for(int y = 0; y < size.getHeight(); y++) {
                 int value = valuesList.get(random.nextInt(valuesList.size()));
-                int xPosition = (int) (cellRegion.getWidth()+5)*(x-size.getWidth()/2);
+                int xPosition = (int) (xOffset + x*(cellRegion.getWidth() + BETWEEN_CELLS_SIZE));
                 int yPosition = (int) (cellRegion.getHeight()+5)*y;
                 tiles.add(new SimpleTile(xPosition, yPosition, value));
             } 

@@ -42,8 +42,6 @@ public class DemonBot extends SimpleTile {
             hunger = 0;
         }
 
-        Log.i(MainActivity.DEBUG_ID, "Demon intension:" + behaviorIntention.name());
-   
         SimpleTile demonTile = null;
         Position position = getPosition();
 
@@ -99,6 +97,8 @@ public class DemonBot extends SimpleTile {
 
         Direction profitDirection = Direction.UP;
         int maximalCellIndex = 0;
+        
+        behaviorIntention = Intention.NONE;
 
         for (Direction direction : Direction.values()) {
 
