@@ -2,6 +2,7 @@ package com.mhyhre.zone_1024.scenes;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.batch.SpriteBatch;
 import org.andengine.entity.text.Text;
@@ -10,8 +11,8 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.util.color.Color;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.game.logic.DemonBot;
-import com.mhyhre.zone_1024.game.logic.DemonBot.Intention;
+import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
+import com.mhyhre.zone_1024.game.logic.demon.Intention;
 import com.mhyhre.zone_1024.game.logic.Grid;
 import com.mhyhre.zone_1024.game.logic.SimpleTile;
 import com.mhyhre.zone_1024.utils.Size;

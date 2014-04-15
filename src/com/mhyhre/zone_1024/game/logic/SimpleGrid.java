@@ -58,13 +58,13 @@ public class SimpleGrid {
     
 
     
-    protected void insertTile(int column, int row, SimpleTile tile) {
+    public void insertTile(int column, int row, SimpleTile tile) {
         if (inGridRange(column, row)) {
             tiles[column][row] = tile;
         }
     }
 
-    protected void removeTile(int x, int y) {
+    public void removeTile(int x, int y) {
         if (inGridRange(x, y)) {
             tiles[x][y] = null;
         }

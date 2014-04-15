@@ -13,7 +13,8 @@ import java.util.List;
 import android.util.Pair;
 
 import com.mhyhre.zone_1024.MainActivity;
-import com.mhyhre.zone_1024.game.logic.DemonBot.Intention;
+import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
+import com.mhyhre.zone_1024.game.logic.demon.Intention;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Size;
 import com.mhyhre.zone_1024.utils.StreamUtils;

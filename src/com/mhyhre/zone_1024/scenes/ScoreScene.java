@@ -21,6 +21,7 @@ public class ScoreScene extends SimpleScene {
     
     ScoresTable scoresTable;
     ArrayList<Text> texts;
+    
     private static double startPressTime = 0;
     private static double currentTime = 0;
     

@@ -31,5 +31,14 @@ public class Size {
         }
         return false;
     }
+    
+    public boolean inRange(Position pos) {
+        if(pos.getX() >= 0 && pos.getY() >=0) {
+            if(pos.getX() < width && pos.getY() < height) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
+import android.util.Log;
 import android.util.Pair;
 
-import com.mhyhre.zone_1024.game.logic.DemonBot.Intention;
+import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.game.logic.SimpleTile.AfterMove;
+import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
 import com.mhyhre.zone_1024.utils.Direction;
 import com.mhyhre.zone_1024.utils.Position;
 import com.mhyhre.zone_1024.utils.Size;
@@ -38,7 +40,7 @@ public class Grid extends SimpleGrid {
     public Position randomAvaibleCell() {
         List<Position> freeCells = availableCells();
         if (freeCells.size() > 0) {
-            return freeCells.get(random.nextInt(freeCells.size())).clone();
+            return freeCells.get(random.nextInt(freeCells.size()));
         }
         return null;
     }
@@ -116,8 +118,8 @@ public class Grid extends SimpleGrid {
 
             if (lastMovingSuccess) {
                resetTilesMovingInfo();
-               demon.onStep();
                addRandomTile();
+               demon.onStep();
             }
             
 
@@ -136,11 +138,11 @@ public class Grid extends SimpleGrid {
         }
 
         Position previous = null;
-        Position last = cell.clone();
+        Position last = cell;
 
         // Progress towards the vector direction until an obstacle is found
         do {
-            previous = last.clone();
+            previous = last;
             last = last.addVector(direction.getVector());
 
             if (inGridRange(last) == false) {
@@ -182,16 +184,15 @@ public class Grid extends SimpleGrid {
         List<Integer> traversalX = traversal.first;
         List<Integer> traversalY = traversal.second;
 
-        Position currentPosition = new Position(0, 0);
-
         // Creating loop by traversals
         for (Integer x : traversalX) {
             for (Integer y : traversalY) {
 
                 SimpleTile tile = getTile(x, y);
 
-                if (tile != null) {
-                    currentPosition.set(x, y);
+                if (tile != null && tile.getValue() != DEMON_VALUE) {
+
+                    Position currentPosition = new Position(x, y);
                     Position targetPosition = findTargetForTile(currentPosition, direction);
 
                     if (currentPosition.equals(targetPosition) == true) {
@@ -202,14 +203,13 @@ public class Grid extends SimpleGrid {
 
                         // ≈сли €чейка не взаимодействует с другими €чейками
                         if (targetTile == null) {
-                            removeTile(x, y);
-                            insertTile(targetPosition.getX(), targetPosition.getY(), tile);
-                            tile.setTargetPosition(targetPosition.getX(), targetPosition.getY());
+                            replaceTile(currentPosition, targetPosition);
                             tile.setAfterMove(AfterMove.NONE);
                             
                             if(tile.getValue() == DEMON_VALUE) {
                                 tile.setWasChanged(true);
                             }
+                            
 
                         } else {
                             
@@ -229,13 +229,36 @@ public class Grid extends SimpleGrid {
 
         canMoving = canMakeMove();
     }
+    
+    public void replaceTile(Position srcPos, Position destPos) {
+        if(srcPos == null || destPos == null) {
+            throw new IllegalArgumentException("Null argument");
+        }
+        
+        if(size.inRange(srcPos) == false || size.inRange(destPos) == false) {
+            throw new IllegalArgumentException("Argument not in range");
+        }
+        
+        SimpleTile first = getTile(srcPos);
+        removeTile(srcPos.getX(), srcPos.getY());
+        insertTile(destPos.getX(), destPos.getY(), first);
+        if(first != null) {
+            first.setTargetPosition(destPos.getX(), destPos.getY());
+        }
+    }
 
     private boolean canMakeMove() {
 
+       
+        
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
+                
+                
+                
                 if (tiles[x][y] != null) {
-                    if (hasNeighborWithEqualValue(x, y)) {
+                    Position pos = new Position(0, 0);
+                    if (canMoveTile(pos)) {
                         return true;
                     }
                 } else {
@@ -247,31 +270,28 @@ public class Grid extends SimpleGrid {
     }
 
     // Need correct positions
-    public boolean hasNeighborWithEqualValue(int x, int y) {
+    public boolean canMoveTile(final Position pos) {
         
-        SimpleTile tile = getTile(x, y);
-        SimpleTile left = getTile(x - 1, y);
-        SimpleTile right = getTile(x + 1, y);
-        SimpleTile down = getTile(x, y - 1);
-        SimpleTile top = getTile(x, y + 1);
-
-        if (left != null) {
-            if (tile.getValue() == left.getValue()) {
-                return true;
-            }
+        if(pos == null || size.inRange(pos) == false) {
+            throw new IllegalArgumentException();
         }
-        if (right != null) {
-            if (tile.getValue() == right.getValue()) {
-                return true;
-            }
+        
+        SimpleTile tile = getTile(pos);
+        
+        if(tile == null) {
+            return false;
         }
-        if (down != null) {
-            if (tile.getValue() == down.getValue()) {
-                return true;
-            }
-        }
-        if (top != null) {
-            if (tile.getValue() == top.getValue()) {
+        
+        for(Direction dir: Direction.values()) {
+            
+            Position neighborPos = pos.addVector(dir.getVector());
+            SimpleTile neighborTile = getTile(neighborPos);
+            
+            if(neighborTile != null) {
+                if(neighborTile.getValue() == tile.getValue()) {
+                    return true;
+                }
+            } else {
                 return true;
             }
         }
@@ -346,6 +366,41 @@ public class Grid extends SimpleGrid {
 
     public boolean isLastMovingSuccess() {
         return lastMovingSuccess;
+    }
+    
+    public Position getDemonPosition() {
+        
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
+                if (tiles[x][y] != null) {
+                    if(tiles[x][y].getValue() == DEMON_VALUE) {
+                        return new Position(x, y);
+                    }
+                }
+                
+            }
+        }
+        throw new NullPointerException("Can't find demon position");
+    }
+
+    public void logState() {
+        
+        StringBuilder matrix = new StringBuilder();
+        Log.i(MainActivity.DEBUG_ID, "Grid: logState:");
+        for (int x = 0; x < size.getWidth(); x++) {
+            for (int y = 0; y < size.getHeight(); y++) {
+                if (tiles[x][y] != null) {
+                    matrix.append("" + tiles[x][y].getValue());
+                } else {
+                    matrix.append("n");
+                }
+                
+            }
+            matrix.append("\n");
+        }
+        
+        Log.i(MainActivity.DEBUG_ID, matrix.toString());
+        
     }
 
 }

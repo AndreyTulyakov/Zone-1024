@@ -8,11 +8,12 @@ package com.mhyhre.zone_1024.scenes;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.IFont;
+
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
-import com.mhyhre.zone_1024.game.logic.DemonBot;
 import com.mhyhre.zone_1024.game.logic.GameControllable;
 import com.mhyhre.zone_1024.game.logic.GameManager;
+import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
 
 public class GameScene extends SimpleScene {
 
@@ -21,6 +22,7 @@ public class GameScene extends SimpleScene {
     private Text textDemonHunger;
     private GameControllable gameManager;
     private GameField gameField;
+    
     private final String strScore;
     private final String strDemonHunger;
 
