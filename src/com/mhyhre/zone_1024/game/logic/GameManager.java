@@ -35,7 +35,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     }
 
     private void setup() {
-        this.grid = new Grid(size);
+        this.grid = new Grid(size, true);
         this.score = 0;
         this.gameFinished = false;
         
@@ -45,9 +45,14 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     public void loadGame() {
         if (MainActivity.getPreferenceManager().isGameWasNotEnded()) {
-            this.grid = GridUtils.loadFromFile();
-            this.score = grid.calculateTotalValues();
-            this.gameFinished = false;
+            
+            grid = GridUtils.loadFromFile();
+            if(grid != null) {        
+                score = grid.calculateTotalValues();
+                gameFinished = false;
+            } else {
+                setup();
+            }
         } else {
             setup();
         }

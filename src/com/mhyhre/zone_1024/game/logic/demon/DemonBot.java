@@ -58,15 +58,14 @@ public class DemonBot extends SimpleTile {
                 // Если можем - кушаем и засыпаем
                 if(isCanEatIntention()) {
                     eatIntention();
-                    behaviorIntention = Intention.NONE;
                     return;
                     
-                // Если нет то ищем новую еду или двигаемся.
+                // Если нет то двигаемся туда или ищем новую еду.
                 } else {
-                    thinkingAboutEatingSomething();
-                    if(behaviorIntention == Intention.NONE) {
-                        thinkingAboutMovingSomewhere();
-                        return;
+                    if(isCanMoveIntention()) {
+                        moveIntention();
+                    } else {
+                        thinkingAboutEatingSomething();
                     }
                 }
             }
@@ -86,7 +85,11 @@ public class DemonBot extends SimpleTile {
                     
                 // Если нет то ищем новую еду вокруг.
                 } else {
-                    thinkingAboutEatingSomething();
+                    if(isCanEatIntention()) {
+                        eatIntention();
+                    } else {
+                        thinkingAboutEatingSomething();
+                    }
                     return;
                 }
             }
@@ -106,6 +109,9 @@ public class DemonBot extends SimpleTile {
         }
     }
 
+    public boolean isSleep() {
+        return behaviorIntention == Intention.NONE;
+    }
     
     private void moveIntention() {
         Position position = getPosition();
@@ -121,6 +127,8 @@ public class DemonBot extends SimpleTile {
         hunger += targetTile.getValue();      
         
         grid.replaceTile(position, targetPos);
+        
+        behaviorIntention = Intention.NONE;
         
         MainActivity.resources.playSound("DemonEat");
         setAfterMove(AfterMove.NONE);   

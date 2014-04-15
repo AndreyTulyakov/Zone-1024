@@ -150,25 +150,25 @@ public class ResourceManager {
         Font mFont;
         
         final ITexture TextureFontPixelWhite48 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite48, MainActivity.Me.getAssets(), "Hardpixel.OTF", 56, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite48, MainActivity.Me.getAssets(), "Hardpixel.ttf", 56, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono48", mFont);
 
         final ITexture TextureFontPixelWhite32 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite32, MainActivity.Me.getAssets(), "Hardpixel.OTF", 32, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite32, MainActivity.Me.getAssets(), "Hardpixel.ttf", 32, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono32", mFont);
 
         final ITexture TextureFontPixelWhite24 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "Hardpixel.OTF", 24, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite24, MainActivity.Me.getAssets(), "Hardpixel.ttf", 24, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono24", mFont);
         
         final ITexture TextureFontPixelWhite16 = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
-        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite16, MainActivity.Me.getAssets(), "Hardpixel.OTF", 20, true,
+        mFont = FontFactory.createFromAsset(MainActivity.Me.getFontManager(), TextureFontPixelWhite16, MainActivity.Me.getAssets(), "Hardpixel.ttf", 20, true,
                 Color.WHITE);
         mFont.load();
         fonts.put("WhiteMono16", mFont);

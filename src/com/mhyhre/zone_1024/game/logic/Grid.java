@@ -23,12 +23,14 @@ public class Grid extends SimpleGrid {
     private boolean lastMovingSuccess;
     private DemonBot demon;
 
-    public Grid(Size size) {
+    public Grid(Size size, boolean addDefaultDemon) {
         super(size);
         random = new Random();
         canMoving = true;
         
-        addDemon();
+        if(addDefaultDemon) {
+            addDemon();
+        }
     }
     
     private void addDemon() {
@@ -118,8 +120,8 @@ public class Grid extends SimpleGrid {
 
             if (lastMovingSuccess) {
                resetTilesMovingInfo();
-               addRandomTile();
                demon.onStep();
+               addRandomTile();
             }
             
 
@@ -190,13 +192,14 @@ public class Grid extends SimpleGrid {
 
                 SimpleTile tile = getTile(x, y);
 
-                if (tile != null && tile.getValue() != DEMON_VALUE) {
+                if (tile != null && (tile.getValue() != DEMON_VALUE || (tile.getValue() == DEMON_VALUE  && getDemon().isSleep()))) {
 
                     Position currentPosition = new Position(x, y);
                     Position targetPosition = findTargetForTile(currentPosition, direction);
 
                     if (currentPosition.equals(targetPosition) == true) {
                         continue;
+                        
                     } else {
 
                         SimpleTile targetTile = getTile(targetPosition);
@@ -242,6 +245,7 @@ public class Grid extends SimpleGrid {
         SimpleTile first = getTile(srcPos);
         removeTile(srcPos.getX(), srcPos.getY());
         insertTile(destPos.getX(), destPos.getY(), first);
+        
         if(first != null) {
             first.setTargetPosition(destPos.getX(), destPos.getY());
         }
@@ -362,6 +366,10 @@ public class Grid extends SimpleGrid {
 
     public DemonBot getDemon() {
         return demon;
+    }
+    
+    public void setDemon(DemonBot bot) {
+        demon = bot;
     }
 
     public boolean isLastMovingSuccess() {
