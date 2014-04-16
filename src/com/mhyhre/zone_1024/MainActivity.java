@@ -39,6 +39,7 @@ public class MainActivity extends SimpleBaseGameActivity {
     
     private static final int width = 540;
     private static final int height = 960;
+    
     private static float halfWidth;
     private static float halfHeight;
     
