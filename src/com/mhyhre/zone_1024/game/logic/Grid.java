@@ -253,15 +253,13 @@ public class Grid extends SimpleGrid {
 
     private boolean canMakeMove() {
 
-       
+        
         
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
                 
-                
-                
                 if (tiles[x][y] != null) {
-                    Position pos = new Position(0, 0);
+                    Position pos = new Position(x, y);
                     if (canMoveTile(pos)) {
                         return true;
                     }
@@ -289,14 +287,19 @@ public class Grid extends SimpleGrid {
         for(Direction dir: Direction.values()) {
             
             Position neighborPos = pos.addVector(dir.getVector());
+            
+            if(size.inRange(neighborPos) == false) {
+                continue;
+            }
+            
             SimpleTile neighborTile = getTile(neighborPos);
             
-            if(neighborTile != null) {
+            if(neighborTile == null) {
+                return true;
+            } else {
                 if(neighborTile.getValue() == tile.getValue()) {
                     return true;
                 }
-            } else {
-                return true;
             }
         }
 
