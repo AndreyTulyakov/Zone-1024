@@ -42,12 +42,10 @@ public class SimpleGrid {
     }
     
     protected void lock() {
-        Log.i(MainActivity.DEBUG_ID, "Grid locked");
         locked = true;
     }
 
     protected void unlock() {
-        Log.i(MainActivity.DEBUG_ID, "Grid unlocked");
         locked = false;
     }
 

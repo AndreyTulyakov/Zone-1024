@@ -13,9 +13,9 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
     private static GameManager instance;
     private static final int START_TILES = 2;
+    private static final int WIN_NUMBER = 1024;
 
     private int score;
-    private final int winNumber = 1024;
     private boolean gameFinished = false;
     private final Size size;
     private Grid grid;
@@ -35,7 +35,7 @@ public final class GameManager implements MoveEventListener, GameControllable {
     }
 
     private void setup() {
-        this.grid = new Grid(size, true);
+        this.grid = new Grid(size, PreferenceManager.isMonsterEnabled());
         this.score = 0;
         this.gameFinished = false;
         
@@ -78,19 +78,18 @@ public final class GameManager implements MoveEventListener, GameControllable {
 
             score = grid.calculateTotalValues();
 
-            // If won
-            if (grid.hasNumberOrMore(winNumber)) {
-                score = grid.calculateTotalValues();
-                PreferenceManager.setGameWasNotEnded(false);
-                gameFinished = true;
-                RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
-            }
-
-            // If game ended
             if (grid.isCanMoving() == false) {
-                gameFinished = true;
+            	
+            	score = grid.calculateTotalValues();
                 PreferenceManager.setGameWasNotEnded(false);
-                RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
+                gameFinished = true;
+                
+                if (grid.hasNumberOrMore(WIN_NUMBER)) {
+                    RootScene.Me.setState(GameStates.GAME_WIN_SCENE);
+                } else {
+                    RootScene.Me.setState(GameStates.GAME_OVER_SCENE);
+                }
+
             }
         }
     }

@@ -141,6 +141,13 @@ public class MainActivity extends SimpleBaseGameActivity {
     @Override
     protected void onPause() {
         Log.i(DEBUG_ID, "Game paused");
+        
+        if(preferenceManager.isGameWasNotEnded()) {
+            GameManager.getInstance().saveGame();
+        }
+        preferenceManager.savePreferences();
+
+        
         this.getEngine().stop();
         super.onPause();
     }

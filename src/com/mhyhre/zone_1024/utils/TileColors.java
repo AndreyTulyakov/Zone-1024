@@ -1,6 +1,6 @@
 package com.mhyhre.zone_1024.utils;
 
-import org.andengine.util.color.Color;
+import org.andengine.util.adt.color.Color;
 
 import android.util.SparseArray;
 

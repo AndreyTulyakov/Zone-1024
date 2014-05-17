@@ -7,8 +7,9 @@ import java.util.Random;
 
 import org.andengine.entity.sprite.batch.SpriteBatch;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.util.color.Color;
 
+
+import org.andengine.util.adt.color.Color;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.game.logic.SimpleTile;

@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-import android.util.Log;
 import android.util.Pair;
 
-import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.game.logic.SimpleTile.AfterMove;
 import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
 import com.mhyhre.zone_1024.utils.Direction;
@@ -22,6 +20,7 @@ public class Grid extends SimpleGrid {
     private boolean canMoving;
     private boolean lastMovingSuccess;
     private DemonBot demon;
+    
 
     public Grid(Size size, boolean addDefaultDemon) {
         super(size);
@@ -37,6 +36,10 @@ public class Grid extends SimpleGrid {
         Position targetPosition = randomAvaibleCell();
         demon = new DemonBot(targetPosition.getX(), targetPosition.getY(), DEMON_VALUE, this);
         insertTile(targetPosition.getX(), targetPosition.getY(), demon);
+    }
+    
+    public boolean hasDemon() {
+    	return demon != null;
     }
 
     public Position randomAvaibleCell() {
@@ -120,7 +123,9 @@ public class Grid extends SimpleGrid {
 
             if (lastMovingSuccess) {
                resetTilesMovingInfo();
-               demon.onStep();
+               if(hasDemon()) {
+            	   demon.onStep();
+               }
                addRandomTile();
             }
             
@@ -253,8 +258,6 @@ public class Grid extends SimpleGrid {
 
     private boolean canMakeMove() {
 
-        
-        
         for (int x = 0; x < size.getWidth(); x++) {
             for (int y = 0; y < size.getHeight(); y++) {
                 
@@ -351,15 +354,15 @@ public class Grid extends SimpleGrid {
         demon.setBehaviorIntention(Intention.EAT_BY_DIRECTION);
         demon.setIntentionDirection(Direction.RIGHT);
         demon.setHunger(0);
-
-        tiles[0][1] = new SimpleTile(0, 1, 16);
-        tiles[0][2] = new SimpleTile(0, 2, 32);
-        tiles[0][3] = new SimpleTile(0, 3, 64);
-        
-        tiles[1][0] = new SimpleTile(1, 0, 128);
-        tiles[1][1] = new SimpleTile(1, 1, 128);
-        tiles[1][2] = new SimpleTile(1, 2, 16);
         */
+        tiles[0][1] = new SimpleTile(0, 1, 46);
+        tiles[0][2] = new SimpleTile(0, 2, 45);
+        tiles[0][3] = new SimpleTile(0, 3, 47);
+        
+        tiles[1][0] = new SimpleTile(1, 0, 512);
+        tiles[1][1] = new SimpleTile(1, 1, 512);
+        tiles[1][2] = new SimpleTile(1, 2, 48);
+
         
     }
 
@@ -394,24 +397,5 @@ public class Grid extends SimpleGrid {
         throw new NullPointerException("Can't find demon position");
     }
 
-    public void logState() {
-        
-        StringBuilder matrix = new StringBuilder();
-        Log.i(MainActivity.DEBUG_ID, "Grid: logState:");
-        for (int x = 0; x < size.getWidth(); x++) {
-            for (int y = 0; y < size.getHeight(); y++) {
-                if (tiles[x][y] != null) {
-                    matrix.append("" + tiles[x][y].getValue());
-                } else {
-                    matrix.append("n");
-                }
-                
-            }
-            matrix.append("\n");
-        }
-        
-        Log.i(MainActivity.DEBUG_ID, matrix.toString());
-        
-    }
 
 }

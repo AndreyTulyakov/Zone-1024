@@ -38,9 +38,8 @@ public class RootScene extends Scene {
     private GameScene gameScene;
     private QuestionScene questionScene;
     private ScoreScene scoreScene;
-    private GameOverScene gameOverScene;
     private AboutScene aboutScene;
-    private GameWinScene gameWinScene;
+    private GameOverScene gameWinScene;
 
     
     private GameManager gameManager;
@@ -76,10 +75,7 @@ public class RootScene extends Scene {
         gameScene = new GameScene(gameManager);
         attachChild(gameScene);
         
-        gameOverScene = new GameOverScene();
-        attachChild(gameOverScene);
-        
-        gameWinScene = new GameWinScene();
+        gameWinScene = new GameOverScene();
         attachChild(gameWinScene);
         
         setState(GameStates.LOADER);
@@ -95,7 +91,6 @@ public class RootScene extends Scene {
         scoreScene.hide();
         questionScene.hide();
         gameScene.hide();
-        gameOverScene.hide();
         gameWinScene.hide();
         aboutScene.hide();
         
@@ -138,7 +133,7 @@ public class RootScene extends Scene {
             
         case GAME_OVER_SCENE:
             gameScene.show();
-            gameOverScene.show();
+            gameWinScene.show();
             break;
             
         case TERMINATE:
@@ -212,7 +207,7 @@ public class RootScene extends Scene {
             break;
             
         case GAME_OVER_SCENE:
-            gameOverScene.onSceneTouchEvent(pSceneTouchEvent);
+            gameWinScene.onSceneTouchEvent(pSceneTouchEvent);
             break;
             
         case GAME_PROCESS:           

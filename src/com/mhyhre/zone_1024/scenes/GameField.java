@@ -8,7 +8,9 @@ import org.andengine.entity.sprite.batch.SpriteBatch;
 import org.andengine.entity.text.Text;
 import org.andengine.opengl.font.IFont;
 import org.andengine.opengl.texture.region.ITextureRegion;
-import org.andengine.util.color.Color;
+
+
+import org.andengine.util.adt.color.Color;
 
 import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
@@ -37,6 +39,7 @@ public class GameField extends SimpleScene {
     private Size size;
 
     public GameField(Size size) {
+    	
         setBackgroundEnabled(false);
         show();
 
@@ -102,32 +105,34 @@ public class GameField extends SimpleScene {
         List<SimpleTile> tiles = grid.getAllTiles();
         int counter = 0;
 
-        DemonBot demon = grid.getDemon();
-        if (demon.isWasChanged()) {
-            demonRegion = MainActivity.resources.getTextureRegion("DemonMoving");
-        } else {
-            if (demon.getBehaviorIntention() == Intention.NONE) {
-                demonRegion = MainActivity.resources.getTextureRegion(demonSleepAnimSwitcher ? "DemonSleep0" : "DemonSleep1");
-            } else {
-                switch (demon.getIntentionDirection()) {
-                case DOWN:
-                    demonRegion = MainActivity.resources.getTextureRegion("DemonDown");
-                    break;
-
-                case LEFT:
-                    demonRegion = MainActivity.resources.getTextureRegion("DemonLeft");
-                    break;
-
-                case RIGHT:
-                    demonRegion = MainActivity.resources.getTextureRegion("DemonRight");
-                    break;
-
-                case UP:
-                    demonRegion = MainActivity.resources.getTextureRegion("DemonUp");
-                    break;
-
-                }
-            }
+        if(grid.hasDemon()) {
+	        DemonBot demon = grid.getDemon();
+	        if (demon.isWasChanged()) {
+	            demonRegion = MainActivity.resources.getTextureRegion("DemonMoving");
+	        } else {
+	            if (demon.getBehaviorIntention() == Intention.NONE) {
+	                demonRegion = MainActivity.resources.getTextureRegion(demonSleepAnimSwitcher ? "DemonSleep0" : "DemonSleep1");
+	            } else {
+	                switch (demon.getIntentionDirection()) {
+	                case DOWN:
+	                    demonRegion = MainActivity.resources.getTextureRegion("DemonDown");
+	                    break;
+	
+	                case LEFT:
+	                    demonRegion = MainActivity.resources.getTextureRegion("DemonLeft");
+	                    break;
+	
+	                case RIGHT:
+	                    demonRegion = MainActivity.resources.getTextureRegion("DemonRight");
+	                    break;
+	
+	                case UP:
+	                    demonRegion = MainActivity.resources.getTextureRegion("DemonUp");
+	                    break;
+	
+	                }
+	            }
+	        }
         }
 
         for (SimpleTile tile : tiles) {

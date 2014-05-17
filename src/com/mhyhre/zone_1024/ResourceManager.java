@@ -87,7 +87,7 @@ public class ResourceManager {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
         
         // Load ui graphics
-        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 128, TextureOptions.BILINEAR);
+        atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 256, TextureOptions.BILINEAR);
         BitmapTextureAtlasTextureRegionFactory.createFromAsset(atlas, MainActivity.Me, "User_Interface.png", 0, 0);
         atlas.load();
         atlases.put("User_Interface", atlas);
@@ -100,7 +100,7 @@ public class ResourceManager {
         
         regions.put("ButtonVibration", TextureRegionFactory.extractFromTexture(atlas, 160, 0, 80, 80, false)); 
         regions.put("ButtonSound", TextureRegionFactory.extractFromTexture(atlas, 240, 0, 80, 80, false)); 
-        
+        regions.put("DemonCheckbox", TextureRegionFactory.extractFromTexture(atlas, 0, 80, 80, 80, false)); 
         
         // Load cells
         atlas = new BitmapTextureAtlas(MainActivity.Me.getTextureManager(), 512, 256, TextureOptions.BILINEAR);

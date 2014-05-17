@@ -61,9 +61,7 @@ public final class GridUtils {
             if(typeId != FILE_TYPE_ID) {
                 return null;
             }
-            
 
-            DemonBot demon = null;
 
             for(int y = 0; y < size.getHeight(); y++) {
                 for(int x = 0; x < size.getWidth(); x++) {
@@ -79,17 +77,19 @@ public final class GridUtils {
                     }
                     
                     if(value == Grid.DEMON_VALUE) {
-                        demon = new DemonBot(x, y, Grid.DEMON_VALUE, grid);
+                    	DemonBot demon = new DemonBot(x, y, Grid.DEMON_VALUE, grid);
                         grid.setDemon(demon);
                         grid.setTile(x, y, demon);
                     }
                 }
             }
             
-            // Load demon data
-            demon.setHunger(dataStream.readInt());
-            demon.setBehaviorIntention(Intention.values()[dataStream.readInt()]);
-            demon.setIntentionDirection(Direction.values()[dataStream.readInt()]);          
+            if(grid.hasDemon()) {
+            	DemonBot demon = grid.getDemon();
+                demon.setHunger(dataStream.readInt());
+                demon.setBehaviorIntention(Intention.values()[dataStream.readInt()]);
+                demon.setIntentionDirection(Direction.values()[dataStream.readInt()]);  
+            }
             
           } catch (FileNotFoundException e) {  
               return null;
@@ -106,6 +106,7 @@ public final class GridUtils {
     }
     
     public static void saveToFile(Grid grid) {
+    	
         Size size = grid.getSize();
         
         FileOutputStream outputStream = null;
@@ -115,8 +116,8 @@ public final class GridUtils {
             outputStream = MainActivity.Me.openFileOutput(GRID_STORE_FILENAME, MainActivity.MODE_PRIVATE);
             dataStream = new DataOutputStream(outputStream);
 
-            dataStream.writeChar(FILE_TYPE_ID);
-            
+            dataStream.writeChar(FILE_TYPE_ID);  
+
             for(int y = 0; y < size.getHeight(); y++) {
                 for(int x = 0; x < size.getWidth(); x++) {
                     SimpleTile tile = grid.getTile(x, y);
@@ -129,10 +130,12 @@ public final class GridUtils {
             }
             
             // Save demon data
-            DemonBot demon = grid.getDemon();
-            dataStream.writeInt(demon.getHunger());
-            dataStream.writeInt(demon.getBehaviorIntention().ordinal());
-            dataStream.writeInt(demon.getIntentionDirection().ordinal());
+            if(grid.hasDemon()) {
+                DemonBot demon = grid.getDemon();
+                dataStream.writeInt(demon.getHunger());
+                dataStream.writeInt(demon.getBehaviorIntention().ordinal());
+                dataStream.writeInt(demon.getIntentionDirection().ordinal());
+            }
             
         } catch (FileNotFoundException e) {
             return;

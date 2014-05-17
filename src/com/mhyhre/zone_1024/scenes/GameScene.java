@@ -13,6 +13,7 @@ import com.mhyhre.zone_1024.MainActivity;
 import com.mhyhre.zone_1024.R;
 import com.mhyhre.zone_1024.game.logic.GameControllable;
 import com.mhyhre.zone_1024.game.logic.GameManager;
+import com.mhyhre.zone_1024.game.logic.Grid;
 import com.mhyhre.zone_1024.game.logic.demon.DemonBot;
 
 public class GameScene extends SimpleScene {
@@ -56,11 +57,18 @@ public class GameScene extends SimpleScene {
     @Override
     protected void onManagedUpdate(float pSecondsElapsed) {
         
-        gameField.update(gameManager.getGrid());
-        DemonBot demon = gameManager.getGrid().getDemon();
-        
+    	Grid grid = gameManager.getGrid();
+        gameField.update(grid);
+
         textEntityScores.setText(strScore + " " + GameManager.getInstance().getScore());
-        textDemonHunger.setText(strDemonHunger + " " + demon.getHunger());
+        
+        if(grid.hasDemon()) {
+        	DemonBot demon = grid.getDemon();
+        	textDemonHunger.setVisible(true);
+        	textDemonHunger.setText(strDemonHunger + " " + demon.getHunger());
+        } else {
+        	textDemonHunger.setVisible(false);
+        }
         
         super.onManagedUpdate(pSecondsElapsed);
     }

@@ -160,6 +160,7 @@ public class DemonBot extends SimpleTile {
         Position targetPos = pos.addVector(intentionDirection.getVector());
 
         if (grid.getSize().inRange(targetPos) == false) {
+        	intentionDirection = intentionDirection.getOpposite();
             return false;
         }
 

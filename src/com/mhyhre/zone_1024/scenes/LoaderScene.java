@@ -41,11 +41,12 @@ public class LoaderScene extends SimpleScene{
         addVibroButton();
         addSoundButton();
         addAboutButton();
+        addDemonButton();
         
         addTitle(font32);
     }
 
-    private void addTitle(IFont font) {
+	private void addTitle(IFont font) {
         String strTextTitle = MainActivity.Me.getString(R.string.app_name);
         textTitle = new Text(0, 0, font, strTextTitle, MainActivity.getVboManager());
         textTitle.setPosition(MainActivity.getHalfWidth(), MainActivity.getHalfHeight());
@@ -151,6 +152,39 @@ public class LoaderScene extends SimpleScene{
             mSpriteSound.setAlpha(0.5f);
         }
     }
+    
+
+    private void addDemonButton() {
+    	Sprite mSpriteDemonEnabled = new Sprite(0, 0, MainActivity.resources.getTextureRegion("DemonCheckbox"), MainActivity.Me.getVertexBufferObjectManager()) {
+            @Override
+            public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_DOWN) {
+
+                    if (PreferenceManager.isMonsterEnabled() == true) {
+                        this.setAlpha(0.5f);
+                        PreferenceManager.setMonsterEnabled(false);
+                    } else {
+                        this.setAlpha(1.0f);
+                        PreferenceManager.setMonsterEnabled(true);
+                        MainActivity.vibrate(40);
+                    }
+                    MainActivity.vibrate(40);
+                }
+                return true;
+            }
+            
+        };
+        mSpriteDemonEnabled.setPosition(MainActivity.getWidth()/2, 60);
+        attachChild(mSpriteDemonEnabled);
+        registerTouchArea(mSpriteDemonEnabled);
+  
+        if (PreferenceManager.isMonsterEnabled()) {
+            mSpriteDemonEnabled.setAlpha(1.0f);
+        } else {
+            mSpriteDemonEnabled.setAlpha(0.3f);
+        }
+	}
+
 
     private void addVibroButton() {
         Sprite mSpriteVibro = new Sprite(0, 0, MainActivity.resources.getTextureRegion("ButtonVibration"), MainActivity.Me.getVertexBufferObjectManager()) {
